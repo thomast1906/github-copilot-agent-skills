@@ -1,0 +1,23 @@
+name: Validate Agent Skills
+
+on:
+  pull_request:
+    paths:
+      - '.github/skills/**'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/skills/**'
+
+jobs:
+  validate-skills:
+    name: Validate Skills Format
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run skill validation
+        run: ./.github/scripts/validate-agent-skills.sh

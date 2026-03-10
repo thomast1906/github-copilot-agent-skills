@@ -204,28 +204,28 @@ grep -rE '(deprecated_argument_1|deprecated_argument_2)\s*=' --include="*.tf" -l
 
 **For each removed resource found:**
 
-**Step 1: Get old resource documentation**
+**Step 1: Search for old resource documentation**
 ```bash
-resolveProviderDocID(
-  providerNamespace="hashicorp",
-  providerName="azurerm",
-  serviceSlug="sql_server",
-  providerDataType="resources",
-  providerVersion="3.117.1"
+mcp_terraform_search_providers(
+  provider_namespace="hashicorp",
+  provider_name="azurerm",
+  service_slug="sql_server",
+  provider_document_type="resources",
+  provider_version="3.117.1"
 )
-getProviderDocs(providerDocID="<id>")
+mcp_terraform_get_provider_details(provider_doc_id="<id-from-search>")
 ```
 
-**Step 2: Get new resource documentation**
+**Step 2: Search for new resource documentation**
 ```bash
-resolveProviderDocID(
-  providerNamespace="hashicorp",
-  providerName="azurerm",
-  serviceSlug="mssql_server",
-  providerDataType="resources",
-  providerVersion="latest"
+mcp_terraform_search_providers(
+  provider_namespace="hashicorp",
+  provider_name="azurerm",
+  service_slug="mssql_server",
+  provider_document_type="resources",
+  provider_version="latest"
 )
-getProviderDocs(providerDocID="<id>")
+mcp_terraform_get_provider_details(provider_doc_id="<id-from-search>")
 ```
 
 **Step 3: Compare schemas**
@@ -434,86 +434,6 @@ Upgraded HashiCorp AzureRM provider from v3.117.1 to v4.51.0. This major version
 
 ### ❌ DON'T:
 - **Document non-breaking changes** - Minor/patch versions don't need TERRAFORM_UPGRADE_BREAKING_CHANGES.md
-- **Provide manual migration steps** - code should handle everything
-- **Assume arguments stayed the same** - always validate schemas
-- **Forget dependent resources** - search and update references
-- **Miss attribute changes** - update `.name` to `.id` where needed
-- **Remove provider blocks** - only update deprecated arguments
-- **Suggest terraform commands** - users validate via pipeline
-
-## Workflow Examples
-
-### Example 1: Non-Breaking Upgrade (Minor Version)
-
-**Scenario:** Upgrading AzureRM from `3.117.0` to `3.118.0`
-
-```bash
-# 1. Check version
-get_latest_provider_version(namespace="hashicorp", name="azurerm")
-# Result: 3.118.0 (minor version bump)
-
-# 2. Check for breaking changes
-resolveProviderDocID(...serviceSlug="3.118.0", providerDataType="guides"...)
-getProviderDocs(providerDocID="<id>")
-# Review: No removed resources, no breaking changes
-
-# 3. Update version
-# versions.tf: version = "3.118.0"
-
-# 4. Commit
-# Message: "chore: upgrade azurerm provider to v3.118.0"
-# NO TERRAFORM_UPGRADE_BREAKING_CHANGES.md needed
-```
-
-### Example 2: Breaking Upgrade (Major Version)
-
-**Scenario:** Upgrading AzureRM from `3.117.0` to `4.51.0`
-
-```bash
-# 1. Check version  
-get_latest_provider_version(namespace="hashicorp", name="azurerm")
-# Result: 4.51.0 (major version bump)
-
-# 2. Get upgrade guide
-resolveProviderDocID(...serviceSlug="4.0-upgrade-guide"...)
-getProviderDocs(providerDocID="<id>")
-# Review: extract FULL list of removed / deprecated resources from the guide
-# (e.g. azurerm_sql_*, azurerm_automation_*, azurerm_network_*, etc.)
-
-# 3. Scan codebase for ALL removed resources at once
-REMOVED=(
-  "azurerm_sql_server"
-  "azurerm_sql_database"
-  "azurerm_sql_firewall_rule"
-  "azurerm_sql_virtual_network_rule"
-  "azurerm_sql_elasticpool"
-  "azurerm_sql_active_directory_administrator"
-  "azurerm_sql_failover_group"
-  # ... every resource listed as removed in the 4.0 upgrade guide
-)
-PATTERN=$(IFS="|"; echo "${REMOVED[*]}")
-grep -rE "($PATTERN)" --include="*.tf"
-
-# 4. For each affected resource: fetch old + new docs, compare schemas
-# 5. Apply resource type renames and argument changes
-# 6. Add moved blocks for state migration
-# 7. Scan for deprecated provider block arguments and fix those too
-# 8. Create TERRAFORM_UPGRADE_BREAKING_CHANGES.md at repository root
-# 9. Commit with detailed message referencing documentation
-```
-
-## Best Practices
-
-### ✅ DO:
-- **Use moved blocks** for resource type changes (automatic state migration)
-- **Validate arguments** against official docs for both old and new resources
-- **Check default values** - document if new resource has different defaults
-- **Update dependent resources** that reference migrated resources
-- **Document what was done** - show code changes applied
-- **Include resource documentation links** for transparency
-- **Use pipeline validation** - let CI/CD handle terraform commands
-
-### ❌ DON'T:
 - **Provide manual migration steps** - code should handle everything
 - **Assume arguments stayed the same** - always validate schemas
 - **Forget dependent resources** - search and update references
