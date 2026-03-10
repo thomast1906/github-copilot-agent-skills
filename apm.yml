@@ -1,0 +1,9 @@
+name: github-copilot-agent-skills
+version: 1.0.0
+description: >
+  Full Azure agent skill pack — architecture design, WAF/CAF, cost optimisation,
+  API Management, Terraform, and deployment workflows for GitHub Copilot.
+dependencies:
+  apm:
+    - thomast1906/github-copilot-agent-skills/packages/architect
+    - thomast1906/github-copilot-agent-skills/packages/terraform

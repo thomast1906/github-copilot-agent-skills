@@ -1,0 +1,12 @@
+name: terraform-deployer-skills
+version: 1.0.0
+description: >
+  Terraform provider upgrades, IaC deployment, APIOps, and GitHub
+  Agentic Workflow skills for GitHub Copilot.
+dependencies:
+  apm:
+    - thomast1906/github-copilot-agent-skills/.github/agents/terraform-provider-upgrade.agent.md
+    - thomast1906/github-copilot-agent-skills/.github/agents/gh-aw-builder.agent.md
+    - thomast1906/github-copilot-agent-skills/.github/skills/terraform-provider-upgrade
+    - thomast1906/github-copilot-agent-skills/.github/skills/apiops-deployment
+    - thomast1906/github-copilot-agent-skills/.github/skills/gh-aw-operations

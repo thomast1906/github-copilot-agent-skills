@@ -1,0 +1,16 @@
+name: azure-architect-skills
+version: 1.0.0
+description: >
+  Azure architecture design, WAF/CAF assessment, cost optimisation,
+  and API Management skills for GitHub Copilot.
+dependencies:
+  apm:
+    - thomast1906/github-copilot-agent-skills/.github/agents/azure-architect.agent.md
+    - thomast1906/github-copilot-agent-skills/.github/agents/apim-policy-author.agent.md
+    - thomast1906/github-copilot-agent-skills/.github/skills/architecture-design
+    - thomast1906/github-copilot-agent-skills/.github/skills/waf-assessment
+    - thomast1906/github-copilot-agent-skills/.github/skills/cost-optimization
+    - thomast1906/github-copilot-agent-skills/.github/skills/api-security-review
+    - thomast1906/github-copilot-agent-skills/.github/skills/apim-policy-authoring
+    - thomast1906/github-copilot-agent-skills/.github/skills/azure-apim-architecture
+    - thomast1906/github-copilot-agent-skills/.github/skills/drawio-mcp-diagramming
