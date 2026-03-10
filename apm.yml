@@ -7,3 +7,4 @@ dependencies:
   apm:
     - thomast1906/github-copilot-agent-skills/packages/architect
     - thomast1906/github-copilot-agent-skills/packages/terraform
+    - thomast1906/github-copilot-agent-skills/.github/skills/apm-setup
