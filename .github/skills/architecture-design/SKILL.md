@@ -134,13 +134,20 @@ DataClassification: Public | Internal | Confidential | Restricted
 
 ### 6. Estimate Costs
 
-Provide monthly cost breakdown by service category:
-- Compute (App Service, Functions, VMs)
-- Data (SQL, Cosmos DB, Storage)
-- Networking (Front Door, App Gateway, Bandwidth)
-- Monitoring (Application Insights, Log Analytics)
+**Invoke the `azure-pricing` skill** to retrieve live retail pricing. Never estimate costs from memory.
 
-Include cost optimization opportunities and reserved instance recommendations.
+The `azure-pricing` skill will:
+- Call `azure-mcp/pricing` (`pricing_get`) per billable resource SKU and region
+- Return a three-column table: Pay-as-you-go | 1-year Reserved | 3-year Reserved
+- Identify top reserved instance / savings plan candidates
+
+> Confirm all service SKUs in step 3 before requesting pricing — the tool requires a specific SKU or service name.
+
+Structure the cost output by category:
+- Compute (App Service, Functions, VMs, AKS nodes)
+- Data (SQL, Cosmos DB, Storage)
+- Networking (Front Door, App Gateway, Firewall, Bandwidth)
+- Monitoring (Application Insights, Log Analytics)
 
 ## High-Level Design Output Format
 
@@ -207,10 +214,11 @@ For each component:
 - Rollback procedure
 
 ### 10. Cost Breakdown
-- Monthly cost estimate by service
-- Annual projection
-- Cost optimization recommendations
-- Reserved instance opportunities
+- **Invoke the `azure-pricing` skill** to retrieve live retail prices per service SKU and target region
+- Monthly cost per service and annual projection
+- Side-by-side table: Pay-as-you-go | 1-year Reserved | 3-year Reserved
+- Cost optimization recommendations (right-sizing, spot/preemptible nodes, storage tiers)
+- Top reserved instance / savings plan candidates with estimated monthly saving
 
 ### 11. Well-Architected Assessment
 - Brief evaluation against each WAF pillar
@@ -242,7 +250,7 @@ comprehensive security controls, and cost-optimized infrastructure.
 - Global reach with Azure Front Door CDN
 - Auto-scaling for traffic spikes (Black Friday, holidays)
 - PCI-DSS compliant payment processing
-- Estimated cost: $2,850/month (Production)
+- **Estimated cost**: see Section 10 — priced live via the `azure-pricing` skill per SKU and target region
 
 **Timeline:** 8-week implementation with phased rollout
 
@@ -283,6 +291,7 @@ Functions handle asynchronous order processing, Azure SQL provides ACID guarante
 **Be Specific:** Use exact service names and SKUs (not "database" but "Azure SQL Database S2 DTU")
 **Show Trade-offs:** Explain why you chose service X over Y
 **Include Diagrams:** Describe architecture visually with clear component relationships
+**Live Pricing:** Invoke the **`azure-pricing` skill** for every cost section — never guess prices from memory; always pass the target `region` and `currency` (e.g. `GBP` for UK workloads)
 **Cost-Aware:** Always provide cost estimates and optimization opportunities
 **Security First:** Address authentication, authorization, encryption, network security
 **WAF Alignment:** Reference specific WAF principles in design decisions

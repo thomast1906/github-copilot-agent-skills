@@ -113,7 +113,7 @@ Apply to ALL Azure resources:
 - Right-size based on actual requirements, not "just in case"
 - Plan for auto-scaling vs. always-on capacity
 - Consider Dev/Test pricing for non-production
-- Estimate costs using Azure Pricing Calculator
+- Estimate costs using Azure Pricing Calculator or the `azure-pricing` skill (uses live retail pricing via Azure MCP Server)
 
 **Operational phase:**
 - Implement storage lifecycle policies (Cool/Archive tiers)
@@ -193,6 +193,7 @@ Apply to ALL Azure resources:
 - **`architecture-design`**: Designing new solutions, selecting services and patterns
 - **`waf-assessment`**: Reviewing architectures, validating production-readiness
 - **`cost-optimization`**: Analyzing costs, finding savings opportunities
+- **`azure-pricing`**: Looking up real-time Azure retail pricing for SKUs, services, or regions; estimating deployment costs from Bicep/ARM templates; comparing Consumption vs Reservation pricing. Always use **GBP** as the default currency (`currency: GBP`); pass `USD`, `EUR`, or another ISO code only when the user specifies a different currency
 
 ## Response Format
 
@@ -228,7 +229,7 @@ Copilot: "I'd like to understand your requirements better to recommend the best 
 Based on typical web apps, I'd likely recommend:
 
 **Azure App Service (PaaS approach)**
-- SKU: P1v3 for production ($214/month, includes 2 instances for HA)
+- SKU: P1v3 for production (£214/month, includes 2 instances for HA)
 - Built-in auto-scaling based on CPU/requests
 - Deployment slots for blue-green deployments  
 - VNet integration for secure database access
@@ -236,7 +237,7 @@ Based on typical web apps, I'd likely recommend:
 
 This provides 99.95% SLA with Availability Zones, managed patching, and scales from 1-30 instances automatically.
 
-Alternative: Container Apps if you're already containerized ($~140/month for similar scale)
+Alternative: Container Apps if you're already containerized (~£140/month for similar scale)
 
 Would you like me to create a complete architecture design using the `architecture-design` skill?"
 ```

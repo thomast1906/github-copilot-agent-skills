@@ -45,11 +45,13 @@ Commit to 1-year or 3-year terms for predictable workloads.
 - Cosmos DB
 - Azure Cache for Redis
 
-**Savings:**
+**Savings (typical ranges — always verify with the `azure-pricing` skill using `price-type: Reservation`):**
 - 1-year: 20-40%
 - 3-year: 40-72%
 
 **When to Use:** Workloads with consistent, predictable usage
+
+**To confirm exact RI rates:** use `tool_search_tool_regex` with pattern `pricing`, then call the tool with `price-type: Reservation` and `include-savings-plan: true` for the specific SKU and region. Compare the returned `retailPrice` against the `Consumption` rate to calculate the actual saving percentage.
 
 ### 3. Auto-Scaling
 Scale resources based on demand instead of static provisioning.
@@ -86,9 +88,36 @@ Identify and remove unused resources.
 - Old snapshots and backups
 - Idle Load Balancers
 
-**Typical Savings:** $200-2,000/month per environment
+**Typical Savings:** £200-2,000/month per environment
 
 ## Cost Analysis Process
+
+### Step 0: Retrieve Live Pricing with Azure MCP Pricing Tool
+
+**Before estimating any costs, invoke the `azure-pricing` skill to fetch real retail prices.**
+
+First, use `tool_search_tool_regex` with pattern `pricing` to discover the exact tool name — do **not** hardcode it. Then call the tool with:
+
+```
+sku:      <ARM SKU e.g. Standard_D4ds_v5>
+service:  <e.g. Virtual Machines, Azure Kubernetes Service>
+region:   <ARM region slug e.g. uksouth, eastus>
+currency: GBP
+price-type: Consumption          # on-demand baseline
+include-savings-plan: true       # returns 1yr/3yr rates in nested array
+```
+
+Then follow up with `price-type: Reservation` to retrieve exact reserved instance rates.
+
+**Monthly cost formula:** `hourly_price × 730`
+
+**Important:** The tool requires a specific SKU or service name — do not call it with only a broad category (e.g. "Virtual Machines"). Confirm the SKU before calling.
+
+Build a three-column cost table per resource:
+
+| Resource | Pay-as-you-go | 1-yr Reserved | 3-yr Reserved |
+|----------|--------------|---------------|---------------|
+| (data from pricing tool) | | | |
 
 ### Step 1: Gather Current Costs
 
@@ -124,13 +153,15 @@ For each recommendation:
 
 ## Output Format
 
+> **Note:** All cost figures in the template below are illustrative placeholders. Before populating any analysis, use the **`azure-pricing` skill** to retrieve actual retail prices per SKU and region (currency: GBP by default). Never copy heuristic amounts into a real recommendation — always fetch live prices.
+
 ```markdown
 # Cost Optimization Analysis
 **Architecture**: [Name]
-**Current Monthly Cost**: $X,XXX
-**Optimized Monthly Cost**: $X,XXX
-**Potential Savings**: $XXX/month (XX%)
-**Annual Savings**: $X,XXX
+**Current Monthly Cost**: £X,XXX
+**Optimized Monthly Cost**: £X,XXX
+**Potential Savings**: £XXX/month (XX%)
+**Annual Savings**: £X,XXX
 
 ---
 
@@ -143,12 +174,12 @@ For each recommendation:
 
 | Category | Monthly Cost | % of Total |
 |----------|-------------|------------|
-| Compute | $1,200 | 45% |
-| Database | $800 | 30% |
-| Storage | $300 | 11% |
-| Networking | $250 | 9% |
-| Monitoring | $150 | 5% |
-| **Total** | **$2,700** | **100%** |
+| Compute | £1,200 | 45% |
+| Database | £800 | 30% |
+| Storage | £300 | 11% |
+| Networking | £250 | 9% |
+| Monitoring | £150 | 5% |
+| **Total** | **£2,700** | **100%** |
 
 ---
 
@@ -157,8 +188,8 @@ For each recommendation:
 ### Priority 1: Quick Wins (< 1 day effort)
 
 #### Opportunity #1: Delete Unattached Disks
-**Current Cost**: $80/month
-**Savings**: $80/month (100%)
+**Current Cost**: £80/month
+**Savings**: £80/month (100%)
 **Effort**: 30 minutes
 **Risk**: Low (verify not needed)
 **Action**: 
@@ -167,8 +198,8 @@ For each recommendation:
 3. Delete: `az disk delete --ids <disk-id>`
 
 #### Opportunity #2: Stop Unused Dev/Test VMs After Hours
-**Current Cost**: $500/month (VM running 24/7)
-**Savings**: $300/month (60%)
+**Current Cost**: £500/month (VM running 24/7)
+**Savings**: £300/month (60%)
 **Effort**: 2 hours (automation script)
 **Risk**: Low (dev environment)
 **Action**: Auto-shutdown policy: 7 PM - 7 AM weekdays, all day weekends
@@ -179,10 +210,10 @@ For each recommendation:
 
 #### Opportunity #3: Downsize App Service Plan
 **Current**: P2v3 (2 cores, 8GB RAM) - Avg CPU: 20%, RAM: 35%
-**Current Cost**: $292/month
+**Current Cost**: £292/month
 **Recommended**: P1v3 (2 cores, 4GB RAM)
-**Optimized Cost**: $146/month
-**Savings**: $146/month (50%)
+**Optimized Cost**: £146/month
+**Savings**: £146/month (50%)
 **Effort**: 4 hours (testing + validation)
 **Risk**: Medium (test performance after change)
 **Action**:
@@ -193,10 +224,10 @@ For each recommendation:
 
 #### Opportunity #4: SQL Database DTU Optimization
 **Current**: S3 (100 DTU) - Avg DTU: 35%
-**Current Cost**: $300/month
+**Current Cost**: £300/month
 **Recommended**: S1 (20 DTU) with auto-scaling to S2
-**Optimized Cost**: $120/month (avg)
-**Savings**: $180/month (60%)
+**Optimized Cost**: £120/month (avg)
+**Savings**: £180/month (60%)
 **Effort**: 1 day (testing + validation)
 **Risk**: Medium (requires performance testing)
 
@@ -206,20 +237,20 @@ For each recommendation:
 
 #### Opportunity #5: Reserved Instances for Production VMs
 **Current**: 2x Standard_D4s_v3 VMs (pay-as-you-go)
-**Current Cost**: $280/month per VM = $560/month
+**Current Cost**: £280/month per VM = £560/month
 **Recommended**: 1-year reserved instance
-**Optimized Cost**: $392/month (2 VMs)
-**Savings**: $168/month (30%)
+**Optimized Cost**: £392/month (2 VMs)
+**Savings**: £168/month (30%)
 **Effort**: 30 minutes (purchase reservation)
 **Risk**: Low (production VMs run continuously)
 **Commitment**: 1 year
 
 #### Opportunity #6: Azure SQL Reserved Capacity
 **Current**: Pay-as-you-go
-**Current Cost**: $300/month
+**Current Cost**: £300/month
 **Recommended**: 1-year reserved capacity
-**Optimized Cost**: $210/month
-**Savings**: $90/month (30%)
+**Optimized Cost**: £210/month
+**Savings**: £90/month (30%)
 **Effort**: 15 minutes
 **Commitment**: 1 year
 
@@ -229,19 +260,19 @@ For each recommendation:
 
 #### Opportunity #7: Migrate to Serverless Cosmos DB
 **Current**: Provisioned 1000 RU/s (24/7)
-**Current Cost**: $58/month
+**Current Cost**: £58/month
 **Recommended**: Serverless (pay-per-request)
-**Optimized Cost**: $20/month (estimated based on usage patterns)
-**Savings**: $38/month (65%)
+**Optimized Cost**: £20/month (estimated based on usage patterns)
+**Savings**: £38/month (65%)
 **Effort**: 1 week (code changes + testing)
 **Risk**: Medium (requires application changes)
 
 #### Opportunity #8: Implement Storage Lifecycle Policies
 **Current**: 2TB in Hot tier
-**Current Cost**: $40/month
+**Current Cost**: £40/month
 **Recommended**: Hot (30 days) → Cool (90 days) → Archive
-**Optimized Cost**: $22/month
-**Savings**: $18/month (45%)
+**Optimized Cost**: £22/month
+**Savings**: £18/month (45%)
 **Effort**: 4 hours (policy setup)
 **Risk**: Low (automated)
 
@@ -250,24 +281,24 @@ For each recommendation:
 ## Implementation Roadmap
 
 ### Month 1: Quick Wins
-- Delete unattached disks [$80/month]
-- Configure auto-shutdown for dev VMs [$300/month]
-- **Month 1 Savings**: $380
+- Delete unattached disks [£80/month]
+- Configure auto-shutdown for dev VMs [£300/month]
+- **Month 1 Savings**: £380
 
 ### Month 2: Right-Sizing
-- Downsize App Service Plan [$146/month]
-- Optimize SQL Database DTU [$180/month]
-- **Month 2 Savings**: $326
+- Downsize App Service Plan [£146/month]
+- Optimize SQL Database DTU [£180/month]
+- **Month 2 Savings**: £326
 
 ### Month 3: Commitment Savings
-- Purchase VM Reserved Instances [$168/month]
-- Purchase SQL Reserved Capacity [$90/month]
-- **Month 3 Savings**: $258
+- Purchase VM Reserved Instances [£168/month]
+- Purchase SQL Reserved Capacity [£90/month]
+- **Month 3 Savings**: £258
 
 ### Months 4-6: Architecture Changes
-- Migrate to Serverless Cosmos DB [$38/month]
-- Implement Storage Lifecycle [$18/month]
-- **Months 4-6 Savings**: $56
+- Migrate to Serverless Cosmos DB [£38/month]
+- Implement Storage Lifecycle [£18/month]
+- **Months 4-6 Savings**: £56
 
 ---
 
@@ -275,20 +306,20 @@ For each recommendation:
 
 | Timeframe | Cumulative Monthly Savings | Annual Savings |
 |-----------|---------------------------|----------------|
-| Month 1 | $380 | $4,560 |
-| Month 2 | $706 | $8,472 |
-| Month 3 | $964 | $11,568 |
-| Months 4-6 | $1,020/month | $12,240 |
+| Month 1 | £380 | £4,560 |
+| Month 2 | £706 | £8,472 |
+| Month 3 | £964 | £11,568 |
+| Months 4-6 | £1,020/month | £12,240 |
 
-**Final Optimized Cost**: $1,680/month (from $2,700)
-**Total Annual Savings**: $12,240 (38% reduction)
+**Final Optimized Cost**: £1,680/month (from £2,700)
+**Total Annual Savings**: £12,240 (38% reduction)
 
 ---
 
 ## Cost Governance Recommendations
 
 ### 1. Set Up Budgets & Alerts
-- Monthly budget: $1,800 (10% buffer)
+- Monthly budget: £1,800 (10% buffer)
 - Alert at 50%, 80%, 90%, 100%
 - Auto-notification to team leads
 
