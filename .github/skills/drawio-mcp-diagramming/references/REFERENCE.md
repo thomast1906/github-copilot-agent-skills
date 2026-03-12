@@ -126,3 +126,55 @@ Use Azure2 image styles (image=img/lib/azure2/...) for Azure resources.
 Use AWS4 image styles (image=img/lib/aws4/...) for AWS resources.
 Show connectivity, data replication, and identity federation between the clouds.
 ```
+
+## Known-Good Azure2 Icon Examples
+
+```text
+image=img/lib/azure2/networking/Front_Doors.svg
+image=img/lib/azure2/networking/Private_Link_Hub.svg
+image=img/lib/azure2/networking/Network_Watcher.svg
+image=img/lib/azure2/app_services/API_Management_Services.svg
+image=img/lib/azure2/app_services/App_Services.svg
+image=img/lib/azure2/databases/Azure_Cosmos_DB.svg
+image=img/lib/azure2/identity/Managed_Identities.svg
+image=img/lib/azure2/management_governance/Policy.svg
+image=img/lib/azure2/analytics/Log_Analytics_Workspaces.svg
+image=img/lib/azure2/management_governance/Monitor.svg
+image=img/lib/azure2/devops/Application_Insights.svg
+image=img/lib/azure2/devops/API_Connections.svg
+```
+
+## Known-Good AWS4 Icon Examples
+
+AWS4 icons use stencil syntax: `shape=mxgraph.aws4.<name>`. Always confirm the exact name against `aws4-complete-catalog.txt` before use.
+
+```text
+shape=mxgraph.aws4.ec2;fillColor=#ED7100;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.lambda;fillColor=#ED7100;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.elastic_container_service;fillColor=#ED7100;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.elastic_kubernetes_service;fillColor=#ED7100;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.application_load_balancer;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.cloudfront;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.route_53;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.vpc;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.transit_gateway;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.s3;fillColor=#3F8624;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.efs;fillColor=#3F8624;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.rds;fillColor=#C7131F;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.dynamodb;fillColor=#C7131F;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.elasticache;fillColor=#C7131F;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.iam;fillColor=#DD344C;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.key_management_service;fillColor=#DD344C;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.waf;fillColor=#DD344C;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.cognito;fillColor=#DD344C;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.cloudwatch;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.cloudformation;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.cloudtrail;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.sqs;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.sns;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.eventbridge;fillColor=#E7157B;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.api_gateway;fillColor=#8C4FFF;fontColor=#ffffff;strokeColor=none;
+shape=mxgraph.aws4.codepipeline;fillColor=#C7131F;fontColor=#ffffff;strokeColor=none;
+```
+
+> **Note:** Shape names in the catalog use underscores. If a shape does not render, grep the catalog for partial name matches (e.g. `grep -i "gateway" references/aws4-complete-catalog.txt`).
