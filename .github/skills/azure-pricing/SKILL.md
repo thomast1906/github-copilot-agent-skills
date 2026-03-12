@@ -41,6 +41,10 @@ Fetch live Azure retail pricing data via the Azure MCP Server pricing tool and t
 > **Gotchas:**
 > - `SavingsPlan` is **NOT** a valid `price-type` value. To get savings plan rates use `include-savings-plan: true` alongside a `Consumption` query.
 > - Prefer querying with a specific SKU rather than a broad service name alone — results will be more targeted and useful. Querying by service name without a SKU is valid when the user explicitly wants a full listing of available SKUs.
+> - **SKU name spacing varies by service.** The `sku` parameter is format-sensitive. For App Service, `P2v3` returns no results but `P2 v3` (with a space) works. If the `sku` parameter returns empty, fall back to an OData `filter` with `skuName eq '...'` to match exactly as the API stores it.
+> - **Reservation `retailPrice` values are lump-sum totals, not hourly rates.** Despite `unitOfMeasure: "1 Hour"`, Reservation price rows return the total commitment cost (annual or 3-year). Divide by 8,760 (1-year) or 26,280 (3-year) to get an hourly equivalent for comparison.
+> - **SQL Database compute and storage are separate meters.** You need two calls: one for compute (e.g. `4 vCore` under `SQL Database Single/Elastic Pool General Purpose - Compute Gen5`) and one for storage (`SQL Database Single/Elastic Pool General Purpose - Storage`). A single query returns both if you don't filter by `productName`.
+> - **SQL Database `skuName` in the API uses plain English, not ARM format.** The ARM SKU `GP_Gen5_4` maps to API `skuName: "4 vCore"` under `productName` containing `General Purpose - Compute Gen5`. Filter by both `skuName` and `productName` to avoid Business Critical or DC-Series rows returning alongside General Purpose.
 
 ## Workflow
 
@@ -224,8 +228,9 @@ The table below covers frequently used services — use the service name exactly
 If the pricing tool returns no results:
 1. Try broadening the query (remove SKU, keep only service + region).
 2. Verify the service name matches the Common Service Name Reference above.
-3. Try the `filter` parameter with an OData expression.
-4. Inform the user if pricing is unavailable for a specific SKU and suggest the nearest alternative.
+3. Try the `filter` parameter with an OData expression — this is more reliable than the `sku` parameter for services where the API `skuName` format differs from the portal/ARM name (e.g. App Service, SQL Database).
+4. If `skuName` format is unknown, query without it first to see what `skuName` values are returned, then narrow.
+5. Inform the user if pricing is unavailable for a specific SKU and suggest the nearest alternative.
 
 ## Reference Documentation
 
