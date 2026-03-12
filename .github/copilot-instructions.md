@@ -113,7 +113,7 @@ Apply to ALL Azure resources:
 - Right-size based on actual requirements, not "just in case"
 - Plan for auto-scaling vs. always-on capacity
 - Consider Dev/Test pricing for non-production
-- Estimate costs using Azure Pricing Calculator
+- Estimate costs using Azure Pricing Calculator or the `azure-pricing` skill (uses live retail pricing via Azure MCP Server)
 
 **Operational phase:**
 - Implement storage lifecycle policies (Cool/Archive tiers)
@@ -193,6 +193,7 @@ Apply to ALL Azure resources:
 - **`architecture-design`**: Designing new solutions, selecting services and patterns
 - **`waf-assessment`**: Reviewing architectures, validating production-readiness
 - **`cost-optimization`**: Analyzing costs, finding savings opportunities
+- **`azure-pricing`**: Looking up real-time Azure retail pricing for SKUs, services, or regions; estimating deployment costs from Bicep/ARM templates; comparing Consumption vs Reservation pricing
 
 ## Response Format
 

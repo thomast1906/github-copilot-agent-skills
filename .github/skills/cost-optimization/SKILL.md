@@ -45,11 +45,13 @@ Commit to 1-year or 3-year terms for predictable workloads.
 - Cosmos DB
 - Azure Cache for Redis
 
-**Savings:**
+**Savings (typical ranges — always verify with `mcp_azure_mcp_pricing` using `price-type: Reservation`):**
 - 1-year: 20-40%
 - 3-year: 40-72%
 
 **When to Use:** Workloads with consistent, predictable usage
+
+**To confirm exact RI rates:** call `pricing_get` with `price-type: Reservation` and `include-savings-plan: true` for the specific SKU and region. Compare the returned `retailPrice` against the `Consumption` rate to calculate the actual saving percentage.
 
 ### 3. Auto-Scaling
 Scale resources based on demand instead of static provisioning.
@@ -89,6 +91,34 @@ Identify and remove unused resources.
 **Typical Savings:** $200-2,000/month per environment
 
 ## Cost Analysis Process
+
+### Step 0: Retrieve Live Pricing with Azure MCP Pricing Tool
+
+**Before estimating any costs, use `mcp_azure_mcp_pricing` (`pricing_get`) to fetch real retail prices.**
+
+```
+mcp_azure_mcp_pricing:
+  command: pricing_get
+  parameters:
+    sku:      <ARM SKU e.g. Standard_D4ds_v5>
+    service:  <e.g. Virtual Machines, Azure Kubernetes Service>
+    region:   <ARM region slug e.g. uksouth, eastus>
+    currency: <ISO code e.g. GBP, USD>
+    price-type: Consumption          # on-demand baseline
+    include-savings-plan: true       # returns 1yr/3yr rates in nested array
+```
+
+Then follow up with `price-type: Reservation` to retrieve exact reserved instance rates.
+
+**Monthly cost formula:** `hourly_price × 730`
+
+**Important:** The tool requires a specific SKU or service name — do not call it with only a broad category (e.g. "Virtual Machines"). Confirm the SKU before calling.
+
+Build a three-column cost table per resource:
+
+| Resource | Pay-as-you-go | 1-yr Reserved | 3-yr Reserved |
+|----------|--------------|---------------|---------------|
+| (data from pricing_get) | | | |
 
 ### Step 1: Gather Current Costs
 
