@@ -45,6 +45,11 @@ Fetch live Azure retail pricing data via the Azure MCP Server pricing tool and t
 > - **Reservation `retailPrice` values are lump-sum totals, not hourly rates.** Despite `unitOfMeasure: "1 Hour"`, Reservation price rows return the total commitment cost (annual or 3-year). Divide by 8,760 (1-year) or 26,280 (3-year) to get an hourly equivalent for comparison.
 > - **SQL Database compute and storage are separate meters.** You need two calls: one for compute (e.g. `4 vCore` under `SQL Database Single/Elastic Pool General Purpose - Compute Gen5`) and one for storage (`SQL Database Single/Elastic Pool General Purpose - Storage`). A single query returns both if you don't filter by `productName`.
 > - **SQL Database `skuName` in the API uses plain English, not ARM format.** The ARM SKU `GP_Gen5_4` maps to API `skuName: "4 vCore"` under `productName` containing `General Purpose - Compute Gen5`. Filter by both `skuName` and `productName` to avoid Business Critical or DC-Series rows returning alongside General Purpose.
+> - **Spot pricing requires the `filter` parameter, not `price-type`.** Spot is not a `price-type` value — use `filter: "contains(meterName, 'Spot') and armSkuName eq '<sku>' and armRegionName eq '<region>'"` with `price-type: Consumption`. Live-tested: Standard_D4s_v5 in `uksouth` returns Linux Spot at £0.0213/hr and Windows Spot at £0.039/hr (vs £0.164/hr and £0.300/hr standard — ~87% saving).
+> - **`isPrimaryMeterRegion eq true` in OData filter:** When using targeted `sku` + `region` queries, the MCP tool already returns only primary meter region rows. The `isPrimaryMeterRegion eq true` filter expression is useful when writing broad OData-only queries (without a locked region) that might otherwise return duplicate rows for the same SKU across meter variants.
+> - **`include-savings-plan: true` is incompatible with the `filter` parameter.** When `include-savings-plan: true` is set alongside an OData `filter`, the tool returns empty results. To retrieve savings plan data, use `sku` + `region` parameters only. The `savingsPlan` field is a nested array (`[{"term": "1 Year", "unitPrice": ...}, {"term": "3 Years", ...}]`) present only on Linux compute rows — Windows VM rows never include savings plan data.
+> - **`DevTestConsumption` waives the Windows OS license cost on VMs.** Windows VMs queried with `price-type: DevTestConsumption` return at Linux-equivalent prices (e.g. Standard_D4s_v5 uksouth: £0.164/hr, same as Linux PAYG). The Windows license is free under Dev/Test subscriptions. Always flag this when estimating costs for Dev/Test Windows VMs.
+> - **⚠️ Azure OpenAI / AI services cannot be queried via this MCP tool.** The Azure MCP pricing tool returns a 500 error for any query that resolves to the `AI + Machine Learning` service family — including `service: "Foundry Models"`, `service: "Azure OpenAI"`, `service-family: "AI + Machine Learning"`, and OData filters matching those services. This is a known MCP tool limitation. For AI model pricing (GPT-4o, text-embedding, etc.), use the [Azure Pricing Calculator](https://azure.microsoft.com/pricing/calculator/) or the [Azure OpenAI pricing page](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) directly.
 
 ## Workflow
 
@@ -64,9 +69,20 @@ Fetch live Azure retail pricing data via the Azure MCP Server pricing tool and t
 
 ### Scenario 2: Template Cost Estimation (Bicep / ARM / Terraform)
 
+**Pre-estimation: ask about usage patterns before querying** — for consumption-based services, the cost varies wildly based on scale. Before calling the pricing tool, if the template contains any of the following, ask the user:
+
+| Service | Ask about |
+|---------|----------|
+| Azure Functions | Expected invocations/month, average execution duration (ms), memory allocation (GB) |
+| Cosmos DB (serverless) | Expected RU consumption/month |
+| Container Apps | Expected request volume, scale-to-zero behaviour, vCPU/memory allocation |
+| Azure OpenAI | Note: AI service pricing is not queryable via this MCP tool — direct users to the [Azure OpenAI pricing page](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) |
+
+For always-on services (VMs, App Service, SQL Database), proceed directly with the pricing query.
+
 1. Parse the template to identify all resource types and their SKUs/tiers.
 2. For each resource, call the pricing tool with the appropriate `sku` and/or `service` + `region`.
-3. Aggregate results into a total monthly cost estimate.
+3. Aggregate results into a total monthly **and annual** cost estimate (`monthly × 12`).
 4. Flag any resources where pricing could not be retrieved.
 
 **Common Terraform resource mappings (examples — not exhaustive):**
@@ -117,6 +133,10 @@ Use the `filter` parameter for complex queries:
 - Specific meter: `meterId eq 'abc-123'`
 - Price range: `retailPrice le 0.10`
 - Combined: `serviceName eq 'Storage' and skuName eq 'LRS' and armRegionName eq 'eastus'`
+- **Spot pricing:** `filter: "contains(meterName, 'Spot') and armSkuName eq 'Standard_D4s_v5' and armRegionName eq 'uksouth'"` with `price-type: Consumption` — returns Linux and Windows Spot rows separately
+- **Primary meter only (broad queries):** `filter: "serviceName eq 'Virtual Machines' and armRegionName eq 'uksouth' and isPrimaryMeterRegion eq true"` — avoids duplicate rows when not using a specific SKU
+
+> **Note:** Avoid OData filters that resolve to `serviceFamily eq 'AI + Machine Learning'` — the MCP tool will return a 500 error. See AI services note in Gotchas above.
 
 ## Output Format
 
@@ -135,8 +155,10 @@ Use the `filter` parameter for complex queries:
 | Price Type | Consumption |
 | Retail Price | [from tool]/hour |
 | Monthly Est. | ~[from tool]/month (730 hrs) |
+| Annual Est. | ~[from tool]/year |
 | Currency | GBP |
 
+**Spot:** [from tool]/hour ([x]% saving vs Consumption) — interrupt-tolerant workloads only
 **Savings Plan (1-year):** [from tool]/hour ([x]% saving vs Consumption)
 **1-Year Reservation:** [from tool]/hour ([x]% saving)
 **3-Year Reservation:** [from tool]/hour ([x]% saving)
@@ -150,20 +172,20 @@ Use the `filter` parameter for complex queries:
 **Region**: uksouth
 **Currency**: GBP
 
-| Resource | SKU / Tier | Monthly Cost |
-|----------|-----------|-------------|
-| App Service Plan | P2v3 | £240.00 |
-| Azure SQL Database | GP_Gen5_4 | £304.00 |
-| Storage Account | Standard_LRS | £15.00 |
-| Application Insights | Pay-as-you-go | ~£8.00 |
-| **Total** | | **~£567/month** |
+| Resource | SKU / Tier | Monthly Cost | Annual Cost |
+|----------|-----------|-------------|-------------|
+| App Service Plan | P2v3 | £240.00 | £2,880.00 |
+| Azure SQL Database | GP_Gen5_4 | £304.00 | £3,648.00 |
+| Storage Account | Standard_LRS | £15.00 | £180.00 |
+| Application Insights | Pay-as-you-go | ~£8.00 | ~£96.00 |
+| **Total** | | **~£567/month** | **~£6,804/year** |
 
 > Note: Estimates based on retail (pay-as-you-go) pricing. Reserved instances or savings plans can reduce this by 20-70%.
 
 **Cost Reduction Opportunities:**
 - Switch App Service Plan to 1-year reservation: save ~£72/month
 - SQL Database 1-year reservation: save ~£122/month
-- **Total potential savings with reservations: ~£194/month (34%)**
+- **Total potential savings with reservations: ~£194/month (34%) / ~£2,328/year**
 ```
 
 ### Region Comparison Table
@@ -197,23 +219,25 @@ Use the `filter` parameter for complex queries:
 
 The table below covers frequently used services — use the service name exactly as shown. For services not listed, try the exact Azure portal display name or use the `filter` parameter with an OData expression.
 
-| Azure Service | `service` Parameter Value |
-|---------------|--------------------------|
-| Virtual Machines | `Virtual Machines` |
-| App Service | `Azure App Service` |
-| Azure SQL Database | `SQL Database` |
-| Azure Cosmos DB | `Azure Cosmos DB` |
-| Azure Kubernetes Service | `Azure Kubernetes Service` |
-| Azure Functions | `Azure Functions` |
-| Storage (Blob/Queue/Table) | `Storage` |
-| Azure Cache for Redis | `Azure Cache for Redis` |
-| Service Bus | `Service Bus` |
-| Event Hubs | `Event Hubs` |
-| API Management | `API Management` |
-| Application Gateway | `Application Gateway` |
-| Azure Front Door | `Azure Front Door` |
-| Log Analytics | `Log Analytics` |
-| Application Insights | `Application Insights` |
+| Azure Service | `service` Parameter Value | Notes |
+|---------------|--------------------------|-------|
+| Virtual Machines | `Virtual Machines` | |
+| App Service | `Azure App Service` | |
+| Azure SQL Database | `SQL Database` | |
+| Azure Cosmos DB | `Azure Cosmos DB` | |
+| Azure Kubernetes Service | `Azure Kubernetes Service` | |
+| Azure Functions | `Azure Functions` | |
+| Storage (Blob/Queue/Table) | `Storage` | |
+| Azure Cache for Redis | `Redis Cache` | API service name differs from portal display name |
+| Service Bus | `Service Bus` | |
+| Event Hubs | `Event Hubs` | |
+| API Management | `API Management` | |
+| Application Gateway | `Application Gateway` | |
+| Azure Front Door | `Azure Front Door` | |
+| Log Analytics | `Log Analytics` | |
+| Application Insights | `Application Insights` | |
+| Azure Container Apps | `Azure Container Apps` | ⚠️ **Cannot use `service` parameter** — tool returns 400 (no ARM SKU). Use `filter: "serviceName eq 'Azure Container Apps' and armRegionName eq '<region>'"`  instead. Multi-unit pricing (vCPU/sec, GiB-sec, requests/1M) — always ask about usage before estimating |
+| Azure OpenAI / Foundry Models | `Foundry Models` | ⚠️ **Not queryable via MCP tool** — `AI + Machine Learning` service family causes 500 error. Use [Azure OpenAI pricing page](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) directly |
 
 ## Price Type Guide
 
@@ -230,7 +254,11 @@ If the pricing tool returns no results:
 2. Verify the service name matches the Common Service Name Reference above.
 3. Try the `filter` parameter with an OData expression — this is more reliable than the `sku` parameter for services where the API `skuName` format differs from the portal/ARM name (e.g. App Service, SQL Database).
 4. If `skuName` format is unknown, query without it first to see what `skuName` values are returned, then narrow.
+4a. If service name is unknown, use `service-family` alone (e.g. `service-family: Compute`, `service-family: Databases`) to discover what `serviceName` values exist in that family, then re-query with the correct name.
 5. Inform the user if pricing is unavailable for a specific SKU and suggest the nearest alternative.
+
+If the pricing tool returns a **500 error**:
+- Check whether the query would resolve to `serviceFamily eq 'AI + Machine Learning'`. If so, this is a known MCP tool limitation — redirect the user to the [Azure Pricing Calculator](https://azure.microsoft.com/pricing/calculator/) or [Azure OpenAI pricing page](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/).
 
 ## Reference Documentation
 
@@ -239,3 +267,5 @@ If the pricing tool returns no results:
 - [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
 - [Azure Reservations](https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/save-compute-costs-reservations)
 - [Azure Savings Plans](https://learn.microsoft.com/en-us/azure/cost-management-billing/savings-plan/savings-plan-compute-overview)
+- [Azure OpenAI Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) *(use directly — not queryable via MCP tool)*
+- [Cost Estimation Formulas](references/COST-FORMULAS.md) *(service-specific formulas, Spot pricing reference, pre-estimation guidance)*
