@@ -83,7 +83,7 @@ Exit criteria: 2–3 use cases defined, success criteria agreed, tools/dependenc
 
 Make structural decisions before writing:
 
-1. **Choose the primary pattern** — Sequential workflow, iterative refinement, domain-specific intelligence, or multi-tool coordination.
+1. **Choose the primary pattern** — Sequential workflow, iterative refinement, domain-specific intelligence, or multi-tool coordination. Read [references/workflows.md](references/workflows.md) for structure templates and the pattern-selection guide — load it now if you are unsure which pattern fits.
 2. **Plan the folder structure** — Only add `scripts/`, `references/`, or `assets/` when there is a clear reason:
    - Same code rewritten repeatedly → `scripts/`
    - Reference material > ~100 lines → `references/`
@@ -120,11 +120,19 @@ description: [What + When + optional Not-when — single line, under 200 words]
 - Reference bundled files clearly and state exactly WHEN the agent should read them
 - **Write for coexistence** — this skill loads alongside other skills in `.github/skills/`. Never assume it is the only skill in context. Avoid generic section headings like "## Overview" that could conflict, and don't claim to handle tasks that belong to another skill in this repo.
 
+Read [references/output-patterns.md](references/output-patterns.md) for patterns on specifying output format (Template, Examples, Scope Communication, Validation Gate) — load it when deciding how to structure the skill's output expectations or examples.
+
 ### Phase 4 — Validate
 
-Before declaring the skill complete, verify:
+Run the automated validator first:
 
-**Structure checks:**
+```bash
+python .github/skills/skill-creator/scripts/quick_validate.py .github/skills/<skill-name>
+```
+
+Then work through the full [references/quality-checklist.md](references/quality-checklist.md) for description quality scoring, instruction quality scoring, trigger testing, and final sign-off.
+
+**Quick structure checks** (also caught by the script):
 - [ ] SKILL.md exists with correct casing (not skill.md or SKILL.MD)
 - [ ] Frontmatter has `name` and `description`, correct YAML delimiters (`---`)
 - [ ] Folder name is kebab-case matching `name` field
@@ -142,6 +150,14 @@ Before declaring the skill complete, verify:
 - [ ] SKILL.md body is under 500 lines
 
 ### Phase 5 — Deliver
+
+If starting a new skill from scratch, scaffold the folder first:
+
+```bash
+python .github/skills/skill-creator/scripts/init_skill.py <skill-name>
+```
+
+This creates the folder and a template SKILL.md with TODO placeholders. Then fill in the skill content and run the validator before presenting to the user.
 
 Place the completed skill at `.github/skills/<skill-name>/SKILL.md`.
 
@@ -236,7 +252,7 @@ Use when the same code is written repeatedly across invocations, or when determi
 
 - Token-efficient: scripts can be executed without loading into context
 - Test scripts by actually running them — don't assume they work
-- Example: `scripts/rotate_pdf.py`, `scripts/validate_bicep.sh`
+- This skill bundles: `scripts/init_skill.py` (scaffold a new skill folder from template) and `scripts/quick_validate.py` (validate structure, frontmatter, and body against this repo's conventions)
 
 ### references/
 
@@ -244,7 +260,7 @@ Use for domain knowledge, API specs, schemas, or detailed guides that exceed wha
 
 - Load only when needed — always state the condition in SKILL.md
 - Avoid duplicating content between SKILL.md and reference files
-- Example: `references/azure-sdk-patterns.md`, `references/schema.md`
+- This skill bundles: `references/workflows.md` (workflow pattern templates — read during Phase 2), `references/output-patterns.md` (output formatting patterns — read during Phase 3), and `references/quality-checklist.md` (pre-delivery quality checks — read during Phase 4)
 
 ### assets/
 
