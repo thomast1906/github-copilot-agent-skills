@@ -34,6 +34,7 @@ Several skills integrate with the **[Azure MCP Server](https://learn.microsoft.c
 | `azure-pricing` | Uses the Azure MCP Server pricing tool to look up real-time Azure retail pricing for any service, SKU, or region; estimates deployment costs from Bicep/ARM/Terraform templates; compares Consumption vs Reservation pricing. Defaults to GBP. Includes reference files for cost formulas and SKU name quirks. [Requires Azure MCP.](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-mcp-server) |
 | `cost-optimization` | Identifies cost reduction opportunities and quantifies savings across Azure workloads |
 | `drawio-mcp-diagramming` | Creates and edits architecture diagrams using the Draw.io MCP integration with support for both Azure and AWS icon libraries |
+| `excalidraw-mcp-diagramming` | Creates and edits diagrams on a live Excalidraw canvas using the Excalidraw MCP server; supports architectures, workflows, flowcharts, mind maps, and sequence diagrams with PNG/SVG/URL export |
 | `gh-aw-operations` | Comprehensive skills for creating, compiling, debugging, and managing GitHub Agentic Workflows (gh-aw) |
 | `terraform-provider-upgrade` | Safe Terraform provider upgrades with automatic resource migration, breaking change detection, and state management using moved blocks |
 | `waf-assessment` | Assesses architectures across all five WAF pillars and provides scored recommendations |

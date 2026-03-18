@@ -141,10 +141,39 @@ Inspect the image:
 - Is there ≥150px of clear space around labeled arrows?
 - Are connections logically correct?
 
-### Step 7 — Adjust
+### Step 7 — Iterate and Refine
 
-Use `update_element` for small corrections. For shape replacements, use
-`delete_element` + `batch_create_elements`, then screenshot again.
+Load [references/iterative-refinement.md](references/iterative-refinement.md) if
+the user asks to change, fix, or update an existing diagram. Quick reference:
+
+**Audit first:**
+```
+describe_scene()   // returns all element ids, types, labels, positions
+```
+Use this before any edit — you need the exact element `id` to target.
+
+**Small corrections** (label text, colour, position):
+```
+update_element({ id: "box-1", text: "New Label" })
+update_element({ id: "box-1", backgroundColor: "#b2f2bb" })
+```
+Then `get_canvas_screenshot()` to verify.
+
+**Shape replacement** (size, shape type, structural change):
+```
+batch_create_elements([{ "type": "delete", "ids": "old-id" }, ...newShapes, ...newArrows])
+```
+Arrows bound to the deleted shape must also be deleted and recreated in the
+same batch — binding cannot be re-attached after the fact.
+
+**Decision rule:**
+
+| Change | Method |
+|---|---|
+| Text / colour / opacity / position | `update_element` |
+| Shape size, shape type | delete + redraw in one batch |
+| Moving an arrow endpoint | delete + redraw arrow in one batch with target shape |
+| Restructuring a zone (adding/removing shapes) | delete zone bg + all children + redraw all in one batch |
 
 ### Step 8 — Zoom to Fit
 
@@ -164,6 +193,26 @@ export_scene({ filePath: "/path/to/output.excalidraw" })
 // Shareable link — no file needed
 export_to_excalidraw_url()
 ```
+
+---
+
+## Typography Rules
+
+Minimum font sizes — never go smaller. Labels that look correct in JSON are
+frequently unreadable in screenshots at display scale.
+
+| Context | Minimum `fontSize` | Notes |
+|---|---|---|
+| Shape labels / body text | `16` | Default for all labeled boxes |
+| Diagram title | `24` | Standalone text above the diagram |
+| Zone / section heading | `16` | Inside or above zone background |
+| Secondary annotations | `14` | Data form notes, layer labels only — use sparingly |
+| **Absolute minimum** | `14` | Never use below 14 under any circumstance |
+
+**Camera scale warning:** At `XXL` (1600×1200) the canvas renders at roughly
+40% of original size in the chat panel. A `fontSize: 14` label renders at
+~5px — invisible. Use `fontSize: 20+` for any label that must be readable
+without the user zooming in. When in doubt, go larger.
 
 ---
 
@@ -228,18 +277,54 @@ fills. More colours add noise, not clarity.
 
 ---
 
-## Anti-Patterns
+## Validation Checklist
+
+Run through this before calling `set_viewport`. Fix any failures before
+finishing — they compound and are harder to fix after zooming out.
+
+**Arrow bindings**
+- [ ] Every arrow has both `startElementId` and `endElementId` referencing
+  elements that exist in the same batch
+- [ ] No arrow was created in a call before its target shapes
+- [ ] Deleted shapes had their bound arrows deleted and redrawn in the same batch
+
+**Typography**
+- [ ] All shape labels use `fontSize ≥ 16`
+- [ ] Diagram title uses `fontSize ≥ 24`
+- [ ] No font smaller than `14` anywhere
+- [ ] Multi-line labels (`\n`) have enough box height (≥ 60px per line)
+
+**Colour discipline**
+- [ ] No more than 4 distinct fill colours in the diagram
+- [ ] Same architectural role uses the same fill/stroke pair throughout
+- [ ] Zone backgrounds have `opacity: 25–40` and `strokeStyle: "dashed"`
+
+**Layout and spacing**
+- [ ] Column gap between adjacent labeled boxes is ≥ 150px
+- [ ] Zone backgrounds were placed in the batch **before** the shapes they contain
+- [ ] Zone backgrounds do not hug inner boxes — ≥ 50px padding on all sides
+- [ ] Title is horizontally centred over the diagram content
+
+**Viewport**
+- [ ] `set_viewport({ scrollToContent: true })` called as the final step
+- [ ] Camera size is one of the approved 4:3 ratios (400×300, 600×450,
+  800×600, 1200×900, 1600×1200)
+
+---
+
+## Anti-Patterns (Quick Reference)
 
 | Anti-pattern | Why it causes problems |
 |---|---|
 | Skip screenshot after `clear_canvas` | Ghost elements silently corrupt new arrow bindings |
-| Place arrows in a batch before their target shapes | Arrow IDs reference non-existent shapes — no binding |
+| Place arrows before their target shapes in a batch | Arrow IDs reference non-existent shapes — no binding |
 | Column gap under 100px | Arrow labels bleed into adjacent shapes |
 | Arrows without `startElementId`/`endElementId` | Arrow floats, doesn't update when shapes move |
 | Skip `set_viewport` after creation | Diagram is off-screen and user sees a blank canvas |
 | Zone backgrounds in a separate later batch | Zones render on top of shapes already on the canvas |
 | More than 4 fill colours | Diagram becomes unreadable without a legend |
-| Creating every element in separate calls | Arrow bindings fail — always batch shapes and their arrows together |
+| `fontSize` below 16 on shape labels | Unreadable at XL/XXL camera scale |
+| Editing a bound arrow with `update_element` | Binding is preserved but endpoints may drift — delete and redraw |
 
 ---
 

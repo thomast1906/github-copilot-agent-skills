@@ -15,6 +15,7 @@ coordinates for standard box size `230×160` with `roughness: 0`.
 | Event bus, message broker, single source fan-out | Hub and Spoke |
 | Tracing a request or parameter through layers with data transformations | Data Flow Trace |
 | Concept hierarchy, system component breakdown | Tree (lines + text) |
+| API call chain, auth flow, actor-to-actor interaction, request/response | Sequence Diagram |
 
 ---
 
@@ -184,3 +185,92 @@ Root label (center top)
 **Err on the side of more space.** Diagrams that feel "too spread out" when
 planning almost always look right on screen. Tight diagrams hide arrow labels
 and look cluttered in screenshots.
+
+---
+
+## 6. Sequence Diagram
+
+**Best for:** Actor-to-actor interactions, API call chains, authentication
+flows, request/response cycles. Anything where the *order* and *direction* of
+messages between named participants matters more than the topology.
+
+### Structure
+
+```
+  Actor A          Actor B          Actor C
+  x=100            x=400            x=700
+    │                │                │
+    │──── req ──────►│                │      y=180
+    │                │──── fwd ──────►│      y=260
+    │                │◄─── resp ──────│      y=340
+    │◄─── resp ──────│                │      y=420
+    │                │                │
+```
+
+### Coordinates (validated, standard 3-actor layout)
+
+| Element | x | y | width | height | Notes |
+|---|---|---|---|---|---|
+| Actor box | column_x − 75 | 40 | 150 | 60 | One per actor, top of lifeline |
+| Actor label (standalone) | column_x | 40 | — | fontSize 18 | Centred on column |
+| Lifeline (vertical line arrow, no arrowheads) | column_x | 120 | 0 | total_height | `endArrowhead: null`, `startArrowhead: null` |
+| Activation bar (rectangle) | column_x − 6 | activation_start_y | 12 | activation_height | While actor is processing; `backgroundColor: "#868e96"`, `opacity: 60` |
+| Message arrow (horizontal) | source_x | message_y | target_x − source_x | 0 | Sync: solid; Async: `strokeStyle: "dashed"` |
+| Return arrow | target_x | return_y | source_x − target_x | 0 | `strokeStyle: "dashed"`, `strokeColor: "#868e96"` |
+| Fragment box (opt/loop/alt) | zone_x | zone_y | zone_width | zone_height | `strokeStyle: "dashed"`, `opacity: 20` |
+
+### Spacing rules
+
+- **Column pitch:** 300px — narrower than architecture diagrams because
+  message arrows are horizontal and labels are short
+- **Message row pitch:** 80px — tighter than architecture patterns; sequence
+  diagrams are tall, not wide
+- **Lifeline start y:** 120 (bottom edge of actor box + 20px gap)
+- **Lifeline end y:** last_message_y + 100 (extend below final message)
+- **Actor columns:** x = 100, 400, 700, 1000 … (add 300px per actor)
+
+### Actor box colours
+
+Use the standard component colour for the actor's role:
+- Human user / browser: `#fff3bf` / `#f59e0b` (yellow)
+- Service / API: `#d0bfff` / `#7048e8` (purple)
+- Database: `#b2f2bb` / `#2f9e44` (green)
+- External system: `#ffc9c9` / `#e03131` (red)
+- Auth / IdP: `#ffe8cc` / `#fd7e14` (orange)
+
+### Message arrow colours
+
+| Flow type | strokeColor | strokeStyle |
+|---|---|---|
+| Synchronous request | `#495057` | solid |
+| Async / fire-and-forget | `#fab005` | dashed |
+| Return / response | `#868e96` | dashed |
+| Error / rejection | `#e03131` | solid |
+| Auth token / credential | `#fd7e14` | dashed |
+
+### Example — 3-actor OAuth flow
+
+```
+Actors: User (x=100), App (x=400), Auth Server (x=700)
+
+Messages (y spaced 80px apart from y=180):
+  y=180  User ──► App      "Login request"
+  y=260  App  ──► Auth     "Redirect + client_id"
+  y=340  Auth ──► User     "Login page"
+  y=420  User ──► Auth     "Credentials"
+  y=500  Auth ──► App      "auth_code" (dashed — redirect)
+  y=580  App  ──► Auth     "Exchange code"
+  y=660  Auth ──► App      "access_token" (return, grey dashed)
+  y=740  App  ──► User     "Authenticated session"
+```
+
+Batch order: actor boxes → lifelines → activation bars → message arrows (top
+to bottom) → fragment boxes (opt/loop) → standalone title.
+
+### Camera size guidance
+
+| Actors | Camera |
+|---|---|
+| 2–3 | L (800×600) |
+| 4–5 | XL (1200×900) — use `fontSize: 18+` |
+| 6+ | XXL (1600×1200) — use `fontSize: 20+`, keep labels ≤ 12 chars |
