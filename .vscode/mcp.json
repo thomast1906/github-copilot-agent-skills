@@ -4,6 +4,10 @@
       "type": "http",
       "url": "https://mcp.draw.io/mcp"
     },
+    "excalidraw": {
+      "type": "http",
+      "url": "https://mcp.excalidraw.com"
+    },
     "terraform": {
       "command": "docker",
       "args": [
