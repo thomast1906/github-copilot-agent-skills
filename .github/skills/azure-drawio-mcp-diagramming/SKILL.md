@@ -182,6 +182,12 @@ cd .github/skills/drawio-mcp-diagramming/scripts
 python3 search_azure2_icons_github.py --max-results 9999 > ../references/azure2-complete-catalog.txt
 ```
 
+Note: For Github icons:
+- `images.txt`
+  - Selected icon inventory from `jgraph/drawio` GitHub tree under `/dev/src/main/webapp`
+  - Use this as the canonical lookup for icon paths — **no scripts needed at agent runtime**.
+  - Agent usage: `grep -i "keyword" references/images.txt`
+
 ## Azure Icon Caveats (Important)
 
 Azure icon rendering in draw.io can fail for two common reasons:
