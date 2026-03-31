@@ -85,6 +85,38 @@ Skills are invoked automatically by Copilot based on relevance, or explicitly by
 
 ## Getting Started
 
+### Option A — APM (if using GitHub Copilot & vscode)
+
+Install individual bundles or all agents and skills at once using [APM (Agent Package Manager)](https://github.com/microsoft/apm).
+
+**Install APM:**
+```bash
+curl -sSL https://aka.ms/apm-unix | sh   # macOS / Linux
+irm https://aka.ms/apm-windows | iex     # Windows
+```
+# All agents and skills
+apm install thomast1906/github-copilot-agent-skills --runtime vscode
+
+# Or pick a bundle
+apm install thomast1906/github-copilot-agent-skills/packages/architect --runtime vscode
+apm install thomast1906/github-copilot-agent-skills/packages/terraform --runtime vscode
+apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runtime vscode
+```
+
+| Bundle | What's included |
+|---|---|
+| `packages/architect` | Design and review Azure architectures — service selection, WAF pillar assessments, and live pricing lookups. Includes the `azure-architect` agent and `architecture-design`, `waf-assessment`, `azure-pricing` skills. |
+| `packages/terraform` | Safely upgrade Terraform providers and build GitHub Agentic Workflows. Includes `terraform-provider-upgrade` and `gh-aw-builder` agents, matching skills, and the Terraform MCP (requires Docker). |
+| `packages/diagramming` | Create and edit architecture diagrams via Draw.io and Excalidraw MCP. Includes `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming`, and `excalidraw-mcp-diagramming` skills. |
+
+APM installs skills to `.github/skills/`, agents to `.github/agents/`, and configures MCP servers in `.vscode/mcp.json` automatically.
+
+> **Note:** The Azure MCP (used by `azure-pricing`, `waf-assessment`, `cost-optimization`, `architecture-design`) is provided by the **[Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot)** VS Code extension — install that separately.
+
+---
+
+### Option B — Clone directly
+
 1. Clone or fork this repository.
 2. Open the folder in VS Code with GitHub Copilot Chat enabled.
 3. Skills and agents are registered via `.github/copilot-instructions.md` and load automatically.
