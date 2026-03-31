@@ -8,6 +8,20 @@ argument-hint: 'Describe what you want to package or install, e.g. "set up APM f
 
 APM ([docs](https://microsoft.github.io/apm/) · [GitHub](https://github.com/microsoft/apm)) distributes GitHub Copilot skills, agents, and MCP servers as versioned packages installable with one command. Use this skill to create manifests, wire MCP dependencies, or troubleshoot installs.
 
+## When to Use
+
+Use this skill when you need to:
+
+- Create or update an `apm.yml` root manifest or `packages/*` sub-manifest for a GitHub Copilot skills/agents repository
+- Bundle MCP server configuration into an APM package so consumers get MCP wired automatically on install
+- Install a package from a GitHub repo using the APM CLI
+- Troubleshoot APM install failures (missing `.vscode/mcp.json`, Codex CLI warnings, 404 errors, cached installs)
+
+Do **not** use this skill for:
+- General GitHub Copilot customization questions (use default agent)
+- Creating `SKILL.md` files (use the `skill-creator` skill)
+- Writing MCP server implementation code
+
 Identify which task applies and jump to that section:
 
 - **Creating packages for a repo** → [Package Creation Workflow](#package-creation-workflow)
