@@ -14,3 +14,21 @@ dependencies:
     # Skills
     - thomast1906/github-copilot-agent-skills/.github/skills/terraform-provider-upgrade
     - thomast1906/github-copilot-agent-skills/.github/skills/gh-aw-operations
+  mcp:
+    # Requires Docker to be running
+    - name: terraform
+      registry: false
+      transport: stdio
+      command: docker
+      args:
+        - run
+        - -i
+        - --rm
+        - -e
+        - TFE_TOKEN
+        - -e
+        - TFE_ADDRESS
+        - hashicorp/terraform-mcp-server:0.3.3
+      env:
+        TFE_TOKEN: "${input:tfe_token}"
+        TFE_ADDRESS: "${input:tfe_address}"

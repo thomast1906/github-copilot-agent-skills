@@ -13,3 +13,12 @@ dependencies:
     - thomast1906/github-copilot-agent-skills/.github/skills/drawio-mcp-diagramming
     - thomast1906/github-copilot-agent-skills/.github/skills/azure-drawio-mcp-diagramming
     - thomast1906/github-copilot-agent-skills/.github/skills/excalidraw-mcp-diagramming
+  mcp:
+    - name: drawio
+      registry: false
+      transport: http
+      url: "https://mcp.draw.io/mcp"
+    - name: excalidraw
+      registry: false
+      transport: http
+      url: "https://mcp.excalidraw.com"
