@@ -94,6 +94,9 @@ Install individual bundles or all agents and skills at once using [APM (Agent Pa
 curl -sSL https://aka.ms/apm-unix | sh   # macOS / Linux
 irm https://aka.ms/apm-windows | iex     # Windows
 ```
+
+**Install agents and skills:**
+```bash
 # All agents and skills
 apm install thomast1906/github-copilot-agent-skills --runtime vscode
 
