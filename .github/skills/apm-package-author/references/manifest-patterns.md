@@ -156,3 +156,40 @@ dependencies:
     # - owner/repo/.github/skills/azure-apim-architecture
     # - owner/repo/.github/skills/apiops-deployment
 ```
+
+---
+
+## Package Author vs Consumer
+
+Understanding which repo type you're working in determines what to commit and what to ignore.
+
+**Package-author repo** — you publish packages for others to install. You do not run `apm install` here.
+
+- Do NOT commit `apm.lock.yaml` — the lock file pins versions for consumers, it has no meaning in the authoring repo
+- Do NOT commit `apm_modules/` — the install cache is irrelevant to authoring
+- Add both to `.gitignore`:
+  ```
+  apm.lock.yaml
+  apm_modules/
+  ```
+
+**Consumer project** — a project that runs `apm install` to get skills/agents.
+
+- Commit `apm.lock.yaml` — pins exact versions so all team members get consistent installs
+- Add `apm_modules/` to `.gitignore` — it is regenerated on each `apm install`
+
+---
+
+## The `scripts:` Field and `apm run`
+
+APM has an experimental `scripts:` field that looks like shell commands but is NOT one:
+
+```yaml
+# ❌ This does NOT run a shell command
+scripts:
+  sync: bash scripts/sync.sh
+```
+
+`apm run sync` passes the script value as a prompt to an AI runtime (Codex / LLM context). It is not executed by a shell. It has no effect in VS Code workflows and will silently do nothing.
+
+Do not add a `scripts:` block expecting it to automate file generation or run tooling. Use a `Makefile`, a CI workflow, or a plain shell script instead.

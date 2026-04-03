@@ -63,6 +63,15 @@ touch packages/<name>/.apm/.gitkeep   # APM writes its install cache here — di
 
 The `.apm/.gitkeep` placeholder is mandatory — without the directory APM may fail to write the install cache.
 
+If this is a **package-author repo** (you publish packages; you don't install them), exclude APM consumer artefacts from version control — they have no meaning here:
+
+```bash
+echo "apm.lock.yaml" >> .gitignore
+echo "apm_modules/" >> .gitignore
+```
+
+Leave these out of consumer projects (where you *install* packages) — see [references/manifest-patterns.md](references/manifest-patterns.md#package-author-vs-consumer) for the distinction.
+
 ### 4. Write the `apm.yml` manifest
 
 Minimum required fields:
@@ -159,6 +168,7 @@ apm install owner/repo --runtime vscode   # uses root apm.yml
 | Stale / cached install | APM caches installs locally | Add `--update` to force re-fetch |
 | `apm compile` output wrong format | Missing `target:` field | Add `target: vscode` to the manifest |
 | Skills installed but not appearing in Copilot | `.github/` location not registered in `copilot-instructions.md` | Ensure the project's `copilot-instructions.md` references the skills directory |
+| `scripts:` block in `apm.yml` has no effect | `scripts:` / `apm run` is an experimental AI prompt-runner — it does **not** execute shell commands | Remove the `scripts:` block. Use a `Makefile`, CI workflow, or plain shell script for automation. |
 
 ---
 
@@ -172,3 +182,4 @@ apm install owner/repo --runtime vscode   # uses root apm.yml
 - [ ] Root `apm.yml` updated to reference the new package
 - [ ] Tested with `--runtime vscode` in a clean temp directory
 - [ ] Branch pushed to remote before testing install
+- [ ] `apm.lock.yaml` and `apm_modules/` added to `.gitignore` (package-author repos only)
