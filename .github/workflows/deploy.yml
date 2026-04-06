@@ -44,7 +44,7 @@ jobs:
 
       - name: Configure GitHub Pages
         if: github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Build Astro site
         run: npm run build
