@@ -1,6 +1,6 @@
 ---
 name: Draw.io MCP
-setup: Install the Draw.io integration VS Code extension and enable MCP in VS Code settings.
+installation: Install the Draw.io integration VS Code extension and enable MCP in VS Code settings.
 skills:
   - azure-drawio-mcp-diagramming
   - drawio-mcp-diagramming

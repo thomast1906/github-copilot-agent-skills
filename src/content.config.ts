@@ -43,7 +43,7 @@ const mcpServers = defineCollection({
   type: 'content',
   schema: z.object({
     name: z.string(),
-    setup: z.string(),
+    installation: z.string(),
     skills: z.array(z.string()),
     required: z.boolean().default(false),
   }),

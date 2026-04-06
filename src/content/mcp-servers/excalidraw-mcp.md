@@ -1,6 +1,6 @@
 ---
 name: Excalidraw MCP
-setup: Install the Excalidraw VS Code extension and configure the MCP server in your Copilot settings.
+installation: Install the Excalidraw VS Code extension and configure the MCP server in your Copilot settings.
 skills:
   - excalidraw-mcp-diagramming
 required: false

@@ -100,7 +100,7 @@ Create a new file in `src/content/mcp-servers/` with the naming pattern `server-
 ```markdown
 ---
 name: My MCP Server
-setup: "Extension: my-extension-id"
+installation: "Extension: my-extension-id"
 skills:
   - skill-slug-1
 required: false
@@ -111,7 +111,7 @@ What this MCP server provides.
 
 **Field reference:**
 - `name` — Display name (required)
-- `setup` — Setup instructions (required)
+- `installation` — Installation instructions (required)
 - `skills` — List of skill slugs that use this server (required)
 - `required` — `true` or `false` (required)
 

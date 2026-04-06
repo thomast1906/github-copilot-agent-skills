@@ -1,6 +1,6 @@
 ---
 name: Azure MCP
-setup: Install the Azure Tools VS Code extension — the Azure MCP Server registers automatically.
+installation: Install the Azure Tools VS Code extension — the Azure MCP Server registers automatically.
 skills:
   - architecture-design
   - waf-assessment
