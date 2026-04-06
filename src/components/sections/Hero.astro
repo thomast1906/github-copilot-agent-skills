@@ -1,6 +1,13 @@
 ---
 import Button from '../ui/Button.astro';
 
+interface Props {
+  skillCount?: number;
+  agentCount?: number;
+  packageCount?: number;
+}
+
+const { skillCount, agentCount, packageCount } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 ---
 
@@ -18,11 +25,11 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
       </div>
       
       <div class="stats">
-        <span>14 Skills</span>
+        <span>{skillCount} Skills</span>
         <span>·</span>
-        <span>4 Agents</span>
+        <span>{agentCount} Agents</span>
         <span>·</span>
-        <span>3 Packages</span>
+        <span>{packageCount} Packages</span>
         <span>·</span>
         <span>MIT License</span>
       </div>

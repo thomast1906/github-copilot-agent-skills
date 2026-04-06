@@ -17,7 +17,7 @@ const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
 ---
 
 <BaseLayout title="GitHub Copilot Agent Skills">
-  <Hero />
+  <Hero skillCount={skills.length} agentCount={agents.length} packageCount={packages.length} />
   
   <section class="section">
     <div class="container">
