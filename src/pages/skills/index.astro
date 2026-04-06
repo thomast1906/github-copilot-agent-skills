@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SectionHeader from '../../components/sections/SectionHeader.astro';
+import SkillCard from '../../components/cards/SkillCard.astro';
+import { getCollection } from 'astro:content';
+import { categories } from '../../config/categories';
+
+const skills = await getCollection('skills');
+const sortedCategories = Object.entries(categories).sort((a, b) => a[1].order - b[1].order);
+---
+
+<BaseLayout 
+  title="Skills Catalog"
+  description="Browse all 14 GitHub Copilot agent skills for Azure architecture, Terraform, diagramming, and more."
+>
+  <div class="page">
+    <div class="container">
+      <SectionHeader 
+        title="Skills Catalog" 
+        description="Browse all skills by category. Each skill can be installed individually or as part of a package bundle."
+      />
+      
+      <div class="filter-tabs" role="tablist">
+        <button 
+          class="tab active" 
+          data-category="all"
+          role="tab"
+          aria-selected="true"
+        >
+          All
+        </button>
+        {sortedCategories.map(([slug, category]) => (
+          <button 
+            class="tab" 
+            data-category={slug}
+            role="tab"
+            aria-selected="false"
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+      
+      <div class="skills-grid">
+        {skills.map((skill) => (
+          <SkillCard skill={skill} />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('.skill-card');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-category');
+      
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+    padding: var(--space-4);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .tab {
+    padding: var(--space-3) var(--space-5);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+
+  .tab.active {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

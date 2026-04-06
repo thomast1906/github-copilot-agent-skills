@@ -1,0 +1,41 @@
+---
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'A curated collection of GitHub Copilot agent skills for platform engineers, cloud architects, and DevOps practitioners.' } = Astro.props;
+
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+const fullTitle = title === 'GitHub Copilot Agent Skills' ? title : `${title} | GitHub Copilot Agent Skills`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}/favicon.svg`} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
