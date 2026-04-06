@@ -1,0 +1,104 @@
+---
+import StatusBadge from '../ui/StatusBadge.astro';
+import CategoryBadge from '../ui/CategoryBadge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  skill: CollectionEntry<'skills'>;
+}
+
+const { skill } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+---
+
+<article class="skill-card" data-category={skill.data.category}>
+  <a href={`${baseUrl}/skills/${skill.slug}/`} class="card-link">
+    <div class="card-header">
+      <h3>{skill.data.name}</h3>
+      <div class="badges">
+        <StatusBadge status={skill.data.status} />
+      </div>
+    </div>
+    <p class="description">{skill.body}</p>
+    <div class="card-footer">
+      <CategoryBadge category={skill.data.category} />
+      {skill.data.mcp.length > 0 && (
+        <div class="mcp-pills">
+          {skill.data.mcp.map((mcp) => (
+            <span class="mcp-pill">{mcp}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </a>
+</article>
+
+<style>
+  .skill-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    transition: all 0.2s ease;
+    height: 100%;
+  }
+
+  .skill-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+  }
+
+  .badges {
+    flex-shrink: 0;
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .mcp-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .mcp-pill {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+  }
+</style>

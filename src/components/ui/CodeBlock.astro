@@ -1,0 +1,93 @@
+---
+interface Props {
+  code: string;
+  lang?: string;
+  label?: string;
+}
+
+const { code, lang = 'bash', label } = Astro.props;
+---
+
+<div class="code-block">
+  {label && <div class="label">{label}</div>}
+  <div class="code-wrapper">
+    <pre><code class={`language-${lang}`}>{code}</code></pre>
+    <button class="copy-btn" aria-label="Copy code">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
+        <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+      </svg>
+      <span class="copy-text">Copy</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const codeBlock = button.closest('.code-wrapper');
+      const code = codeBlock?.querySelector('code')?.textContent || '';
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        const textSpan = button.querySelector('.copy-text');
+        if (textSpan) {
+          const originalText = textSpan.textContent;
+          textSpan.textContent = 'Copied!';
+          setTimeout(() => {
+            textSpan.textContent = originalText;
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+</script>
+
+<style>
+  .code-block {
+    margin: var(--space-4) 0;
+  }
+
+  .label {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+    font-weight: 600;
+  }
+
+  .code-wrapper {
+    position: relative;
+  }
+
+  .code-wrapper pre {
+    padding-right: var(--space-16);
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    transition: all 0.2s ease;
+  }
+
+  .copy-btn:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+
+  .copy-btn svg {
+    flex-shrink: 0;
+  }
+</style>

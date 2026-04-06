@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SectionHeader from '../../components/sections/SectionHeader.astro';
+import AgentCard from '../../components/cards/AgentCard.astro';
+import { getCollection } from 'astro:content';
+
+const agents = await getCollection('agents');
+---
+
+<BaseLayout 
+  title="Agents"
+  description="Pre-built GitHub Copilot agents that combine multiple skills into purpose-built workflows for common tasks."
+>
+  <div class="page">
+    <div class="container">
+      <SectionHeader 
+        title="Agents" 
+        description="Purpose-built agents that combine multiple skills into powerful workflows. Each agent is a specialized Copilot persona designed for specific tasks."
+      />
+      
+      <div class="intro-box">
+        <h3>What are agents?</h3>
+        <p>
+          Agents are specialized GitHub Copilot personas that combine multiple skills and come pre-configured 
+          with specific knowledge and behavior. They're designed to handle complex, multi-step workflows in 
+          their domain of expertise.
+        </p>
+        <p>
+          To use an agent, install it via APM or clone this repository. Then, in GitHub Copilot Chat, 
+          select the agent from the agent picker and describe what you need.
+        </p>
+      </div>
+      
+      <div class="agents-grid">
+        {agents.map((agent) => (
+          <AgentCard agent={agent} />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .intro-box {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .intro-box h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-box p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .agents-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .agents-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
