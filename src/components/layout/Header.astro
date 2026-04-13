@@ -33,6 +33,13 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
           Packages
         </a>
         <a 
+          href={`${baseUrl}/mcp-servers/`} 
+          class="nav-link"
+          aria-current={currentPath.startsWith(`${baseUrl}/mcp-servers`) ? 'page' : undefined}
+        >
+          MCP Servers
+        </a>
+        <a 
           href={`${baseUrl}/getting-started/`} 
           class="nav-link"
           aria-current={currentPath.startsWith(`${baseUrl}/getting-started`) ? 'page' : undefined}

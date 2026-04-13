@@ -1,5 +1,24 @@
 # Contributing to the GitHub Copilot Agent Skills Showcase
 
+## Local Development
+
+```bash
+# Install dependencies (first time only)
+npm install
+
+# Start the dev server
+npm run dev
+# → http://localhost:4321/github-copilot-agent-skills/
+
+# Build for production
+npm run build
+
+# Preview the production build locally
+npm run preview
+```
+
+---
+
 ## How Content Works
 
 This site uses **Astro Content Collections** — no code changes needed. Drop a `.md` file in the right folder → it automatically appears on the site after the next build.

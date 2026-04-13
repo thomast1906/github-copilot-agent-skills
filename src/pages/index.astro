@@ -12,7 +12,9 @@ import { getCollection } from 'astro:content';
 const skills = await getCollection('skills');
 const agents = await getCollection('agents');
 const packages = await getCollection('packages');
+const mcpServers = await getCollection('mcp-servers');
 
+const featuredPackages = packages.filter(pkg => pkg.data.featured);
 const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
 ---
 
@@ -31,22 +33,22 @@ const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
         <FeatureCard 
           icon="🛠️"
           title="Skills Library"
-          description="14 production-ready skills for Azure architecture, Terraform, diagramming, and GitHub workflows."
+          description={`${skills.length} production-ready skills for Azure architecture, Terraform, diagramming, and GitHub workflows.`}
         />
         <FeatureCard 
           icon="🤖"
           title="Pre-built Agents"
-          description="4 specialized agents combining multiple skills into purpose-built workflows for common tasks."
+          description={`${agents.length} specialized agents combining multiple skills into purpose-built workflows for common tasks.`}
         />
         <FeatureCard 
           icon="📦"
           title="APM Packages"
-          description="One-command install bundles grouping related agents and skills for specific use cases."
+          description={`${packages.length} one-command install bundles grouping related agents and skills for specific use cases.`}
         />
         <FeatureCard 
           icon="🔌"
           title="MCP Integrations"
-          description="Native integrations with Azure, Terraform, Draw.io, and Excalidraw MCP servers."
+          description={`${mcpServers.length} native integrations with Azure, Terraform, Draw.io, and Excalidraw MCP servers.`}
         />
       </div>
     </div>
@@ -60,7 +62,7 @@ const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
       />
       
       <div class="packages-grid">
-        {packages.map((pkg) => (
+        {featuredPackages.map((pkg) => (
           <PackageCard package={pkg} />
         ))}
       </div>
