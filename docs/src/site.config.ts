@@ -10,16 +10,6 @@ export type SkillCategory =
 
 export type SkillStatus = 'stable' | 'wip';
 
-export interface PackageMeta {
-  featured: boolean;
-}
-
-export const packageMeta: Record<string, PackageMeta> = {
-  'architect':   { featured: true },
-  'diagramming': { featured: false },
-  'terraform':   { featured: true },
-};
-
 export interface McpServer {
   id: string;
   name: string;

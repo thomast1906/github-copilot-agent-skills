@@ -1,5 +1,6 @@
 name: terraform-deployer-skills
 version: 1.0.0
+featured: true
 description: >
   Terraform provider upgrades, IaC deployment, and GitHub Agentic Workflow
   skills and agents for GitHub Copilot.

@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 import yaml from 'yaml';
-import { packageMeta } from './site.config';
 
 // Repo root: docs/src/content.config.ts → two levels up → repo root
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
@@ -81,7 +80,7 @@ const skills = defineCollection({
     status: z.enum(['stable', 'wip']),
     featured: z.boolean(),
     mcp: z.array(z.string()),
-    azureServices: z.array(z.string()),
+    azureServices: z.array(z.string()).default([]),
     version: z.string().optional(),
     lastUpdated: z.string().optional(),
   }),
@@ -134,7 +133,6 @@ const packages = defineCollection({
         const apmDeps: string[] = (data.dependencies?.apm ?? []);
         const { agents: agentIds, skills: skillIds } = parseApmDeps(apmDeps);
         const mcpIds: string[] = (data.dependencies?.mcp ?? []).map((m: { name: string }) => normalizeMcpId(m.name));
-        const overlay = packageMeta[id] ?? { featured: false };
         store.set({
           id,
           data: {
@@ -144,7 +142,7 @@ const packages = defineCollection({
             agents: agentIds,
             skills: skillIds,
             mcp: mcpIds,
-            featured: overlay.featured,
+            featured: (data.featured as boolean) ?? false,
             installCommand: `apm install thomast1906/github-copilot-agent-skills/packages/${id} --runtime ${data.target ?? 'vscode'}`,
           },
         });
