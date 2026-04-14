@@ -8,11 +8,11 @@ metadata:
   last-updated: "2026-01-29"
   azure-services: "api-management, devops, github-actions"
   iac-tools: "bicep, terraform"
-argument-hint: "Describe your APIM deployment goal: infrastructure setup, CI/CD pipeline, or dev-to-prod promotion"
-examples:
-  - "Generate Bicep to deploy APIM across dev, test, and prod environments"
-  - "Create a GitHub Actions APIOps pipeline for promoting API changes"
-  - "How do I implement hub-spoke APIM with VNet integration using Terraform?"
+  examples:
+    - "Generate Bicep to deploy APIM across dev, test, and prod environments"
+    - "Create a GitHub Actions APIOps pipeline for promoting API changes"
+    - "How do I implement hub-spoke APIM with VNet integration using Terraform?"
+
 ---
 
 # APIOps Deployment Skill

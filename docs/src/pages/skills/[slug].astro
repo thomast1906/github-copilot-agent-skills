@@ -57,13 +57,6 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
 
       <p class="description">{skill.data.description}</p>
 
-      {skill.data.argumentHint && (
-        <div class="invoke-hint">
-          <span class="hint-label">How to invoke</span>
-          <span class="hint-text">{skill.data.argumentHint}</span>
-        </div>
-      )}
-
       {skill.data.examples.length > 0 && (
         <section class="examples-section">
           <h2>Example prompts</h2>
@@ -184,34 +177,6 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
     line-height: var(--leading-relaxed);
     color: var(--color-text-secondary);
     margin-bottom: var(--space-8);
-  }
-
-  .invoke-hint {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-accent-primary);
-    border-radius: var(--radius-sm);
-    padding: var(--space-4) var(--space-5);
-    margin-bottom: var(--space-8);
-    font-size: var(--text-base);
-    flex-wrap: wrap;
-  }
-
-  .hint-label {
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-accent-primary);
-    white-space: nowrap;
-  }
-
-  .hint-text {
-    color: var(--color-text-secondary);
-    font-style: italic;
   }
 
   .examples-section {

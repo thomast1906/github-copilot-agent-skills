@@ -2,9 +2,10 @@
 name: Terraform Provider Upgrade
 description: Specialized agent for safely upgrading Terraform providers, detecting breaking changes, migrating removed resources with moved blocks, and ensuring compatibility through comprehensive upgrade workflows.
 tools: ['vscode', 'execute', 'read', 'edit', 'search', 'azure-mcp/azureterraformbestpractices', 'azure-mcp/documentation', 'terraform/*', 'agent', 'todo']
-examples:
-  - "@terraform-provider-upgrade Upgrade my azurerm provider from 3.x to 4.0 with full migration"
-  - "@terraform-provider-upgrade Check for breaking changes before I upgrade hashicorp/kubernetes to 2.30"
+metadata:
+  examples:
+    - "@terraform-provider-upgrade Upgrade my azurerm provider from 3.x to 4.0 with full migration"
+    - "@terraform-provider-upgrade Check for breaking changes before I upgrade hashicorp/kubernetes to 2.30"
 ---
 
 # Terraform Provider Upgrade Agent

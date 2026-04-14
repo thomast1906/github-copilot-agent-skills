@@ -5,11 +5,11 @@ metadata:
   author: github-copilot-skills-terraform
   version: "1.0.0"
   category: terraform-maintenance
-argument-hint: "Specify the Terraform provider and version you want to upgrade to"
-examples:
-  - "Upgrade my azurerm provider from 3.x to 4.0 safely"
-  - "Check for breaking changes before upgrading hashicorp/aws from 4 to 5"
-  - "Migrate resources removed in the kubernetes provider 2.30 upgrade"
+  examples:
+    - "Upgrade my azurerm provider from 3.x to 4.0 safely"
+    - "Check for breaking changes before upgrading hashicorp/aws from 4 to 5"
+    - "Migrate resources removed in the kubernetes provider 2.30 upgrade"
+
 ---
 
 # Terraform Provider Upgrade Skill

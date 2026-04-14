@@ -5,11 +5,11 @@ metadata:
   version: 1.0.0
   category: automation
   tags: [github-agentic-workflows, gh-aw, automation, ci-cd, ai-workflows]
-argument-hint: "Describe the GitHub Agentic Workflow you want to create, configure, or debug"
-examples:
-  - "Create a GitHub Agentic Workflow to automatically review pull requests for security issues"
-  - "Build a gh-aw workflow that triages new issues using Copilot"
-  - "Debug why my agentic workflow frontmatter isn't triggering correctly"
+  examples:
+    - "Create a GitHub Agentic Workflow to automatically review pull requests for security issues"
+    - "Build a gh-aw workflow that triages new issues using Copilot"
+    - "Debug why my agentic workflow frontmatter isn't triggering correctly"
+
 ---
 
 # GitHub Agentic Workflows Operations Skill

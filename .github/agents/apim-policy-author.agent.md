@@ -2,9 +2,10 @@
 name: APIM Policy Author
 description: Expert agent for creating production-ready Azure API Management policy XML for authentication (OAuth, JWT, subscription keys), rate limiting, CORS, error handling, and transformations. Implements hybrid authentication and security best practices.
 tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'azure-mcp/get_azure_bestpractices', 'azure-mcp/documentation', 'azure-mcp/search', 'agent', 'todo']
-examples:
-  - "@apim-policy-author Create an OAuth 2.0 JWT validation policy for my API with subscription key fallback"
-  - "@apim-policy-author Add rate limiting at 1000 calls per hour per user to my existing APIM policy"
+metadata:
+  examples:
+    - "@apim-policy-author Create an OAuth 2.0 JWT validation policy for my API with subscription key fallback"
+    - "@apim-policy-author Add rate limiting at 1000 calls per hour per user to my existing APIM policy"
 ---
 
 ## Purpose

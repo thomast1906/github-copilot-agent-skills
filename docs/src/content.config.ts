@@ -57,8 +57,7 @@ const skills = defineCollection({
           data: {
             name: data.name as string,
             description: data.description as string,
-            argumentHint: (data['argument-hint'] as string) ?? null,
-            examples: (data.examples as string[]) ?? [],
+            examples: ((data.metadata as Record<string, unknown>)?.examples as string[]) ?? [],
             category: overlay.category,
             status: overlay.status,
             featured: overlay.featured,
@@ -72,7 +71,6 @@ const skills = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    argumentHint: z.string().nullable(),
     examples: z.array(z.string()),
     category: z.enum(['azure-architecture', 'azure-apim', 'infrastructure-as-code', 'diagramming', 'github-workflows']),
     status: z.enum(['stable', 'wip']),
@@ -97,7 +95,7 @@ const agents = defineCollection({
             name: data.name as string,
             description: data.description as string,
             tools: (data.tools as string[]) ?? [],
-            examples: (data.examples as string[]) ?? [],
+            examples: ((data.metadata as Record<string, unknown>)?.examples as string[]) ?? [],
             skills: overlay.skills,
             package: overlay.package,
           },

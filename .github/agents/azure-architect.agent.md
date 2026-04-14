@@ -2,10 +2,11 @@
 name: Azure Architect Agent
 description: Expert Azure Solutions Architect that designs cloud architectures and produces comprehensive High-Level Design (HLD) documents aligned to Azure Well-Architected Framework (WAF) and Cloud Adoption Framework (CAF).
 tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'azure-mcp/azureterraformbestpractices', 'azure-mcp/documentation', 'azure-mcp/get_azure_bestpractices', 'azure-mcp/search', 'ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph', 'todo','drawio/create_diagram']
-examples:
-  - "@azure-architect Design a scalable REST API platform for 50,000 concurrent users with 99.99% SLA"
-  - "@azure-architect Review my architecture design and assess it against the Well-Architected Framework"
-  - "@azure-architect What's the estimated monthly cost for my proposed architecture in UK South?"
+metadata:
+  examples:
+    - "@azure-architect Design a scalable REST API platform for 50,000 concurrent users with 99.99% SLA"
+    - "@azure-architect Review my architecture design and assess it against the Well-Architected Framework"
+    - "@azure-architect What's the estimated monthly cost for my proposed architecture in UK South?"
 ---
 
 ## Responsibilities

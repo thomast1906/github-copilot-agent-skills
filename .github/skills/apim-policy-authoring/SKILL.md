@@ -7,11 +7,11 @@ metadata:
   version: "1.0"
   last-updated: "2026-01-29"
   azure-services: "api-management"
-argument-hint: "Describe the policy you need: authentication type, rate limits, CORS config, or transformations"
-examples:
-  - "Create an OAuth 2.0 JWT validation policy for my APIM"
-  - "Add rate limiting at 100 calls per minute per subscription key"
-  - "Write a CORS policy allowing requests from https://myapp.example.com"
+  examples:
+    - "Create an OAuth 2.0 JWT validation policy for my APIM"
+    - "Add rate limiting at 100 calls per minute per subscription key"
+    - "Write a CORS policy allowing requests from https://myapp.example.com"
+
 ---
 
 # APIM Policy Authoring Skill
