@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import SectionHeader from '../components/sections/SectionHeader.astro';
+import CTASection from '../components/sections/CTASection.astro';
+import FeatureCard from '../components/cards/FeatureCard.astro';
+import PackageCard from '../components/cards/PackageCard.astro';
+import SkillCard from '../components/cards/SkillCard.astro';
+import AgentCard from '../components/cards/AgentCard.astro';
+import { getCollection } from 'astro:content';
+import { mcpServers } from '../site.config';
+
+const skills = await getCollection('skills');
+const agents = await getCollection('agents');
+const packages = await getCollection('packages');
+
+const featuredPackages = packages.filter(pkg => pkg.data.featured);
+const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
+---
+
+<BaseLayout title="GitHub Copilot Agent Skills">
+  <Hero skillCount={skills.length} agentCount={agents.length} packageCount={packages.length} />
+  
+  <section class="section">
+    <div class="container">
+      <SectionHeader 
+        title="What's Inside" 
+        description="Everything you need to supercharge GitHub Copilot for cloud architecture and DevOps workflows."
+        align="center"
+      />
+      
+      <div class="features-grid">
+        <FeatureCard 
+          icon="🛠️"
+          title="Skills Library"
+          description={`${skills.length} production-ready skills for Azure architecture, Terraform, diagramming, and GitHub workflows.`}
+        />
+        <FeatureCard 
+          icon="🤖"
+          title="Pre-built Agents"
+          description={`${agents.length} specialized agents combining multiple skills into purpose-built workflows for common tasks.`}
+        />
+        <FeatureCard 
+          icon="📦"
+          title="APM Packages"
+          description={`${packages.length} one-command install bundles grouping related agents and skills for specific use cases.`}
+        />
+        <FeatureCard 
+          icon="🔌"
+          title="MCP Integrations"
+          description={`${mcpServers.length} native integrations with Azure, Terraform, Draw.io, and Excalidraw MCP servers.`}
+        />
+      </div>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <SectionHeader 
+        title="Featured Packages" 
+        description="Install everything you need in one command."
+      />
+      
+      <div class="packages-grid">
+        {featuredPackages.map((pkg) => (
+          <PackageCard package={pkg} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <SectionHeader 
+        title="Skills Overview" 
+        description="Browse our most popular skills — or explore the full catalog."
+      />
+      
+      <div class="skills-grid">
+        {featuredSkills.map((skill) => (
+          <SkillCard skill={skill} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <SectionHeader 
+        title="Meet the Agents" 
+        description="Purpose-built agents that combine multiple skills into powerful workflows."
+      />
+      
+      <div class="agents-grid">
+        {agents.map((agent) => (
+          <AgentCard agent={agent} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <CTASection />
+</BaseLayout>
+
+<style>
+  .section {
+    padding: var(--space-24) 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .features-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 1024px) {
+    .packages-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .agents-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .agents-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

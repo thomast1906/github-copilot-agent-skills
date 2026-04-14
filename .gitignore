@@ -10,6 +10,11 @@ build/
 # Astro
 .astro/
 
+# Docs site (moved to docs/)
+docs/node_modules/
+docs/dist/
+docs/.astro/
+
 # Environment
 .env
 .env.local

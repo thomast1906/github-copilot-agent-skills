@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SectionHeader from '../../components/sections/SectionHeader.astro';
+import MCPServerCard from '../../components/sections/MCPServerCard.astro';
+import { mcpServers } from '../../site.config';
+---
+
+<BaseLayout 
+  title="MCP Servers"
+  description="Model Context Protocol (MCP) servers that extend GitHub Copilot skills with real-time data, external APIs, and specialised tools."
+>
+  <div class="page">
+    <div class="container">
+      <SectionHeader 
+        title="MCP Servers"
+        description="Model Context Protocol servers that extend Copilot skills with real-time data and specialised capabilities. Some skills require one or more MCP servers to be configured in your environment."
+      />
+
+      <div class="intro-box">
+        <h3>What are MCP Servers?</h3>
+        <p>
+          MCP (Model Context Protocol) servers are background processes that provide GitHub Copilot skills with 
+          access to external data and APIs. For example, an Azure pricing skill might require the Azure MCP server 
+          to retrieve live pricing data.
+        </p>
+        <p>
+          Each skill page lists any MCP servers it requires. Configure the listed MCP servers in your 
+          <code>.vscode/mcp.json</code> (VS Code) or <code>~/.config/github-copilot/mcp.json</code> (global) 
+          before using those skills.
+        </p>
+      </div>
+
+      <div class="servers-grid">
+        {mcpServers.map((server) => (
+          <MCPServerCard server={server} />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .intro-box {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .intro-box h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-box p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .intro-box code {
+    font-size: var(--text-sm);
+    background: var(--color-bg-tertiary);
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+  }
+
+  .servers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .servers-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

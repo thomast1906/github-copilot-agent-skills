@@ -1,0 +1,124 @@
+---
+import CodeBlock from '../ui/CodeBlock.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  package: CollectionEntry<'packages'>;
+}
+
+const { package: pkg } = Astro.props;
+---
+
+<article class="package-card">
+  <div class="card-content">
+    <h3>{pkg.data.name}</h3>
+    <p class="description">{pkg.data.description}</p>
+    
+    <CodeBlock code={pkg.data.installCommand} label="Install" />
+    
+    <div class="package-details">
+      {pkg.data.agents.length > 0 && (
+        <div class="detail-section">
+          <h4>Included Agents</h4>
+          <div class="tags">
+            {pkg.data.agents.map((agent) => (
+              <span class="tag">{agent}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {pkg.data.skills.length > 0 && (
+        <div class="detail-section">
+          <h4>Included Skills</h4>
+          <div class="tags">
+            {pkg.data.skills.map((skill) => (
+              <span class="tag">{skill}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {pkg.data.mcp.length > 0 && (
+        <div class="detail-section">
+          <h4>MCP Requirements</h4>
+          <div class="tags">
+            {pkg.data.mcp.map((mcp) => (
+              <span class="tag tag-mcp">{mcp}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .package-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    transition: all 0.2s ease;
+    height: 100%;
+  }
+
+  .package-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .package-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .detail-section h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tag {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .tag-mcp {
+    background: rgba(88, 166, 255, 0.1);
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
+  }
+</style>

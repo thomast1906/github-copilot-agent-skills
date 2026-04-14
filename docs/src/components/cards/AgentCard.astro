@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  agent: CollectionEntry<'agents'>;
+}
+
+const { agent } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/blob/main/.github/agents/${agent.id}.agent.md`;
+---
+
+<article class="agent-card">
+  <a href={`${baseUrl}/agents/${agent.id}/`} class="card-link">
+    <div class="card-content">
+      <h3>{agent.data.name}</h3>
+      <p class="description">{agent.data.description}</p>
+      <div class="skills-tags">
+        {agent.data.skills.map((skill) => (
+          <span class="skill-tag">{skill}</span>
+        ))}
+      </div>
+    </div>
+  </a>
+  <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="view-link">
+    View Source
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path>
+    </svg>
+  </a>
+</article>
+
+<style>
+  .agent-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  .agent-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .skill-tag {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-link);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    align-self: flex-start;
+  }
+
+  .view-link:hover {
+    text-decoration: underline;
+  }
+
+  .view-link svg {
+    flex-shrink: 0;
+  }
+</style>

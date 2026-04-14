@@ -1,0 +1,77 @@
+---
+import type { McpServer } from '../../../site.config';
+
+interface Props {
+  server: McpServer;
+}
+
+const { server } = Astro.props;
+---
+
+<article class="mcp-server-card">
+  <div class="card-header">
+    <h3>{server.name}</h3>
+    {server.required && <span class="required-badge">Required</span>}
+  </div>
+  <p class="description">{server.description}</p>
+  <div class="setup">
+    <h4>Setup</h4>
+    <p>{server.installation}</p>
+  </div>
+</article>
+
+<style>
+  .mcp-server-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+  }
+
+  .required-badge {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background: rgba(210, 153, 34, 0.15);
+    color: var(--color-accent-warning);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .setup h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .setup p {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+</style>

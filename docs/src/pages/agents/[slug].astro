@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SkillCard from '../../components/cards/SkillCard.astro';
+import PackageCard from '../../components/cards/PackageCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const agents = await getCollection('agents');
+  return agents.map((agent) => ({
+    params: { slug: agent.id },
+    props: { agent },
+  }));
+}
+
+interface Props {
+  agent: CollectionEntry<'agents'>;
+}
+
+const { agent } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+
+const allSkills = await getCollection('skills');
+const relatedSkills = allSkills.filter(skill => agent.data.skills.includes(skill.id));
+
+const allPackages = await getCollection('packages');
+const relatedPackages = allPackages.filter(pkg =>
+  agent.data.package ? pkg.id === agent.data.package : pkg.data.agents.includes(agent.id)
+);
+
+const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/blob/main/.github/agents/${agent.id}.agent.md`;
+---
+
+<BaseLayout
+  title={agent.data.name}
+  description={agent.data.description}
+>
+  <article class="page">
+    <div class="container">
+      <a href={`${baseUrl}/agents/`} class="back-link">← Back to Agents</a>
+
+      <header class="agent-header">
+        <div class="header-icon">🤖</div>
+        <div class="header-text">
+          <h1>{agent.data.name}</h1>
+          <p class="description">{agent.data.description}</p>
+        </div>
+      </header>
+
+      <div class="actions">
+        <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          View Source on GitHub
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path>
+          </svg>
+        </a>
+      </div>
+
+      {relatedSkills.length > 0 && (
+        <section class="section">
+          <h2>Skills Used</h2>
+          <p class="section-intro">This agent is powered by the following skills:</p>
+          <div class="skills-grid">
+            {relatedSkills.map((skill) => (
+              <SkillCard skill={skill} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedPackages.length > 0 && (
+        <section class="section">
+          <h2>Available in Packages</h2>
+          <p class="section-intro">Install this agent as part of these packages:</p>
+          <div class="packages-grid">
+            {relatedPackages.map((pkg) => (
+              <PackageCard package={pkg} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-link);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: var(--space-8);
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .agent-header {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+    margin-bottom: var(--space-8);
+  }
+
+  .header-icon {
+    font-size: 3rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  h1 {
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: var(--text-4xl);
+    }
+
+    .agent-header {
+      flex-direction: column;
+    }
+  }
+
+  .description {
+    font-size: var(--text-xl);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .actions {
+    margin-bottom: var(--space-12);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--color-accent-primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+
+  .section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .section-intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 1024px) {
+    .packages-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
