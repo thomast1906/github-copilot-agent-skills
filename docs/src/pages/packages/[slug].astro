@@ -27,7 +27,7 @@ const includedAgents = allAgents.filter(agent => pkg.data.agents.includes(agent.
 const allSkills = await getCollection('skills');
 const includedSkills = allSkills.filter(skill => pkg.data.skills.includes(skill.id));
 
-const requiredMcp = mcpServers.filter(server => pkg.data.mcp.includes(server.name));
+const requiredMcp = mcpServers.filter(server => pkg.data.mcp.includes(server.id));
 
 const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/tree/main/packages/${pkg.id}`;
 ---

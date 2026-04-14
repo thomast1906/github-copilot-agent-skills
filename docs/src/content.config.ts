@@ -22,6 +22,18 @@ function parseApmDeps(deps: string[]): { agents: string[]; skills: string[] } {
   return { agents, skills };
 }
 
+// Normalize raw apm.yml MCP names (e.g. "drawio") to site.config server IDs (e.g. "drawio-mcp")
+const apmMcpIdMap: Record<string, string> = {
+  'drawio':      'drawio-mcp',
+  'excalidraw':  'excalidraw-mcp',
+  'terraform':   'terraform-mcp',
+  'azure':       'azure-mcp',
+};
+
+function normalizeMcpId(rawName: string): string {
+  return apmMcpIdMap[rawName] ?? rawName;
+}
+
 const skills = defineCollection({
   loader: {
     name: 'skills-loader',
@@ -45,6 +57,8 @@ const skills = defineCollection({
           data: {
             name: data.name as string,
             description: data.description as string,
+            argumentHint: (data['argument-hint'] as string) ?? null,
+            examples: (data.examples as string[]) ?? [],
             category: overlay.category,
             status: overlay.status,
             featured: overlay.featured,
@@ -58,6 +72,8 @@ const skills = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
+    argumentHint: z.string().nullable(),
+    examples: z.array(z.string()),
     category: z.enum(['azure-architecture', 'azure-apim', 'infrastructure-as-code', 'diagramming', 'github-workflows']),
     status: z.enum(['stable', 'wip']),
     featured: z.boolean(),
@@ -81,6 +97,7 @@ const agents = defineCollection({
             name: data.name as string,
             description: data.description as string,
             tools: (data.tools as string[]) ?? [],
+            examples: (data.examples as string[]) ?? [],
             skills: overlay.skills,
             package: overlay.package,
           },
@@ -93,6 +110,7 @@ const agents = defineCollection({
     name: z.string(),
     description: z.string(),
     tools: z.array(z.string()),
+    examples: z.array(z.string()),
     skills: z.array(z.string()),
     package: z.string().nullable(),
   }),
@@ -111,7 +129,7 @@ const packages = defineCollection({
         const data = yaml.parse(readFileSync(apmPath, 'utf-8'));
         const apmDeps: string[] = (data.dependencies?.apm ?? []);
         const { agents: agentIds, skills: skillIds } = parseApmDeps(apmDeps);
-        const mcpNames: string[] = (data.dependencies?.mcp ?? []).map((m: { name: string }) => m.name);
+        const mcpIds: string[] = (data.dependencies?.mcp ?? []).map((m: { name: string }) => normalizeMcpId(m.name));
         const overlay = packageMeta[id] ?? { featured: false };
         store.set({
           id,
@@ -121,7 +139,7 @@ const packages = defineCollection({
             version: data.version as string,
             agents: agentIds,
             skills: skillIds,
-            mcp: mcpNames,
+            mcp: mcpIds,
             featured: overlay.featured,
             installCommand: `apm install thomast1906/github-copilot-agent-skills/packages/${id} --runtime ${data.target ?? 'vscode'}`,
           },

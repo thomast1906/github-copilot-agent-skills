@@ -8,6 +8,11 @@ metadata:
   last-updated: "2026-01-29"
   azure-services: "api-management, security-center"
   compliance-frameworks: "owasp-api-top10,azure-security-benchmark,cis-azure"
+argument-hint: "Describe the API configuration, policy XML, or architecture to review for security issues"
+examples:
+  - "Review my APIM policy XML for OWASP API Security Top 10 vulnerabilities"
+  - "Audit this API Management configuration against Azure Security Benchmark"
+  - "Check my VNet Internal APIM setup for security gaps"
 ---
 
 # API Security Review Skill

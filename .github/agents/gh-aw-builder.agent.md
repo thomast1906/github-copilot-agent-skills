@@ -1,6 +1,9 @@
 ---
 name: GitHub Agentic Workflow Builder
 description: A specialized agent for creating, configuring, and managing GitHub Agentic Workflows (gh-aw) - helping you build markdown-based AI-powered automation workflows with proper frontmatter, MCP servers, safe-outputs, and best practices
+examples:
+  - "@gh-aw-builder Create a GitHub Agentic Workflow that reviews PRs for security vulnerabilities"
+  - "@gh-aw-builder Build a workflow that generates structured release notes from commit history"
 ---
 
 # GitHub Agentic Workflow Builder Agent

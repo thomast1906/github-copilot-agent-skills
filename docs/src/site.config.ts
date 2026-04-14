@@ -22,16 +22,16 @@ export const skillMeta: Record<string, SkillMeta> = {
   'apim-policy-authoring':        { category: 'azure-apim',              status: 'wip',    featured: false, mcp: [] },
   'apiops-deployment':            { category: 'azure-apim',              status: 'wip',    featured: false, mcp: [] },
   'apm-package-author':           { category: 'github-workflows',        status: 'stable', featured: false, mcp: [] },
-  'architecture-design':          { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['Azure MCP'] },
+  'architecture-design':          { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['azure-mcp'] },
   'azure-apim-architecture':      { category: 'azure-apim',              status: 'wip',    featured: false, mcp: [] },
-  'azure-drawio-mcp-diagramming': { category: 'diagramming',             status: 'stable', featured: true,  mcp: ['Draw.io MCP'] },
-  'azure-pricing':                { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['Azure MCP'] },
-  'cost-optimization':            { category: 'azure-architecture',      status: 'wip',    featured: false, mcp: ['Azure MCP'] },
-  'drawio-mcp-diagramming':       { category: 'diagramming',             status: 'stable', featured: false, mcp: ['Draw.io MCP'] },
-  'excalidraw-mcp-diagramming':   { category: 'diagramming',             status: 'stable', featured: false, mcp: ['Excalidraw MCP'] },
+  'azure-drawio-mcp-diagramming': { category: 'diagramming',             status: 'stable', featured: true,  mcp: ['drawio-mcp'] },
+  'azure-pricing':                { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['azure-mcp'] },
+  'cost-optimization':            { category: 'azure-architecture',      status: 'wip',    featured: false, mcp: ['azure-mcp'] },
+  'drawio-mcp-diagramming':       { category: 'diagramming',             status: 'stable', featured: false, mcp: ['drawio-mcp'] },
+  'excalidraw-mcp-diagramming':   { category: 'diagramming',             status: 'stable', featured: false, mcp: ['excalidraw-mcp'] },
   'gh-aw-operations':             { category: 'github-workflows',        status: 'stable', featured: true,  mcp: [] },
-  'terraform-provider-upgrade':   { category: 'infrastructure-as-code',  status: 'stable', featured: true,  mcp: ['Terraform MCP'] },
-  'waf-assessment':               { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['Azure MCP'] },
+  'terraform-provider-upgrade':   { category: 'infrastructure-as-code',  status: 'stable', featured: true,  mcp: ['terraform-mcp'] },
+  'waf-assessment':               { category: 'azure-architecture',      status: 'stable', featured: true,  mcp: ['azure-mcp'] },
 };
 
 export interface AgentMeta {
@@ -41,7 +41,7 @@ export interface AgentMeta {
 
 export const agentMeta: Record<string, AgentMeta> = {
   'apim-policy-author':         { skills: ['apim-policy-authoring'],                                                        package: null },
-  'azure-architect':            { skills: ['architecture-design', 'waf-assessment', 'cost-optimization', 'azure-pricing'],  package: 'architect' },
+  'azure-architect':            { skills: ['architecture-design', 'waf-assessment', 'azure-pricing'],  package: 'architect' },
   'gh-aw-builder':              { skills: ['gh-aw-operations'],                                                              package: 'terraform' },
   'terraform-provider-upgrade': { skills: ['terraform-provider-upgrade'],                                                   package: 'terraform' },
 };

@@ -55,6 +55,32 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
         </a>
       </div>
 
+      {agent.data.examples.length > 0 && (
+        <section class="examples-section">
+          <h2>Example prompts</h2>
+          <ul class="examples-list">
+            {agent.data.examples.map((ex) => (
+              <li class="example-item">
+                <span class="example-icon">💬</span>
+                <span class="example-text">{ex}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {agent.data.tools.length > 0 && (
+        <section class="tools-section">
+          <h2>Tools &amp; Skills</h2>
+          <p class="section-intro">This agent has access to the following Copilot tools and skills:</p>
+          <div class="tools-list">
+            {agent.data.tools.map((tool) => (
+              <span class="tool-tag">{tool}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
       {relatedSkills.length > 0 && (
         <section class="section">
           <h2>Skills Used</h2>
@@ -162,6 +188,77 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
 
   .btn-primary:hover {
     opacity: 0.85;
+  }
+
+  .examples-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .examples-section h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .examples-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .example-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .example-icon {
+    font-size: var(--text-base);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .example-text {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    font-style: italic;
+  }
+
+  .tools-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .tools-section h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tool-tag {
+    display: inline-block;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full, 9999px);
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-sm);
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-secondary);
   }
 
   .section {

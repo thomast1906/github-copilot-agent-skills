@@ -94,20 +94,38 @@ import { mcpServers } from '../../site.config';
       </section>
       
       <section class="section">
-        <h2>First Use Example</h2>
+        <h2>Try It Out</h2>
         <p class="intro">
-          Once installed, try asking the Azure Architect agent to design a web application architecture:
+          Once installed, try these example prompts to get started with each package:
         </p>
-        
-        <CodeBlock 
-          code="@azure-architect Design a production-ready architecture for a Node.js web application on Azure. Include a managed database, caching layer, and CDN. Estimate monthly costs for 10,000 users."
-          label="Example Prompt"
-        />
-        
-        <p class="note">
-          The agent will use the Architecture Design, WAF Assessment, and Azure Pricing skills to generate 
-          a comprehensive HLD document with service recommendations and cost estimates.
-        </p>
+
+        <div class="example-block">
+          <h3>📦 Azure Architect package</h3>
+          <CodeBlock
+            code="@azure-architect Design a production-ready REST API for a Node.js app on Azure with managed database, caching, CDN, and 99.99% SLA. Estimate monthly costs for 10,000 concurrent users in UK South."
+            label="Azure Architect"
+          />
+        </div>
+
+        <div class="example-block">
+          <h3>📦 Terraform package</h3>
+          <CodeBlock
+            code="@terraform-provider-upgrade Upgrade my azurerm provider from 3.x to 4.0 safely — detect breaking changes and migrate any removed resources."
+            label="Terraform Provider Upgrade"
+          />
+          <CodeBlock
+            code="@gh-aw-builder Create a GitHub Agentic Workflow that reviews pull requests for security vulnerabilities and posts a structured report."
+            label="GitHub Agentic Workflow Builder"
+          />
+        </div>
+
+        <div class="example-block">
+          <h3>📦 Diagramming package (requires MCP)</h3>
+          <CodeBlock
+            code="Create an Azure hub-spoke network topology diagram with Draw.io showing VNet peering, firewall, and spoke workloads."
+            label="Draw.io Diagramming"
+          />
+        </div>
       </section>
     </div>
   </div>
@@ -191,6 +209,17 @@ import { mcpServers } from '../../site.config';
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
     margin-bottom: var(--space-4);
+  }
+
+  .example-block {
+    margin-bottom: var(--space-8);
+  }
+
+  .example-block h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
   }
 
   .note {

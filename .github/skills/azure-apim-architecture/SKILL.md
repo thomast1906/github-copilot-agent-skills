@@ -7,6 +7,11 @@ metadata:
   version: "1.0"
   last-updated: "2026-01-29"
   azure-services: "api-management, front-door, vnet, private-link, api-center"
+argument-hint: "Describe your APIM scenario or ask about a specific architecture or component decision"
+examples:
+  - "Should I use VNet Internal or External mode for my enterprise APIM?"
+  - "Compare APIM workspaces vs multiple instances for multi-team API ownership"
+  - "Design a hub-spoke API gateway topology for multiple business units"
 ---
 
 # Azure APIM Architecture Skill

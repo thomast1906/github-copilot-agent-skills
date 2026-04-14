@@ -1,6 +1,11 @@
 ---
 name: waf-assessment
 description: Assess Azure architectures against Well-Architected Framework (WAF) five pillars - Reliability, Security, Cost Optimization, Operational Excellence, and Performance Efficiency. Provide scores and recommendations.
+argument-hint: "Describe your Azure architecture or paste your design for a WAF review against any or all five pillars"
+examples:
+  - "Review my AKS cluster architecture against the WAF Reliability pillar"
+  - "Score my three-tier web app against all five Well-Architected Framework pillars"
+  - "What WAF Security improvements should I make to my current architecture?"
 ---
 
 # Well-Architected Framework Assessment Skill
