@@ -3,14 +3,15 @@ name: azure-apim-architecture
 description: Analyzes and explains Azure API Management architecture decisions for enterprise API marketplace implementations using VNet Internal mode, Front Door, hybrid authentication, and multi-environment strategies. Use when discussing APIM component selection, network topology, cost optimization, or comparing alternatives like workspaces vs instances, VNet Internal vs External mode, or Front Door vs Application Gateway.
 license: MIT
 metadata:
+  examples:
+    - "My enterprise APIM needs to expose APIs to both internal teams and external partners while keeping all backends on private VNets — compare VNet Internal mode with Private Link vs VNet External mode and recommend the right approach for my scenario"
+    - "We have 5 product teams each owning 10 or more APIs. Compare APIM workspaces vs separate APIM Premium instances for team isolation, cost, governance, and scalability to 20 teams — which model should we adopt?"
+    - "Design a hub-spoke API gateway topology where a central APIM Premium instance in a hub VNet fronts APIs from 4 business unit spoke VNets, with Azure Front Door WAF as the global entry point and Entra ID for unified authentication"
+
   author: Azure API Marketplace Team
   version: "1.0"
   last-updated: "2026-01-29"
   azure-services: "api-management, front-door, vnet, private-link, api-center"
-  examples:
-    - "Should I use VNet Internal or External mode for my enterprise APIM?"
-    - "Compare APIM workspaces vs multiple instances for multi-team API ownership"
-    - "Design a hub-spoke API gateway topology for multiple business units"
 
 ---
 

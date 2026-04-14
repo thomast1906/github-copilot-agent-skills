@@ -2,13 +2,14 @@
 name: gh-aw-operations
 description: Comprehensive skills for creating, compiling, debugging, and managing GitHub Agentic Workflows (gh-aw) with best practices and common patterns
 metadata:
+  examples:
+    - "Create a GitHub Agentic Workflow triggered on pull_request that scans all changed files for hardcoded secrets, SQL injection risks, and missing input validation, then posts a structured security report as a PR review comment with pass or fail status"
+    - "Build a gh-aw workflow triggered on issues.opened that reads the issue body, categorises it as bug, feature request, or question using Copilot, assigns the appropriate label and team member, and posts a triage summary with next steps"
+    - "My agentic workflow is defined with on: pull_request but it never triggers — review my frontmatter, safe-outputs configuration, and MCP server references and explain exactly what is misconfigured and how to fix it"
+
   version: 1.0.0
   category: automation
   tags: [github-agentic-workflows, gh-aw, automation, ci-cd, ai-workflows]
-  examples:
-    - "Create a GitHub Agentic Workflow to automatically review pull requests for security issues"
-    - "Build a gh-aw workflow that triages new issues using Copilot"
-    - "Debug why my agentic workflow frontmatter isn't triggering correctly"
 
 ---
 

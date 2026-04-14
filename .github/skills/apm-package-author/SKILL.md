@@ -3,9 +3,10 @@ name: apm-package-author
 description: 'Create, maintain, and troubleshoot APM (Agent Package Manager) manifests for distributing GitHub Copilot skills, agents, and MCP servers. USE FOR: creating apm.yml root manifests; creating packages/* sub-manifests; bundling MCP server config into a package; installing packages from a GitHub repo; troubleshooting APM install errors (missing .vscode/mcp.json, Codex CLI warnings, cached installs). DO NOT USE FOR: general GitHub Copilot customization questions; creating SKILL.md files (use skill-creator); writing MCP server code.'
 metadata:
   examples:
-    - "Create an apm.yml manifest for my new Azure Pricing skill"
-    - "Add my MCP server configuration to an existing APM package"
-    - "Troubleshoot why my APM install is showing a missing .vscode/mcp.json error"
+    - "Create a complete apm.yml root manifest and packages/azure-tools sub-manifest that bundles my azure-pricing skill, cost-optimization skill, and the Azure MCP server with the correct mcp.json config"
+    - "Add my custom Draw.io MCP server (npm package @myorg/drawio-mcp) to my existing diagramming APM package, wire up the mcp.json entry, and verify the apm.yml dependencies block is correct"
+    - "My APM install completes but VS Code shows a missing .vscode/mcp.json warning and the installed skills are not available in Copilot Chat — diagnose the manifest and fix the package structure"
+
 ---
 
 # APM Package Author

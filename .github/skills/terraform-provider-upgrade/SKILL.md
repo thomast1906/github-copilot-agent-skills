@@ -2,13 +2,14 @@
 name: terraform-provider-upgrade
 description: Safe Terraform provider upgrades with automatic resource migration, breaking change detection, and state management using moved blocks. Use when upgrading provider versions, handling removed resources, migrating deprecated syntax, or performing major version upgrades.
 metadata:
+  examples:
+    - "Safely upgrade my azurerm provider from 3.116.0 to 4.0 — scan all Terraform modules for breaking changes, generate moved blocks for renamed resources, update deprecated arguments, and produce a step-by-step migration plan with rollback instructions"
+    - "Before I upgrade hashicorp/aws from 4.67 to 5.0, scan my Terraform codebase for removed resources, renamed attributes, and required state migrations, then give me a risk-ranked list of changes ordered by blast radius"
+    - "The azurerm 4.0 upgrade removed azurerm_virtual_machine from my codebase — migrate all usages to azurerm_linux_virtual_machine using moved blocks so existing VMs in state are preserved and not destroyed and recreated"
+
   author: github-copilot-skills-terraform
   version: "1.0.0"
   category: terraform-maintenance
-  examples:
-    - "Upgrade my azurerm provider from 3.x to 4.0 safely"
-    - "Check for breaking changes before upgrading hashicorp/aws from 4 to 5"
-    - "Migrate resources removed in the kubernetes provider 2.30 upgrade"
 
 ---
 

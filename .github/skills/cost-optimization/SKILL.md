@@ -3,9 +3,10 @@ name: cost-optimization
 description: Analyze Azure architectures for cost optimization opportunities, provide savings recommendations, and calculate ROI for improvements.
 metadata:
   examples:
-    - "Find cost savings opportunities in my current Azure architecture"
-    - "Which of my resources would benefit most from reserved instances?"
-    - "Generate a cost optimization report for my production subscription"
+    - "Analyse this Azure setup — App Service P3v3 with 3 instances, Azure SQL General Purpose 8 vCores, Redis Cache C2, and 20TB Blob Storage — and identify the top 5 cost reduction opportunities with estimated monthly savings for each"
+    - "I am spending £12,000 per month on compute across 25 VMs with a consistent 55% average CPU utilisation. Identify which VMs are best candidates for 1-year reserved instances and calculate the projected annual savings"
+    - "Generate a cost optimisation report for my production subscription: identify oversized resources, recommend storage tier downgrades, flag orphaned disks and unused Public IPs, and list reserved instance candidates ranked by savings potential"
+
 ---
 
 # Cost Optimization Skill

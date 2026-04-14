@@ -3,15 +3,16 @@ name: api-security-review
 description: Reviews Azure API Management configurations for security vulnerabilities, OWASP API Security Top 10 compliance, VNet Internal mode validation, Private Link verification, and Azure Security Benchmark alignment. Use when performing security audits, pre-deployment validation, or compliance reviews.
 license: MIT
 metadata:
+  examples:
+    - "Review this APIM policy XML for OWASP API Security Top 10 vulnerabilities and provide specific remediation steps for each finding"
+    - "Audit my APIM instance configured with VNet Internal mode and Private Link — confirm it meets the Azure Security Benchmark and flag any misconfigurations"
+    - "My APIM gateway exposes three APIs publicly. Identify which policies are missing authentication, rate limiting, or input validation and generate a prioritised remediation plan"
+
   author: Azure API Marketplace Team
   version: "1.0"
   last-updated: "2026-01-29"
   azure-services: "api-management, security-center"
   compliance-frameworks: "owasp-api-top10,azure-security-benchmark,cis-azure"
-  examples:
-    - "Review my APIM policy XML for OWASP API Security Top 10 vulnerabilities"
-    - "Audit this API Management configuration against Azure Security Benchmark"
-    - "Check my VNet Internal APIM setup for security gaps"
 
 ---
 

@@ -3,14 +3,15 @@ name: apim-policy-authoring
 description: Creates production-ready Azure API Management policy XML for authentication (OAuth 2.0, JWT validation, subscription keys), rate limiting, CORS configuration, error handling, and API transformations. Use when implementing API security, access control, or request/response processing logic.
 license: MIT
 metadata:
+  examples:
+    - "Create a production-ready inbound policy that validates Entra ID JWT tokens, falls back to subscription key auth for legacy clients, and returns a structured XML 401 error if both fail"
+    - "Write a rate limiting policy that enforces 1000 calls per hour per subscription key and 60 per minute per IP, returning a 429 with a Retry-After header on violation"
+    - "Generate a CORS policy for my APIM product that allows https://app.contoso.com with GET, POST, DELETE methods, includes Authorization and Content-Type headers, and correctly handles OPTIONS preflight requests"
+
   author: Azure API Marketplace Team
   version: "1.0"
   last-updated: "2026-01-29"
   azure-services: "api-management"
-  examples:
-    - "Create an OAuth 2.0 JWT validation policy for my APIM"
-    - "Add rate limiting at 100 calls per minute per subscription key"
-    - "Write a CORS policy allowing requests from https://myapp.example.com"
 
 ---
 

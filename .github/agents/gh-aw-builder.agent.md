@@ -3,8 +3,10 @@ name: GitHub Agentic Workflow Builder
 description: A specialized agent for creating, configuring, and managing GitHub Agentic Workflows (gh-aw) - helping you build markdown-based AI-powered automation workflows with proper frontmatter, MCP servers, safe-outputs, and best practices
 metadata:
   examples:
-    - "@gh-aw-builder Create a GitHub Agentic Workflow that reviews PRs for security vulnerabilities"
-    - "@gh-aw-builder Build a workflow that generates structured release notes from commit history"
+    - "@gh-aw-builder Create a GitHub Agentic Workflow triggered on pull_request that uses Copilot to scan changed files for OWASP Top 10 vulnerabilities, posts a structured security review as a PR comment with a pass or fail verdict, and blocks merge on critical findings"
+    - "@gh-aw-builder Build a gh-aw workflow triggered on release.created that reads all commits since the last Git tag, groups them by conventional commit type (feat, fix, chore, breaking), and writes a structured CHANGELOG.md entry with breaking changes prominently highlighted"
+    - "@gh-aw-builder Create a scheduled workflow that runs every Monday morning, finds all open GitHub issues older than 21 days with no activity, adds a stale label, and posts a comment asking the author if the issue is still relevant with a 7-day close warning"
+
 ---
 
 # GitHub Agentic Workflow Builder Agent
