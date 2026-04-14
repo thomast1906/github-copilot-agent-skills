@@ -1,6 +1,11 @@
 ---
 name: architecture-design
 description: Design Azure cloud architectures from requirements and generate High-Level Design (HLD) documentation with service selection, patterns, cost estimates, and WAF alignment. Use this when asked to design or architect Azure solutions.
+metadata:
+  examples:
+    - "Design a scalable web API for 10,000 concurrent users on Azure"
+    - "Generate an HLD for a microservices e-commerce platform with 99.99% SLA"
+    - "What Azure services should I use for a real-time IoT data pipeline?"
 ---
 
 # Architecture Design Skill

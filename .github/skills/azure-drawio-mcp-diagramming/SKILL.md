@@ -1,6 +1,11 @@
 ---
 name: azure-drawio-mcp-diagramming
 description: Create and edit architecture diagrams using Draw.io MCP (`drawio/create_diagram`) with reliable Azure icon rendering guidance and troubleshooting. compatibility Requires Python 3 and internet access to refresh the icon catalog (periodic, not per-run).
+metadata:
+  examples:
+    - "Create an Azure hub-spoke network topology diagram with Draw.io"
+    - "Draw a three-tier web app with App Service, Azure SQL, and Redis Cache"
+    - "Generate a Draw.io diagram for my AKS cluster with ingress and monitoring"
 ---
 
 # Draw.io MCP Diagramming Skill

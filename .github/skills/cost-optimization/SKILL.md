@@ -1,6 +1,11 @@
 ---
 name: cost-optimization
 description: Analyze Azure architectures for cost optimization opportunities, provide savings recommendations, and calculate ROI for improvements.
+metadata:
+  examples:
+    - "Find cost savings opportunities in my current Azure architecture"
+    - "Which of my resources would benefit most from reserved instances?"
+    - "Generate a cost optimization report for my production subscription"
 ---
 
 # Cost Optimization Skill
