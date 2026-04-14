@@ -4,15 +4,17 @@ description: Creates production-ready Azure API Management policy XML for authen
 license: MIT
 metadata:
   examples:
-    - "Create a production-ready inbound policy that validates Entra ID JWT tokens, falls back to subscription key auth for legacy clients, and returns a structured XML 401 error if both fail"
-    - "Write a rate limiting policy that enforces 1000 calls per hour per subscription key and 60 per minute per IP, returning a 429 with a Retry-After header on violation"
-    - "Generate a CORS policy for my APIM product that allows https://app.contoso.com with GET, POST, DELETE methods, includes Authorization and Content-Type headers, and correctly handles OPTIONS preflight requests"
-
+  - Create a production-ready inbound policy that validates Entra ID JWT tokens, falls back to subscription key auth for legacy clients, and returns a structured XML 401 error if both fail
+  - Write a rate limiting policy that enforces 1000 calls per hour per subscription key and 60 per minute per IP, returning a 429 with a Retry-After header on violation
+  - Generate a CORS policy for my APIM product that allows https://app.contoso.com with GET, POST, DELETE methods, includes Authorization and Content-Type headers, and correctly handles OPTIONS preflight requests
   author: Azure API Marketplace Team
-  version: "1.0"
-  last-updated: "2026-01-29"
-  azure-services: "api-management"
-
+  version: '1.0'
+  last-updated: '2026-01-29'
+  azure-services: api-management
+  category: azure-apim
+  status: wip
+  featured: false
+  mcp: []
 ---
 
 # APIM Policy Authoring Skill

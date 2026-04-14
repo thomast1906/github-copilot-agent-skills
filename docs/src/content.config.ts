@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 import yaml from 'yaml';
-import { skillMeta, agentMeta, packageMeta } from './site.config';
+import { packageMeta } from './site.config';
 
 // Repo root: docs/src/content.config.ts → two levels up → repo root
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
@@ -34,6 +34,12 @@ function normalizeMcpId(rawName: string): string {
   return apmMcpIdMap[rawName] ?? rawName;
 }
 
+function parseAzureServices(raw: unknown): string[] {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return (raw as string[]).map(s => String(s).trim()).filter(Boolean);
+  return String(raw).split(',').map(s => s.trim()).filter(Boolean);
+}
+
 const skills = defineCollection({
   loader: {
     name: 'skills-loader',
@@ -46,22 +52,21 @@ const skills = defineCollection({
         if (!existsSync(skillPath)) continue;
         const raw = readFileSync(skillPath, 'utf-8');
         const { data, content } = matter(raw);
-        const overlay = skillMeta[slug] ?? {
-          category: 'azure-architecture' as const,
-          status: 'stable' as const,
-          featured: false,
-          mcp: [] as string[],
-        };
+        const meta = (data.metadata as Record<string, unknown>) ?? {};
+        const rawMcp = (meta.mcp as string[] | undefined) ?? [];
         store.set({
           id: slug,
           data: {
             name: data.name as string,
             description: data.description as string,
-            examples: ((data.metadata as Record<string, unknown>)?.examples as string[]) ?? [],
-            category: overlay.category,
-            status: overlay.status,
-            featured: overlay.featured,
-            mcp: overlay.mcp,
+            examples: (meta.examples as string[]) ?? [],
+            category: (meta.category as string) ?? 'azure-architecture',
+            status: (meta.status as string) ?? 'stable',
+            featured: (meta.featured as boolean) ?? false,
+            mcp: Array.isArray(rawMcp) ? rawMcp : [],
+            azureServices: parseAzureServices(meta['azure-services']),
+            version: (meta.version as string | undefined) ?? undefined,
+            lastUpdated: (meta['last-updated'] as string | undefined) ?? undefined,
           },
           body: content,
         });
@@ -76,6 +81,9 @@ const skills = defineCollection({
     status: z.enum(['stable', 'wip']),
     featured: z.boolean(),
     mcp: z.array(z.string()),
+    azureServices: z.array(z.string()),
+    version: z.string().optional(),
+    lastUpdated: z.string().optional(),
   }),
 });
 
@@ -88,16 +96,15 @@ const agents = defineCollection({
         const id = file.replace('.agent.md', '');
         const raw = readFileSync(join(agentsDir, file), 'utf-8');
         const { data, content } = matter(raw);
-        const overlay = agentMeta[id] ?? { skills: [] as string[], package: null };
+        const meta = (data.metadata as Record<string, unknown>) ?? {};
         store.set({
           id,
           data: {
             name: data.name as string,
             description: data.description as string,
             tools: (data.tools as string[]) ?? [],
-            examples: ((data.metadata as Record<string, unknown>)?.examples as string[]) ?? [],
-            skills: overlay.skills,
-            package: overlay.package,
+            examples: (meta.examples as string[]) ?? [],
+            skills: (meta.skills as string[]) ?? [],
           },
           body: content,
         });
@@ -110,7 +117,6 @@ const agents = defineCollection({
     tools: z.array(z.string()),
     examples: z.array(z.string()),
     skills: z.array(z.string()),
-    package: z.string().nullable(),
   }),
 });
 

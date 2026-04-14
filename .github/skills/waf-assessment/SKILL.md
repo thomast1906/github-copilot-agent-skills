@@ -3,10 +3,14 @@ name: waf-assessment
 description: Assess Azure architectures against Well-Architected Framework (WAF) five pillars - Reliability, Security, Cost Optimization, Operational Excellence, and Performance Efficiency. Provide scores and recommendations.
 metadata:
   examples:
-    - "Review my AKS architecture against the WAF Reliability pillar: I run a single node pool in one region with no Pod Disruption Budgets, no cluster autoscaler, and no multi-region failover. Score the current state and give me a prioritised remediation plan."
-    - "Score my three-tier web app (App Service P2v3 + Azure SQL General Purpose + Redis Cache C1) against all five WAF pillars and produce a report with a score for each pillar, the top 3 risks per pillar, and specific remediation actions with effort estimates"
-    - "What are the most critical WAF Security improvements for my architecture? I am using public endpoints on Azure SQL and Storage, storing connection strings in App Service app settings, and have not enabled Microsoft Defender for Cloud on my subscription."
-
+  - 'Review my AKS architecture against the WAF Reliability pillar: I run a single node pool in one region with no Pod Disruption Budgets, no cluster autoscaler, and no multi-region failover. Score the current state and give me a prioritised remediation plan.'
+  - Score my three-tier web app (App Service P2v3 + Azure SQL General Purpose + Redis Cache C1) against all five WAF pillars and produce a report with a score for each pillar, the top 3 risks per pillar, and specific remediation actions with effort estimates
+  - What are the most critical WAF Security improvements for my architecture? I am using public endpoints on Azure SQL and Storage, storing connection strings in App Service app settings, and have not enabled Microsoft Defender for Cloud on my subscription.
+  category: azure-architecture
+  status: stable
+  featured: true
+  mcp:
+  - azure-mcp
 ---
 
 # Well-Architected Framework Assessment Skill

@@ -3,10 +3,14 @@ name: excalidraw-mcp-diagramming
 description: Create and edit diagrams on a live Excalidraw canvas using the Excalidraw MCP server. Use when asked to draw, diagram, sketch, or visualise architectures, workflows, data flows, system designs, flowcharts, mind maps, or sequence diagrams. Trigger phrases include "create an excalidraw", "draw me a diagram", "make a flowchart", "visualise the system", "diagram this architecture", "export to PNG/SVG". Can export to PNG, SVG, .excalidraw file, or a shareable URL. Do NOT use for Draw.io or diagrams.net output (use drawio-mcp-diagramming instead).
 metadata:
   examples:
-    - "Sketch a hand-drawn style architecture diagram for my event-driven microservices system: API Gateway routing to 5 bounded-context services, each with its own Postgres database, communicating via Kafka topics, with Redis for session state"
-    - "Create a mind map exploring the trade-offs between monolith, modular monolith, and microservices for my early-stage SaaS product — cover operational complexity, team autonomy, deployment risk, data isolation, and infrastructure cost"
-    - "Draw a sequence diagram for the user login flow: browser sends credentials to Next.js API route, which redirects to Entra ID OIDC, validates the JWT, sets a session cookie, and redirects to the dashboard — include the silent token refresh path"
-
+  - 'Sketch a hand-drawn style architecture diagram for my event-driven microservices system: API Gateway routing to 5 bounded-context services, each with its own Postgres database, communicating via Kafka topics, with Redis for session state'
+  - Create a mind map exploring the trade-offs between monolith, modular monolith, and microservices for my early-stage SaaS product — cover operational complexity, team autonomy, deployment risk, data isolation, and infrastructure cost
+  - 'Draw a sequence diagram for the user login flow: browser sends credentials to Next.js API route, which redirects to Entra ID OIDC, validates the JWT, sets a session cookie, and redirects to the dashboard — include the silent token refresh path'
+  category: diagramming
+  status: stable
+  featured: false
+  mcp:
+  - excalidraw-mcp
 ---
 
 # Excalidraw MCP Diagramming

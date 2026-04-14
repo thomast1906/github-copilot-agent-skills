@@ -1,13 +1,30 @@
 ---
 name: Azure Architect Agent
 description: Expert Azure Solutions Architect that designs cloud architectures and produces comprehensive High-Level Design (HLD) documents aligned to Azure Well-Architected Framework (WAF) and Cloud Adoption Framework (CAF).
-tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'azure-mcp/azureterraformbestpractices', 'azure-mcp/documentation', 'azure-mcp/get_azure_bestpractices', 'azure-mcp/search', 'ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph', 'todo','drawio/create_diagram']
+tools:
+- vscode
+- execute
+- read
+- agent
+- edit
+- search
+- web
+- azure-mcp/azureterraformbestpractices
+- azure-mcp/documentation
+- azure-mcp/get_azure_bestpractices
+- azure-mcp/search
+- ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph
+- todo
+- drawio/create_diagram
 metadata:
   examples:
-    - "@azure-architect Design a production REST API platform for 50,000 concurrent users with sub-100ms p99 latency, 99.99% SLA, and PCI-DSS compliance in UK South with a target monthly budget of £20,000. Cover API gateway, compute, database, caching, and observability with a full cost breakdown."
-    - "@azure-architect Review this architecture — App Service P3v3 with 2 instances, Azure SQL Business Critical, Redis Cache Premium P1, and Front Door Standard WAF. Score it against all five WAF pillars, identify the top risks per pillar, and produce a prioritised remediation backlog."
-    - "@azure-architect Compare the monthly cost in UK South for running my workload on AKS (5× Standard_D4s_v5 nodes) vs Azure Container Apps consumption plan vs App Service Premium P2v3 ×3, assuming 20 million requests per month and 400ms average processing time. Include 1-year reservation savings."
-
+  - '@azure-architect Design a production REST API platform for 50,000 concurrent users with sub-100ms p99 latency, 99.99% SLA, and PCI-DSS compliance in UK South with a target monthly budget of £20,000. Cover API gateway, compute, database, caching, and observability with a full cost breakdown.'
+  - '@azure-architect Review this architecture — App Service P3v3 with 2 instances, Azure SQL Business Critical, Redis Cache Premium P1, and Front Door Standard WAF. Score it against all five WAF pillars, identify the top risks per pillar, and produce a prioritised remediation backlog.'
+  - '@azure-architect Compare the monthly cost in UK South for running my workload on AKS (5× Standard_D4s_v5 nodes) vs Azure Container Apps consumption plan vs App Service Premium P2v3 ×3, assuming 20 million requests per month and 400ms average processing time. Include 1-year reservation savings.'
+  skills:
+  - architecture-design
+  - waf-assessment
+  - azure-pricing
 ---
 
 ## Responsibilities
