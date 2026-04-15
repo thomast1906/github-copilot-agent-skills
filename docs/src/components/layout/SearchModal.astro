@@ -1,0 +1,157 @@
+---
+const base = import.meta.env.BASE_URL || '/github-copilot-agent-skills/';
+const bundlePath = base.endsWith('/') ? base + '_pagefind/' : base + '/_pagefind/';
+---
+
+<link rel="stylesheet" href={bundlePath + 'pagefind-ui.css'} />
+
+<dialog id="search-dialog" aria-label="Search skills, agents, and packages">
+  <div class="search-inner">
+    <div class="search-header">
+      <span class="search-title">Search</span>
+      <button class="search-close" id="search-close" aria-label="Close search">✕</button>
+    </div>
+    <div id="search"></div>
+  </div>
+</dialog>
+
+<script define:vars={{ bundlePath }}>
+  let initialized = false;
+
+  function openSearch() {
+    const dialog = document.getElementById('search-dialog');
+    if (!dialog) return;
+
+    if (!initialized) {
+      const script = document.createElement('script');
+      script.src = bundlePath + 'pagefind-ui.js';
+      script.onload = () => {
+        new PagefindUI({ element: '#search', bundlePath, showImages: false });
+        initialized = true;
+        setTimeout(() => dialog.querySelector('input')?.focus(), 50);
+      };
+      document.head.appendChild(script);
+    } else {
+      setTimeout(() => dialog.querySelector('input')?.focus(), 50);
+    }
+
+    dialog.showModal();
+  }
+
+  function initSearch() {
+    document.getElementById('search-btn')?.addEventListener('click', openSearch);
+
+    document.getElementById('search-close')?.addEventListener('click', () => {
+      document.getElementById('search-dialog')?.close();
+    });
+
+    document.getElementById('search-dialog')?.addEventListener('click', (e) => {
+      const dialog = e.currentTarget;
+      const rect = dialog.getBoundingClientRect();
+      const clickedOutside =
+        e.clientX < rect.left || e.clientX > rect.right ||
+        e.clientY < rect.top || e.clientY > rect.bottom;
+      if (clickedOutside) dialog.close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initSearch);
+</script>
+
+<style>
+  #search-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    top: 10vh;
+    width: min(680px, 95vw);
+    max-height: 80vh;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  }
+
+  #search-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .search-close {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    line-height: 1;
+  }
+
+  .search-close:hover {
+    color: var(--color-text-primary);
+    background: var(--color-bg-tertiary);
+  }
+
+  #search {
+    padding: var(--space-4);
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* Override pagefind UI styles to match site theme */
+  #search-dialog :global(.pagefind-ui) {
+    --pagefind-ui-scale: 0.9;
+    --pagefind-ui-primary: var(--color-accent-primary);
+    --pagefind-ui-text: var(--color-text-primary);
+    --pagefind-ui-background: var(--color-bg-secondary);
+    --pagefind-ui-border: var(--color-border);
+    --pagefind-ui-tag: var(--color-bg-tertiary);
+    --pagefind-ui-font: var(--font-sans, system-ui);
+  }
+
+  #search-dialog :global(.pagefind-ui__search-input) {
+    background: var(--color-bg-primary) !important;
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  #search-dialog :global(.pagefind-ui__result-link) {
+    color: var(--color-accent-primary) !important;
+  }
+
+  #search-dialog :global(.pagefind-ui__result-excerpt) {
+    color: var(--color-text-secondary) !important;
+  }
+</style>

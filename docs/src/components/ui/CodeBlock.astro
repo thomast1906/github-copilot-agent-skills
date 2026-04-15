@@ -23,26 +23,26 @@ const { code, lang = 'bash', label } = Astro.props;
 </div>
 
 <script>
-  document.querySelectorAll('.copy-btn').forEach(button => {
-    button.addEventListener('click', async () => {
-      const codeBlock = button.closest('.code-wrapper');
-      const code = codeBlock?.querySelector('code')?.textContent || '';
-      
-      try {
-        await navigator.clipboard.writeText(code);
-        const textSpan = button.querySelector('.copy-text');
-        if (textSpan) {
-          const originalText = textSpan.textContent;
-          textSpan.textContent = 'Copied!';
-          setTimeout(() => {
-            textSpan.textContent = originalText;
-          }, 2000);
+  function initCopy() {
+    document.querySelectorAll('.copy-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const codeBlock = button.closest('.code-wrapper');
+        const code = codeBlock?.querySelector('code')?.textContent || '';
+        try {
+          await navigator.clipboard.writeText(code);
+          const textSpan = button.querySelector('.copy-text');
+          if (textSpan) {
+            const originalText = textSpan.textContent;
+            textSpan.textContent = 'Copied!';
+            setTimeout(() => { textSpan.textContent = originalText; }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy:', err);
         }
-      } catch (err) {
-        console.error('Failed to copy:', err);
-      }
+      });
     });
-  });
+  }
+  document.addEventListener('astro:page-load', initCopy);
 </script>
 
 <style>

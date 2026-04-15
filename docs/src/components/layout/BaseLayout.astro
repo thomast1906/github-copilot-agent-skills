@@ -1,6 +1,7 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import { ClientRouter } from 'astro:transitions';
 import '../../styles/global.css';
 
 interface Props {
@@ -30,6 +31,7 @@ const fullTitle = title === 'GitHub Copilot Agent Skills' ? title : `${title} | 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <ClientRouter />
   </head>
   <body>
     <Header />
