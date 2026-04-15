@@ -66,19 +66,6 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
           <span class="sr-only">GitHub</span>
         </a>
 
-        <button
-          class="search-btn"
-          id="search-trigger"
-          aria-label="Search (Ctrl+K)"
-          title="Search (Ctrl+K)"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-            <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/>
-          </svg>
-          <span class="search-label">Search</span>
-          <kbd class="search-kbd">⌘K</kbd>
-        </button>
-
         <a
           href="https://github.com/thomast1906/github-copilot-agent-skills"
           target="_blank"
@@ -152,16 +139,6 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
   document.addEventListener('astro:page-load', () => {
     initNav();
     loadStarCount();
-    document.getElementById('search-trigger')?.addEventListener('click', () => {
-      document.dispatchEvent(new CustomEvent('open-search'));
-    });
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      document.dispatchEvent(new CustomEvent('open-search'));
-    }
   });
 </script>
 
@@ -226,42 +203,6 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
   .nav-link-external svg {
     flex-shrink: 0;
-  }
-
-  .search-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 5px var(--space-3);
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-full, 9999px);
-    color: var(--color-text-secondary);
-    font-size: var(--text-sm);
-    font-family: inherit;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  }
-
-  .search-btn:hover {
-    background: var(--color-bg-secondary);
-    border-color: var(--color-accent-primary);
-    color: var(--color-accent-primary);
-  }
-
-  .search-kbd {
-    font-family: inherit;
-    font-size: 0.75em;
-    padding: 1px 5px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    color: var(--color-text-secondary);
-  }
-
-  @media (max-width: 768px) {
-    .search-label, .search-kbd { display: none; }
   }
 
   .star-btn {

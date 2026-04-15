@@ -1,7 +1,6 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
-import SearchModal from './SearchModal.astro';
 import { ClientRouter } from 'astro:transitions';
 import '../../styles/global.css';
 
@@ -55,6 +54,5 @@ const fullTitle = title === 'Thomas Thornton | GitHub Copilot Agent Skills' ? ti
       <slot />
     </main>
     <Footer />
-    <SearchModal />
   </body>
 </html>
