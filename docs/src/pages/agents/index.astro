@@ -72,19 +72,13 @@ const agents = await getCollection('agents');
 
   .agents-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--space-6);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     .agents-grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .agents-grid {
-      grid-template-columns: repeat(4, 1fr);
     }
   }
 </style>
