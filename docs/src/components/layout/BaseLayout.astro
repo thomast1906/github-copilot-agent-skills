@@ -1,6 +1,7 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import SearchModal from './SearchModal.astro';
 import { ClientRouter } from 'astro:transitions';
 import '../../styles/global.css';
 
@@ -12,7 +13,7 @@ interface Props {
 const { title, description = 'A curated collection of GitHub Copilot agent skills for platform engineers, cloud architects, and DevOps practitioners.' } = Astro.props;
 
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
-const fullTitle = title === 'GitHub Copilot Agent Skills' ? title : `${title} | GitHub Copilot Agent Skills`;
+const fullTitle = title === 'Thomas Thornton | GitHub Copilot Agent Skills' ? title : `${title} | Thomas Thornton | GitHub Copilot Agent Skills`;
 ---
 
 <!DOCTYPE html>
@@ -32,6 +33,21 @@ const fullTitle = title === 'GitHub Copilot Agent Skills' ? title : `${title} | 
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <ClientRouter />
+    <script>
+      // Smooth-scroll only for in-page anchor links; leave ClientRouter navigation instant.
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (href?.startsWith('#')) {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    </script>
   </head>
   <body>
     <Header />
@@ -39,5 +55,6 @@ const fullTitle = title === 'GitHub Copilot Agent Skills' ? title : `${title} | 
       <slot />
     </main>
     <Footer />
+    <SearchModal />
   </body>
 </html>

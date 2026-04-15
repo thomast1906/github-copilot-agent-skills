@@ -10,7 +10,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior is intentionally omitted here so Astro ClientRouter's
+     programmatic scroll-to-top on navigation is instant (no bounce effect).
+     Smooth scrolling for anchor links is applied via JavaScript below. */
 }
 
 body {
@@ -51,10 +53,6 @@ ol[role="list"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  
   *,
   *::before,
   *::after {

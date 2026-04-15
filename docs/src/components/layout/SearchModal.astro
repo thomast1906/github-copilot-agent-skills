@@ -39,7 +39,8 @@ const bundlePath = base.endsWith('/') ? base + '_pagefind/' : base + '/_pagefind
   }
 
   function initSearch() {
-    document.getElementById('search-btn')?.addEventListener('click', openSearch);
+    document.removeEventListener('open-search', openSearch);
+    document.addEventListener('open-search', openSearch);
 
     document.getElementById('search-close')?.addEventListener('click', () => {
       document.getElementById('search-dialog')?.close();

@@ -4,7 +4,7 @@ import StatusBadge from '../../components/ui/StatusBadge.astro';
 import CategoryBadge from '../../components/ui/CategoryBadge.astro';
 import AgentCard from '../../components/cards/AgentCard.astro';
 import PackageCard from '../../components/cards/PackageCard.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { mcpServers } from '../../site.config';
 
 export async function getStaticPaths() {
@@ -20,6 +20,7 @@ interface Props {
 }
 
 const { skill } = Astro.props;
+const { Content } = await render(skill);
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
 const relatedMcpServers = mcpServers.filter(server =>
@@ -82,8 +83,7 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
         </section>
       )}
 
-      <div class="source-link-row">
-        <div class="install-row">
+      <div class="source-link-row">        <div class="install-row">
           <span class="install-label">Quick install:</span>
           <code class="install-cmd">apm install thomast1906/github-copilot-agent-skills/.github/skills/{skill.id} --runtime vscode</code>
           <button class="copy-install-btn" data-cmd={`apm install thomast1906/github-copilot-agent-skills/.github/skills/${skill.id} --runtime vscode`} aria-label="Copy install command">
@@ -101,6 +101,13 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
           </svg>
         </a>
       </div>
+
+      <section class="prose-section">
+        <h2>Full Specification</h2>
+        <div class="prose">
+          <Content />
+        </div>
+      </section>
 
       {relatedMcpServers.length > 0 && (
         <section class="section">
@@ -431,6 +438,104 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
     .packages-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  .prose-section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .prose-section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-8);
+  }
+
+  .prose {
+    font-size: var(--text-base);
+    line-height: 1.75;
+    color: var(--color-text-primary);
+    max-width: 72ch;
+  }
+
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+  }
+
+  .prose :global(h1) { font-size: var(--text-3xl); }
+  .prose :global(h2) { font-size: var(--text-2xl); }
+  .prose :global(h3) { font-size: var(--text-xl); }
+  .prose :global(h4) { font-size: var(--text-lg); }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875em;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+  }
+
+  .prose :global(pre) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    overflow-x: auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: var(--text-sm);
+  }
+
+  .prose :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--color-border);
+    padding-left: var(--space-4);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-bottom: var(--space-4);
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-8) 0;
   }
 </style>
 
