@@ -90,9 +90,10 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
   .packages-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-8);
     margin-bottom: var(--space-16);
+    min-width: 0;
   }
 
   @media (min-width: 1024px) {

@@ -73,6 +73,10 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
   .description {
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .skills-tags {

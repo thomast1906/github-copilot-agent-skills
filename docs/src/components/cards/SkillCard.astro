@@ -79,6 +79,10 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
     flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .card-footer {

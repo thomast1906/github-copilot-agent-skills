@@ -63,6 +63,9 @@ const { code, lang = 'bash', label } = Astro.props;
 
   .code-wrapper pre {
     padding-right: var(--space-16);
+    overflow-x: auto;
+    white-space: pre;
+    word-break: normal;
   }
 
   .copy-btn {
