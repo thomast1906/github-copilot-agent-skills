@@ -58,14 +58,16 @@ const skills = defineCollection({
           data: {
             name: data.name as string,
             description: data.description as string,
-            examples: (meta.examples as string[]) ?? [],
-            category: (meta.category as string) ?? 'azure-architecture',
-            status: (meta.status as string) ?? 'stable',
-            featured: (meta.featured as boolean) ?? false,
-            mcp: Array.isArray(rawMcp) ? rawMcp : [],
-            azureServices: parseAzureServices(meta['azure-services']),
-            version: (meta.version as string | undefined) ?? undefined,
-            lastUpdated: (meta['last-updated'] as string | undefined) ?? undefined,
+            metadata: {
+              examples: (meta.examples as string[]) ?? [],
+              category: (meta.category as string) ?? 'azure-architecture',
+              status: (meta.status as string) ?? 'stable',
+              featured: (meta.featured as boolean) ?? false,
+              mcp: Array.isArray(rawMcp) ? rawMcp : [],
+              azureServices: parseAzureServices(meta['azure-services']),
+              version: (meta.version as string | undefined) ?? undefined,
+              lastUpdated: (meta['last-updated'] as string | undefined) ?? undefined,
+            },
           },
           body: content,
         });
@@ -75,14 +77,16 @@ const skills = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    examples: z.array(z.string()),
-    category: z.enum(['azure-architecture', 'azure-apim', 'infrastructure-as-code', 'diagramming', 'github-workflows']),
-    status: z.enum(['stable', 'wip']),
-    featured: z.boolean(),
-    mcp: z.array(z.string()),
-    azureServices: z.array(z.string()).default([]),
-    version: z.string().optional(),
-    lastUpdated: z.string().optional(),
+    metadata: z.object({
+      examples: z.array(z.string()),
+      category: z.enum(['azure-architecture', 'azure-apim', 'infrastructure-as-code', 'diagramming', 'github-workflows']),
+      status: z.enum(['stable', 'wip']),
+      featured: z.boolean(),
+      mcp: z.array(z.string()),
+      azureServices: z.array(z.string()).default([]),
+      version: z.string().optional(),
+      lastUpdated: z.string().optional(),
+    }),
   }),
 });
 
@@ -102,8 +106,10 @@ const agents = defineCollection({
             name: data.name as string,
             description: data.description as string,
             tools: (data.tools as string[]) ?? [],
-            examples: (meta.examples as string[]) ?? [],
-            skills: (meta.skills as string[]) ?? [],
+            metadata: {
+              examples: (meta.examples as string[]) ?? [],
+              skills: (meta.skills as string[]) ?? [],
+            },
           },
           body: content,
         });
@@ -114,8 +120,10 @@ const agents = defineCollection({
     name: z.string(),
     description: z.string(),
     tools: z.array(z.string()).default([]),
-    examples: z.array(z.string()).default([]),
-    skills: z.array(z.string()).default([]),
+    metadata: z.object({
+      examples: z.array(z.string()).default([]),
+      skills: z.array(z.string()).default([]),
+    }),
   }),
 });
 

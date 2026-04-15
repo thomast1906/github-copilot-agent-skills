@@ -15,7 +15,7 @@ const agents = await getCollection('agents');
 const packages = await getCollection('packages');
 
 const featuredPackages = packages.filter(pkg => pkg.data.featured);
-const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
+const featuredSkills = skills.filter(skill => skill.data.metadata.featured).slice(0, 6);
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 ---
 

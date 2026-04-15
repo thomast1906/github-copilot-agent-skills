@@ -9,23 +9,23 @@ interface Props {
 
 const { skill } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
-const cat = categories[skill.data.category as keyof typeof categories];
-const examples = skill.data.examples?.slice(0, 2) ?? [];
-const services = skill.data.azureServices ?? [];
+const cat = categories[skill.data.metadata.category as keyof typeof categories];
+const examples = skill.data.metadata.examples?.slice(0, 2) ?? [];
+const services = skill.data.metadata.azureServices ?? [];
 ---
 
 <article
   class="skill-card"
-  data-category={skill.data.category}
+  data-category={skill.data.metadata.category}
   style={`--cat-color: ${cat?.color ?? 'var(--color-accent-primary)'}`}
 >
   <a href={`${baseUrl}/skills/${skill.id}/`} class="card-link">
     <div class="card-top">
       <span class="cat-chip">
         {cat?.icon && <span class="cat-icon" aria-hidden="true">{cat.icon}</span>}
-        {cat?.name ?? skill.data.category}
+        {cat?.name ?? skill.data.metadata.category}
       </span>
-      <StatusBadge status={skill.data.status} />
+      <StatusBadge status={skill.data.metadata.status} />
     </div>
 
     <h3>{skill.data.name}</h3>

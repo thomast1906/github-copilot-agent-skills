@@ -7,7 +7,7 @@ interface Props {
 
 const { agent } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL;
-const skillCount = agent.data.skills?.length ?? 0;
+const skillCount = agent.data.metadata.skills?.length ?? 0;
 ---
 
 <article class="agent-card">

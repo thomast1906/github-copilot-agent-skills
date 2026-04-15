@@ -20,7 +20,7 @@ const { agent } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
 const allSkills = await getCollection('skills');
-const relatedSkills = allSkills.filter(skill => agent.data.skills.includes(skill.id));
+const relatedSkills = allSkills.filter(skill => agent.data.metadata.skills.includes(skill.id));
 
 const allPackages = await getCollection('packages');
 const relatedPackages = allPackages.filter(pkg => pkg.data.agents.includes(agent.id));
@@ -60,11 +60,11 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
         </a>
       </div>
 
-      {agent.data.examples.length > 0 && (
+      {agent.data.metadata.examples.length > 0 && (
         <section class="examples-section">
           <h2>Example prompts</h2>
           <ul class="examples-list">
-            {agent.data.examples.map((ex) => (
+            {agent.data.metadata.examples.map((ex) => (
               <li class="example-item">
                 <span class="example-icon">💬</span>
                 <span class="example-text">{ex}</span>

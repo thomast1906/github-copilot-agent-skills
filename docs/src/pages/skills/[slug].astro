@@ -23,12 +23,12 @@ const { skill } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
 const relatedMcpServers = mcpServers.filter(server =>
-  skill.data.mcp.includes(server.id)
+  skill.data.metadata.mcp.includes(server.id)
 );
 
 const allAgents = await getCollection('agents');
 const relatedAgents = allAgents.filter(agent =>
-  agent.data.skills.includes(skill.id)
+  agent.data.metadata.skills.includes(skill.id)
 );
 
 const allPackages = await getCollection('packages');
@@ -50,29 +50,29 @@ const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/bl
       <header class="skill-header">
         <h1>{skill.data.name}</h1>
         <div class="badges">
-          <StatusBadge status={skill.data.status} />
-          <CategoryBadge category={skill.data.category} />
-          {skill.data.version && <span class="meta-badge">v{skill.data.version}</span>}
-          {skill.data.lastUpdated && <span class="meta-badge">Updated {skill.data.lastUpdated}</span>}
+          <StatusBadge status={skill.data.metadata.status} />
+          <CategoryBadge category={skill.data.metadata.category} />
+          {skill.data.metadata.version && <span class="meta-badge">v{skill.data.metadata.version}</span>}
+          {skill.data.metadata.lastUpdated && <span class="meta-badge">Updated {skill.data.metadata.lastUpdated}</span>}
         </div>
       </header>
 
       <p class="description">{skill.data.description}</p>
 
-      {skill.data.azureServices.length > 0 && (
+      {skill.data.metadata.azureServices.length > 0 && (
         <div class="azure-services">
           <span class="services-label">Azure services:</span>
-          {skill.data.azureServices.map(svc => (
+          {skill.data.metadata.azureServices.map(svc => (
             <span class="service-tag">{svc}</span>
           ))}
         </div>
       )}
 
-      {skill.data.examples.length > 0 && (
+      {skill.data.metadata.examples.length > 0 && (
         <section class="examples-section">
           <h2>Example prompts</h2>
           <ul class="examples-list">
-            {skill.data.examples.map((ex) => (
+            {skill.data.metadata.examples.map((ex) => (
               <li class="example-item">
                 <span class="example-icon">💬</span>
                 <span class="example-text">{ex}</span>
