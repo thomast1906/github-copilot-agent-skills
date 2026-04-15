@@ -113,9 +113,9 @@ const agents = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    tools: z.array(z.string()),
-    examples: z.array(z.string()),
-    skills: z.array(z.string()),
+    tools: z.array(z.string()).default([]),
+    examples: z.array(z.string()).default([]),
+    skills: z.array(z.string()).default([]),
   }),
 });
 

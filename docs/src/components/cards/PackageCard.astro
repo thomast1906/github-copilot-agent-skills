@@ -7,123 +7,128 @@ interface Props {
 }
 
 const { package: pkg } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+const href = `${baseUrl}/packages/${pkg.id}/`;
+
+const agentCount = pkg.data.agents.length;
+const skillCount = pkg.data.skills.length;
+const mcpCount = pkg.data.mcp.length;
 ---
 
-<article class="package-card">
-  <div class="card-content">
-    <h3>{pkg.data.name}</h3>
-    <p class="description">{pkg.data.description}</p>
-    
-    <CodeBlock code={pkg.data.installCommand} label="Install" />
-    
-    <div class="package-details">
-      {pkg.data.agents.length > 0 && (
-        <div class="detail-section">
-          <h4>Included Agents</h4>
-          <div class="tags">
-            {pkg.data.agents.map((agent) => (
-              <span class="tag">{agent}</span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {pkg.data.skills.length > 0 && (
-        <div class="detail-section">
-          <h4>Included Skills</h4>
-          <div class="tags">
-            {pkg.data.skills.map((skill) => (
-              <span class="tag">{skill}</span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {pkg.data.mcp.length > 0 && (
-        <div class="detail-section">
-          <h4>MCP Requirements</h4>
-          <div class="tags">
-            {pkg.data.mcp.map((mcp) => (
-              <span class="tag tag-mcp">{mcp}</span>
-            ))}
-          </div>
-        </div>
-      )}
+<a href={href} class="package-card">
+  <div class="card-top">
+    <span class="package-icon">📦</span>
+    <div class="card-meta">
+      {agentCount > 0 && <span class="meta-chip">{agentCount} agent{agentCount !== 1 ? 's' : ''}</span>}
+      {skillCount > 0 && <span class="meta-chip">{skillCount} skill{skillCount !== 1 ? 's' : ''}</span>}
+      {mcpCount > 0 && <span class="meta-chip meta-chip-mcp">{mcpCount} MCP</span>}
     </div>
   </div>
-</article>
+
+  <h3>{pkg.data.name}</h3>
+  <p class="description">{pkg.data.description}</p>
+
+  <div class="install-preview">
+    <CodeBlock code={pkg.data.installCommand} label="Install" />
+  </div>
+
+  <div class="card-footer">
+    <span class="view-hint">View package →</span>
+  </div>
+</a>
 
 <style>
   .package-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent-primary);
     border-radius: var(--radius-md);
     padding: var(--space-6);
-    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     height: 100%;
     min-width: 0;
   }
 
   .package-card:hover {
     border-color: var(--color-accent-primary);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   }
 
-  .card-content {
+  .package-card:hover .view-hint {
+    opacity: 1;
+  }
+
+  .card-top {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .package-icon {
+    font-size: var(--text-2xl);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .meta-chip {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 2px var(--space-3);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full, 9999px);
+    color: var(--color-text-secondary);
+  }
+
+  .meta-chip-mcp {
+    background: rgba(88, 166, 255, 0.1);
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
   }
 
   h3 {
-    font-size: var(--text-2xl);
-    font-weight: 600;
+    font-size: var(--text-xl);
+    font-weight: 700;
     line-height: var(--leading-tight);
     color: var(--color-text-primary);
   }
 
   .description {
     color: var(--color-text-secondary);
+    font-size: var(--text-sm);
     line-height: var(--leading-relaxed);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    flex: 1;
   }
 
-  .package-details {
+  .install-preview {
+    margin-top: auto;
+  }
+
+  .card-footer {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    justify-content: flex-end;
   }
 
-  .detail-section h4 {
+  .view-hint {
     font-size: var(--text-sm);
     font-weight: 600;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .tag {
-    font-size: var(--text-xs);
-    padding: var(--space-1) var(--space-3);
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    color: var(--color-text-secondary);
-  }
-
-  .tag-mcp {
-    background: rgba(88, 166, 255, 0.1);
-    border-color: var(--color-accent-primary);
     color: var(--color-accent-primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 </style>
