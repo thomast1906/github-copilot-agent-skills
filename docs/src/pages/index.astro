@@ -16,6 +16,7 @@ const packages = await getCollection('packages');
 
 const featuredPackages = packages.filter(pkg => pkg.data.featured);
 const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 ---
 
 <BaseLayout title="GitHub Copilot Agent Skills">
@@ -34,21 +35,25 @@ const featuredSkills = skills.filter(skill => skill.data.featured).slice(0, 6);
           icon="🛠️"
           title="Skills Library"
           description={`${skills.length} production-ready skills for Azure architecture, Terraform, diagramming, and GitHub workflows.`}
+          href={`${baseUrl}/skills/`}
         />
         <FeatureCard 
           icon="🤖"
           title="Pre-built Agents"
           description={`${agents.length} specialized agents combining multiple skills into purpose-built workflows for common tasks.`}
+          href={`${baseUrl}/agents/`}
         />
         <FeatureCard 
           icon="📦"
           title="APM Packages"
           description={`${packages.length} one-command install bundles grouping related agents and skills for specific use cases.`}
+          href={`${baseUrl}/packages/`}
         />
         <FeatureCard 
           icon="🔌"
           title="MCP Integrations"
           description={`${mcpServers.length} native integrations with Azure, Terraform, Draw.io, and Excalidraw MCP servers.`}
+          href={`${baseUrl}/getting-started/#mcp-setup`}
         />
       </div>
     </div>
