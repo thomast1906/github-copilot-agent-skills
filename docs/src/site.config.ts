@@ -41,7 +41,7 @@ export const mcpServers: McpServer[] = [
   {
     id: 'drawio-mcp',
     name: 'Draw.io MCP',
-    description: 'Enables Copilot to create and edit Draw.io diagrams with full access to Azure icon libraries.',
+    description: 'Enables GitHub Copilot to create and edit Draw.io diagrams with full access to Azure icon libraries.',
     installation: 'Install the Draw.io integration VS Code extension and enable MCP in VS Code settings.',
     mcpJson: `{
   "servers": {
@@ -58,8 +58,8 @@ export const mcpServers: McpServer[] = [
   {
     id: 'excalidraw-mcp',
     name: 'Excalidraw MCP',
-    description: 'Enables Copilot to create hand-drawn style architecture sketches using Excalidraw.',
-    installation: 'Install the Excalidraw VS Code extension and configure the MCP server in your Copilot settings.',
+    description: 'Enables GitHub Copilot to create hand-drawn style architecture sketches using Excalidraw.',
+    installation: 'Install the Excalidraw VS Code extension and configure the MCP server in your GitHub Copilot settings.',
     mcpJson: `{
   "servers": {
     "excalidraw": {
@@ -75,7 +75,7 @@ export const mcpServers: McpServer[] = [
   {
     id: 'terraform-mcp',
     name: 'Terraform MCP',
-    description: 'Gives Copilot access to Terraform registry documentation for provider version analysis and upgrade planning.',
+    description: 'Gives GitHub Copilot access to Terraform registry documentation for provider version analysis and upgrade planning.',
     installation: 'Install HashiCorp Terraform extension and enable the Terraform MCP server integration.',
     mcpJson: `{
   "servers": {

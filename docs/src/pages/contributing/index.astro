@@ -8,7 +8,7 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 
 const skillFrontmatterExample = `---
 name: my-skill-name
-description: 'Clear one-liner: what does this skill do and when should Copilot use it? Include USE FOR and DO NOT USE FOR triggers.'
+description: 'Clear one-liner: what does this skill do and when should GitHub Copilot use it? Include USE FOR and DO NOT USE FOR triggers.'
 metadata:
   examples:
     - Describe a realistic prompt a user would type — be specific, not generic
@@ -108,7 +108,7 @@ dependencies:
             <code>name</code><span class="req">Yes</span><span>Skill slug / identifier used for invocation</span>
           </div>
           <div class="field-row">
-            <code>description</code><span class="req">Yes</span><span>Shown on cards and detail pages. Include USE FOR / DO NOT USE FOR triggers so Copilot knows when to activate it.</span>
+            <code>description</code><span class="req">Yes</span><span>Shown on cards and detail pages. Include USE FOR / DO NOT USE FOR triggers so GitHub Copilot knows when to activate it.</span>
           </div>
           <div class="field-row">
             <code>metadata.examples</code><span class="req">Yes</span><span>3 realistic example prompts. Shown on the skill page as "Example prompts".</span>
@@ -184,7 +184,7 @@ dependencies:
         <p class="intro">The body of <code>SKILL.md</code> is your skill's instruction set. These guidelines help keep skills consistent and effective.</p>
         <ul class="guidelines-list">
           <li><strong>When to Use</strong> — list specific trigger scenarios (include USE FOR: and DO NOT USE FOR: patterns in the description)</li>
-          <li><strong>Inputs</strong> — describe what context Copilot needs to do its job (e.g. architecture docs, Terraform files, requirements)</li>
+          <li><strong>Inputs</strong> — describe what context GitHub Copilot needs to do its job (e.g. architecture docs, Terraform files, requirements)</li>
           <li><strong>Output Format</strong> — define what the skill produces (markdown report, XML policy, draw.io XML, etc.)</li>
           <li><strong>MCP Tool Usage</strong> — if the skill calls MCP tools, document which tools and when</li>
           <li><strong>References</strong> — put supporting data (schema files, example outputs, look-up tables) in a <code>references/</code> subdirectory</li>
