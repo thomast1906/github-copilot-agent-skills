@@ -18,7 +18,139 @@ const { server } = Astro.props;
     <h4>Setup</h4>
     <p>{server.installation}</p>
   </div>
+  {server.mcpJson && (
+    <div class="json-section">
+      <h4>
+        <code>.vscode/mcp.json</code>
+        <button class="copy-json-btn" data-json={server.mcpJson} aria-label="Copy JSON config">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
+            <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+          </svg>
+          Copy
+        </button>
+      </h4>
+      <pre class="json-block"><code>{server.mcpJson}</code></pre>
+    </div>
+  )}
 </article>
+
+<script>
+  document.querySelectorAll('.copy-json-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const json = btn.getAttribute('data-json') || '';
+      try {
+        await navigator.clipboard.writeText(json);
+        const orig = btn.textContent?.trim();
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { if (btn.textContent === '✓ Copied') btn.textContent = orig || 'Copy'; }, 2000);
+      } catch {}
+    });
+  });
+</script>
+
+<style>
+  .mcp-server-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+  }
+
+  .required-badge {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background: rgba(210, 153, 34, 0.15);
+    color: var(--color-accent-warning);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .setup h4, .json-section h4 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .setup p {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .json-section {
+    margin-top: var(--space-4);
+  }
+
+  .json-section h4 code {
+    font-size: var(--text-xs);
+    color: var(--color-text-primary);
+  }
+
+  .copy-json-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px var(--space-2);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .copy-json-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .json-block {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    font-size: var(--text-xs);
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-secondary);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: var(--leading-relaxed);
+  }
+</style>
 
 <style>
   .mcp-server-card {

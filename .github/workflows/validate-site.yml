@@ -8,6 +8,9 @@ on:
       - '.github/agents/**'
       - 'packages/**'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build Site

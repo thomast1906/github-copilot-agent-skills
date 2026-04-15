@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+---
+
+<BaseLayout title="404 — Page Not Found" description="The page you're looking for doesn't exist.">
+  <div class="page">
+    <div class="container">
+      <div class="content">
+        <div class="code">404</div>
+        <h1>Page not found</h1>
+        <p>The page you're looking for doesn't exist or may have moved.</p>
+        <div class="links">
+          <a href={`${baseUrl}/`} class="btn-primary">Go home</a>
+          <a href={`${baseUrl}/skills/`} class="btn-secondary">Browse skills</a>
+          <a href={`${baseUrl}/getting-started/`} class="btn-secondary">Getting started</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-24) 0;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .content {
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .code {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-accent-primary);
+    margin-bottom: var(--space-4);
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  p {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-10);
+  }
+
+  .links {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-accent-primary);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+</style>

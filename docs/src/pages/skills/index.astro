@@ -11,7 +11,7 @@ const sortedCategories = Object.entries(categories).sort((a, b) => a[1].order - 
 
 <BaseLayout 
   title="Skills Catalog"
-  description="Browse all 14 GitHub Copilot agent skills for Azure architecture, Terraform, diagramming, and more."
+  description={`Browse all ${skills.length} GitHub Copilot agent skills for Azure architecture, Terraform, diagramming, and more.`}
 >
   <div class="page">
     <div class="container">
