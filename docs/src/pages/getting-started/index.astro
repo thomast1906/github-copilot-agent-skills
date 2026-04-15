@@ -3,7 +3,12 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 import SectionHeader from '../../components/sections/SectionHeader.astro';
 import CodeBlock from '../../components/ui/CodeBlock.astro';
 import MCPServerCard from '../../components/sections/MCPServerCard.astro';
+import PackageCard from '../../components/cards/PackageCard.astro';
+import { getCollection } from 'astro:content';
 import { mcpServers } from '../../site.config';
+
+const packages = await getCollection('packages');
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
 ---
 
 <BaseLayout 
@@ -16,114 +21,150 @@ import { mcpServers } from '../../site.config';
         title="Getting Started" 
         description="Install agent skills and start using them with GitHub Copilot in minutes."
       />
-      
+
       <section class="section">
         <h2>Prerequisites</h2>
         <ul class="checklist">
-          <li><strong>VS Code</strong> with GitHub Copilot extension installed</li>
+          <li><strong>VS Code</strong> (or VS Code Insiders) with the <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a> extension and Copilot Chat enabled</li>
           <li><strong>GitHub Copilot</strong> subscription (Individual, Business, or Enterprise)</li>
-          <li><strong>Git</strong> (for cloning the repository)</li>
+          <li><strong>Git</strong> for cloning (Option B only)</li>
         </ul>
       </section>
-      
+
       <section class="section">
-        <h2>Option A: Install with APM (Recommended)</h2>
+        <h2>Option A — APM <span class="recommended-badge">Recommended</span></h2>
         <p class="intro">
-          The Agent Package Manager (APM) makes it easy to install curated bundles of agents and skills.
+          <a href="https://github.com/microsoft/apm" target="_blank" rel="noopener noreferrer">APM (Agent Package Manager)</a> installs skills, agents, and MCP configuration in one command.
         </p>
-        
+
         <div class="step">
-          <h3>Step 1: Install a Package</h3>
-          <p>Choose a package and run the install command:</p>
-          <CodeBlock 
-            code="apm install thomast1906/github-copilot-agent-skills/packages/architect --runtime vscode"
-            label="Architect Bundle"
-          />
-          <CodeBlock 
-            code="apm install thomast1906/github-copilot-agent-skills/packages/terraform --runtime vscode"
-            label="Terraform Bundle"
-          />
-          <CodeBlock 
-            code="apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runtime vscode"
-            label="Diagramming Bundle"
-          />
+          <h3>Step 1: Install APM</h3>
+          <CodeBlock code="curl -sSL https://aka.ms/apm-unix | sh" label="macOS / Linux" />
+          <CodeBlock code="irm https://aka.ms/apm-windows | iex" label="Windows (PowerShell)" />
         </div>
-        
+
         <div class="step">
-          <h3>Step 2: Restart VS Code</h3>
-          <p>Close and reopen VS Code to load the newly installed agents and skills.</p>
-        </div>
-        
-        <div class="step">
-          <h3>Step 3: Open Copilot Chat</h3>
-          <p>
-            Open GitHub Copilot Chat in VS Code. You'll see the installed agents available in the agent picker. 
-            Select an agent and start chatting!
+          <h3>Step 2: Install agents and skills</h3>
+          <p>Install everything at once, or pick the bundle you need:</p>
+          <CodeBlock
+            code="apm install thomast1906/github-copilot-agent-skills --runtime vscode"
+            label="All agents and skills"
+          />
+          <div class="divider-label">— or pick a bundle —</div>
+          {packages.map(pkg => (
+            <CodeBlock code={pkg.data.installCommand} label={pkg.data.name} />
+          ))}
+          <p class="note">
+            APM installs skills to <code>.github/skills/</code>, agents to <code>.github/agents/</code>, and wires MCP servers in <code>.vscode/mcp.json</code> automatically.
           </p>
         </div>
+
+        <div class="step">
+          <h3>Step 3: Reload VS Code</h3>
+          <p>Close and reopen VS Code (or run <strong>Developer: Reload Window</strong>) to load the newly installed agents and skills.</p>
+        </div>
+
+        <div class="step">
+          <h3>Step 4: Open Copilot Chat</h3>
+          <p>
+            Open GitHub Copilot Chat. Installed agents appear in the agent picker — select one and start chatting.
+            To invoke a skill directly, ask by name: <em>"use the waf-assessment skill to review this architecture"</em>.
+          </p>
+        </div>
+
+        <div class="packages-preview">
+          <h3>Available bundles</h3>
+          <div class="packages-grid">
+            {packages.map(pkg => (
+              <PackageCard package={pkg} />
+            ))}
+          </div>
+        </div>
       </section>
-      
+
       <section class="section">
-        <h2>Option B: Clone the Repository</h2>
+        <h2>Option B — Clone Directly</h2>
         <p class="intro">
-          If you prefer to work directly with the source, you can clone the repository and use the agents locally.
+          Prefer to work directly with the source? Clone the repo and everything auto-loads.
         </p>
-        
-        <CodeBlock 
-          code="git clone https://github.com/thomast1906/github-copilot-agent-skills.git"
-          label="Clone"
-        />
-        
-        <p class="note">
-          After cloning, open the repository in VS Code. GitHub Copilot will automatically detect
-          the agents defined in <code>.github/agents/</code> and skills in <code>.github/skills/</code>.
-        </p>
+
+        <ol class="steps-list">
+          <li>
+            <strong>Clone or fork the repository</strong>
+            <CodeBlock code="git clone https://github.com/thomast1906/github-copilot-agent-skills.git" label="Clone" />
+          </li>
+          <li>
+            <strong>Open the folder in VS Code</strong> with GitHub Copilot Chat enabled.
+          </li>
+          <li>
+            <strong>Skills and agents load automatically.</strong> They are registered via <code>.github/copilot-instructions.md</code> — no manual configuration needed.
+          </li>
+          <li>
+            <strong>Invoke an agent</strong> by opening Copilot Chat and selecting it from the agent picker (e.g. <strong>Azure Architect</strong>).
+          </li>
+          <li>
+            <strong>Invoke a skill explicitly</strong> by name in chat — e.g. <em>"use the waf-assessment skill to review this architecture"</em>.
+          </li>
+          <li>
+            <strong>For MCP-backed skills</strong>, ensure the relevant MCP server is running. The repo includes a pre-configured <code>.vscode/mcp.json</code> — VS Code will prompt you to start servers when first used. See <a href="#mcp">MCP Server Setup</a> below.
+          </li>
+        </ol>
       </section>
-      
-      <section class="section">
+
+      <section class="section" id="mcp">
         <h2>MCP Server Setup</h2>
         <p class="intro">
-          Some skills require MCP servers to be configured. Install the servers you need based on which skills you're using.
+          Some skills require MCP servers to be active. The servers below are pre-configured in <code>.vscode/mcp.json</code> (Option B) or wired automatically by APM (Option A).
         </p>
-        
+
         <div class="mcp-grid">
           {mcpServers.map((server) => (
             <MCPServerCard server={server} />
           ))}
         </div>
+
+        <p class="note">
+          <strong>Azure MCP</strong> is provided by the <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot" target="_blank" rel="noopener noreferrer">Azure Tools</a> VS Code extension — it registers automatically and does not need a <code>mcp.json</code> entry. <strong>Terraform MCP</strong> requires Docker to be running.
+        </p>
       </section>
-      
+
       <section class="section">
         <h2>Try It Out</h2>
-        <p class="intro">
-          Once installed, try these example prompts to get started with each package:
-        </p>
+        <p class="intro">Once installed, try these prompts to get started:</p>
 
         <div class="example-block">
-          <h3>📦 Azure Architect package</h3>
+          <h3>🏗️ Azure Architect</h3>
           <CodeBlock
             code="@azure-architect Design a production-ready REST API for a Node.js app on Azure with managed database, caching, CDN, and 99.99% SLA. Estimate monthly costs for 10,000 concurrent users in UK South."
-            label="Azure Architect"
+            label="Architecture design"
+          />
+          <CodeBlock
+            code="@azure-architect Run a WAF assessment on the architecture in ARCHITECTURE.md and score each of the five pillars."
+            label="WAF assessment"
           />
         </div>
 
         <div class="example-block">
-          <h3>📦 Terraform package</h3>
+          <h3>🔧 Terraform</h3>
           <CodeBlock
-            code="@terraform-provider-upgrade Upgrade my azurerm provider from 3.x to 4.0 safely — detect breaking changes and migrate any removed resources."
-            label="Terraform Provider Upgrade"
-          />
-          <CodeBlock
-            code="@gh-aw-builder Create a GitHub Agentic Workflow that reviews pull requests for security vulnerabilities and posts a structured report."
-            label="GitHub Agentic Workflow Builder"
+            code="@terraform-provider-upgrade Upgrade my azurerm provider from 3.x to 4.0 safely — detect breaking changes and migrate any removed resources using moved blocks."
+            label="Provider upgrade"
           />
         </div>
 
         <div class="example-block">
-          <h3>📦 Diagramming package (requires MCP)</h3>
+          <h3>⚙️ GitHub Agentic Workflows</h3>
           <CodeBlock
-            code="Create an Azure hub-spoke network topology diagram with Draw.io showing VNet peering, firewall, and spoke workloads."
-            label="Draw.io Diagramming"
+            code="@gh-aw-builder Create a GitHub Agentic Workflow that reviews pull requests for security vulnerabilities and posts a structured report as a PR comment."
+            label="Agentic workflow"
+          />
+        </div>
+
+        <div class="example-block">
+          <h3>🎨 Diagramming (requires MCP)</h3>
+          <CodeBlock
+            code="Create an Azure hub-spoke network topology diagram with Draw.io showing VNet peering, Azure Firewall, and spoke workloads."
+            label="Draw.io diagram"
           />
         </div>
       </section>
@@ -247,5 +288,91 @@ import { mcpServers } from '../../site.config';
     .mcp-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  .recommended-badge {
+    display: inline-block;
+    background: var(--color-accent-primary);
+    color: #fff;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full, 9999px);
+    vertical-align: middle;
+    margin-left: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .divider-label {
+    text-align: center;
+    color: var(--color-text-tertiary, var(--color-text-secondary));
+    font-size: var(--text-sm);
+    margin: var(--space-4) 0;
+  }
+
+  .packages-preview {
+    margin-top: var(--space-10);
+  }
+
+  .packages-preview h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-6);
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .packages-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding-left: 0;
+    list-style: none;
+    counter-reset: steps;
+  }
+
+  .steps-list li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    counter-increment: steps;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .steps-list li::before {
+    content: counter(steps);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: var(--color-accent-primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .steps-list li strong {
+    color: var(--color-text-primary);
+  }
+
+  .steps-list li em {
+    color: var(--color-text-secondary);
   }
 </style>

@@ -47,6 +47,13 @@ const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
           Getting Started
         </a>
         <a 
+          href={`${baseUrl}/contributing/`} 
+          class="nav-link"
+          aria-current={currentPath.startsWith(`${baseUrl}/contributing`) ? 'page' : undefined}
+        >
+          Contributing
+        </a>
+        <a 
           href="https://github.com/thomast1906/github-copilot-agent-skills" 
           target="_blank" 
           rel="noopener noreferrer"
