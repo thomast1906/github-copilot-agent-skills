@@ -13,6 +13,21 @@ This skill is intended to do more than generate Terraform files. It should help 
 
 The goal is to produce Terraform modules that are understandable, maintainable, and genuinely useful in practice.
 
+## Prerequisites
+
+The following tools must be installed locally before using this skill. The skill references them during generation and validation steps.
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| [Terraform](https://developer.hashicorp.com/terraform/install) | Core IaC tool — `init`, `validate`, `fmt` | `brew install hashicorp/tap/terraform` |
+| [terraform-docs](https://terraform-docs.io/user-guide/installation/) | Generates README inputs/outputs from module source | `brew install terraform-docs` |
+| [tflint](https://github.com/terraform-linters/tflint#installation) | Static analysis — catches deprecated args, provider-specific issues | `brew install tflint` |
+| [tflint-ruleset-azurerm](https://github.com/terraform-linters/tflint-ruleset-azurerm) | Azure-specific tflint rules | configured via `.tflint.hcl` (see [VALIDATION.md](references/VALIDATION.md)) |
+
+**Minimum versions:** Terraform ≥ 1.2 (required for `lifecycle` preconditions/postconditions). terraform-docs ≥ 0.16. tflint ≥ 0.50.
+
+If any tool is missing, the skill will flag this and suggest the install command before running validation steps.
+
 ## Required MCP Tools
 
 This skill makes active use of the HashiCorp Terraform Registry MCP and the Azure MCP Server. Use the tools below at the indicated stages of the workflow. Full parameter reference and example call sequences are in [references/MCP-TOOLS.md](references/MCP-TOOLS.md).
@@ -205,6 +220,8 @@ terraform init -backend=false && terraform validate   # syntax and references
 tflint --init && tflint             # provider-specific issues, deprecated args, naming
 terraform-docs .                    # README in sync with variables and outputs
 ```
+
+Before running these commands, verify each tool is available (`terraform -version`, `terraform-docs --version`, `tflint --version`). If a tool is missing, output the install command from the Prerequisites section and stop — do not silently skip the validation step.
 
 See [references/VALIDATION.md](references/VALIDATION.md) for full tool setup, `.tflint.hcl` config, and CI pipeline guidance.
 
