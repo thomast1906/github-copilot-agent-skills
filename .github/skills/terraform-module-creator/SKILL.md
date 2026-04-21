@@ -21,6 +21,8 @@ This skill makes active use of the HashiCorp Terraform Registry MCP and the Azur
 |------|-------|---------|
 | `azure-azureterraformbestpractices` | Step 1 — Understand the ask | Get Azure Terraform best practices before starting design |
 | `azure-get_azure_bestpractices` | Step 1 — Understand the ask | Get platform-level best practices for the specific Azure service |
+| `azure-documentation` | Step 1 — Understand the ask | Look up CAF naming standards, DNS zone names, service feature behaviour |
+| `azure-wellarchitectedframework` | Step 1 / Step 6 | Get WAF pillar recommendations to inform secure, reliable defaults |
 | `mcp_terraform_search_modules` | Step 2 — Decide module type | Check if an Azure Verified Module or registry module already exists |
 | `mcp_terraform_get_module_details` | Step 2 — Decide module type | Review an existing module's inputs/outputs to assess fit |
 | `mcp_terraform_get_provider_capabilities` | Step 3 — Define boundary | Discover what azurerm resources exist for the service area |
@@ -59,7 +61,7 @@ Follow this process for every request.
 
 ### 1. Understand the ask
 
-Call `azure-azureterraformbestpractices` and `azure-get_azure_bestpractices` for the target Azure service before starting design. This grounds decisions in current Azure platform guidance.
+Call `azure-azureterraformbestpractices` and `azure-get_azure_bestpractices` for the target Azure service before starting design. Call `azure-documentation` for CAF naming conventions, private endpoint DNS zone names, or any service feature behaviour that needs current guidance. Call `azure-wellarchitectedframework` to understand which WAF pillar recommendations should inform the module's default values. This grounds decisions in current Azure platform guidance rather than assumptions.
 
 Identify:
 

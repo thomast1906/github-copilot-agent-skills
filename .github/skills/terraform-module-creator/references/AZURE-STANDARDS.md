@@ -6,7 +6,7 @@ Platform standards that Azure Terraform modules should align with. Use `azure-az
 
 ## Naming Conventions
 
-Follow the [CAF naming standard](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming).
+Follow the CAF naming standard. Call `azure-documentation(intent="CAF resource naming conventions Azure")` to retrieve current abbreviation tables and pattern guidance.
 
 **Pattern:** `{resource-type-abbreviation}-{workload}-{environment}-{region}-{instance}`
 
@@ -176,7 +176,7 @@ Use ARM region names (lowercase, no spaces) in variables. Common values:
 
 ## Azure Verified Modules
 
-Check [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/) (AVM) and the [Terraform Registry](https://registry.terraform.io/) for reference when designing a module. Use `mcp_terraform_search_modules` to find them.
+Use `mcp_terraform_search_modules` to check what AVM and registry modules exist for the service area.
 
 **Do not recommend AVM modules over custom modules.** AVM modules are highly abstracted, expose a large number of variables, and often violate the KISS principle this skill is built around. They are useful as a reference to understand what arguments the resource exposes in practice and what outputs consumers typically need — but they are not the target output of this skill.
 
@@ -213,11 +213,15 @@ Callers should decide what SKU is appropriate for their environment. The module 
 
 ---
 
-## Reference Documentation
+## Live Guidance via MCP Tools
 
-- [CAF Naming Conventions](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)
-- [CAF Tagging Strategy](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-tagging)
-- [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/)
-- [Terraform AzureRM Provider Docs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
-- [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/)
-- [Azure Private Endpoint DNS](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns)
+Do not use static documentation links. Use the Azure MCP tools to retrieve current guidance at design time.
+
+| Topic | Tool to call |
+|-------|-------------|
+| CAF naming and tagging standards | `azure-documentation(intent="CAF resource naming conventions Azure")` |
+| Azure security defaults for a service | `azure-get_azure_bestpractices(intent="Azure best practices for <service>")` |
+| Terraform-specific Azure guidance | `azure-azureterraformbestpractices(intent="<service> Terraform Azure")` |
+| Well-Architected Framework pillars | `azure-wellarchitectedframework(intent="reliability security <service>")` |
+| Private endpoint DNS zone names | `azure-documentation(intent="private endpoint DNS zone names Azure private link")` |
+| Terraform provider resource reference | `mcp_terraform_search_providers` → `mcp_terraform_get_provider_details` |

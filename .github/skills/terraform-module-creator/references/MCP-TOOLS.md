@@ -240,6 +240,34 @@ azure-bicepschema(
 
 ---
 
+### `azure-documentation`
+
+Search official Microsoft Learn and Azure documentation for service-specific guidance, CAF standards, and feature behaviour.
+
+**When to use:** When you need current Azure platform guidance that isn't covered by `azure-get_azure_bestpractices` — e.g., CAF naming conventions, private endpoint DNS zone names, specific service feature behaviour.
+
+```bash
+azure-documentation(intent="CAF resource naming conventions Azure")
+azure-documentation(intent="private endpoint DNS zone names Azure private link")
+azure-documentation(intent="storage account network rules service endpoints")
+```
+
+---
+
+### `azure-wellarchitectedframework`
+
+Get Well-Architected Framework recommendations for specific pillars (Reliability, Security, Cost Optimisation, Operational Excellence, Performance Efficiency).
+
+**When to use:** When designing module defaults and guardrails — ensure the module nudges consumers toward WAF-aligned configurations by default.
+
+```bash
+azure-wellarchitectedframework(intent="reliability storage account Azure")
+azure-wellarchitectedframework(intent="security Key Vault WAF recommendations")
+azure-wellarchitectedframework(intent="operational excellence AKS monitoring")
+```
+
+---
+
 ### `azure-pricing` (via azure-pricing skill)
 
 Look up real-time Azure retail pricing for the resources the module will create.
