@@ -13,6 +13,25 @@ This skill is intended to do more than generate Terraform files. It should help 
 
 The goal is to produce Terraform modules that are understandable, maintainable, and genuinely useful in practice.
 
+## Required MCP Tools
+
+This skill makes active use of the HashiCorp Terraform Registry MCP and the Azure MCP Server. Use the tools below at the indicated stages of the workflow. Full parameter reference and example call sequences are in [references/MCP-TOOLS.md](references/MCP-TOOLS.md).
+
+| Tool | Stage | Purpose |
+|------|-------|---------|
+| `azure-azureterraformbestpractices` | Step 1 — Understand the ask | Get Azure Terraform best practices before starting design |
+| `azure-get_azure_bestpractices` | Step 1 — Understand the ask | Get platform-level best practices for the specific Azure service |
+| `mcp_terraform_search_modules` | Step 2 — Decide module type | Check if an Azure Verified Module or registry module already exists |
+| `mcp_terraform_get_module_details` | Step 2 — Decide module type | Review an existing module's inputs/outputs to assess fit |
+| `mcp_terraform_get_provider_capabilities` | Step 3 — Define boundary | Discover what azurerm resources exist for the service area |
+| `mcp_terraform_search_providers` | Step 4 — Design interface | Find provider resource documentation by service slug |
+| `mcp_terraform_get_provider_details` | Step 4 — Design interface | Get full argument reference and attribute reference for a resource |
+| `mcp_terraform_get_latest_provider_version` | Step 6 — Generate module | Get the current latest azurerm version for versions.tf |
+| `mcp_terraform_search_policies` | Step 6 — Generate module | Find CIS/NIST policies that inform compliance-aware defaults |
+| `azure-bicepschema` | Step 6 — Generate module | Validate SKU, kind, and tier values against the ARM API schema |
+
+**Important:** Before invoking any Azure MCP tool, run a discovery call with `learn=true` or `tool_search_tool_regex` to confirm the exact tool name. Do not hardcode names that may change.
+
 ## Use this skill when
 
 - a user wants to create a new Terraform module from a requirement or scenario
@@ -40,6 +59,8 @@ Follow this process for every request.
 
 ### 1. Understand the ask
 
+Call `azure-azureterraformbestpractices` and `azure-get_azure_bestpractices` for the target Azure service before starting design. This grounds decisions in current Azure platform guidance.
+
 Identify:
 
 - what is being deployed
@@ -54,6 +75,10 @@ Example:
 > This module is intended to provision a standard Azure Storage Account pattern with consistent naming, tagging, diagnostics, and access configuration for shared platform use.
 
 ### 2. Decide the module type
+
+**Check the Terraform Registry for reference.** Call `mcp_terraform_search_modules` to see what existing modules look like for the resource. Use this to understand common interface patterns and what other teams have found necessary — not to replace the custom module. AVM and registry modules are often over-abstracted and do not align with the KISS principle this skill applies. Review them for ideas, not as a recommendation to adopt.
+
+If a candidate is found, call `mcp_terraform_get_module_details` to review its interface. Use this to identify what arguments matter in practice and what complexity to avoid.
 
 Work out whether the module is:
 
@@ -75,6 +100,8 @@ State clearly:
 A good module boundary should be easy to explain in a few lines.
 
 ### 4. Design the interface
+
+Use `mcp_terraform_search_providers` to find the resource documentation by service slug, then call `mcp_terraform_get_provider_details` with the returned `provider_doc_id` to get the full argument reference. Use this to understand all available arguments before deciding which to expose as variables. See [references/MCP-TOOLS.md](references/MCP-TOOLS.md) for common service slug values.
 
 Design variables and outputs with discipline.
 
@@ -112,6 +139,10 @@ module/
 Add `locals.tf` if it improves clarity. Only add more files if there is a clear readability benefit. Do not create file sprawl for the sake of neatness.
 
 ### 6. Generate the module
+
+Before generating `versions.tf`, call `mcp_terraform_get_latest_provider_version(namespace="hashicorp", name="azurerm")` to get the current latest version and use it as the minimum constraint.
+
+For compliance-sensitive modules, call `mcp_terraform_search_policies` with a query like `"CIS Azure"` to identify policy constraints that should inform default values (e.g., requiring TLS 1.2, disabling public network access by default).
 
 When generating code:
 
@@ -199,17 +230,19 @@ If the user has repeated Terraform code and wants to extract a module:
 
 ## Azure-specific considerations
 
-When working on Azure Terraform modules, pay attention to:
+When working on Azure Terraform modules, follow the platform standards in [references/AZURE-STANDARDS.md](references/AZURE-STANDARDS.md). Key areas:
 
-- naming consistency
-- tagging
+- naming consistency (CAF pattern)
+- required tags
 - RBAC scope
-- identity configuration
+- identity configuration (prefer managed identity)
 - diagnostics and observability
-- networking assumptions
+- networking assumptions (do not create VNets or DNS zones inside the module)
 - environment separation
 - alignment with platform guardrails
 - whether Azure Verified Modules or an existing shared module should be preferred
+
+Use `azure-bicepschema` to validate SKU names, `kind` values, and tier options against the ARM API when these are unclear from the provider docs alone.
 
 Do not assume a new custom module is always the best answer.
 
@@ -258,3 +291,11 @@ Do not:
 - Design a Terraform module interface for deploying an Azure App Service plan and web app pair.
 - Review this Terraform module and tell me if it is over-abstracted.
 - Refactor this repeated Terraform pattern into a reusable module without turning it into a framework.
+
+## References
+
+Supporting reference material for this skill:
+
+- [MCP-TOOLS.md](references/MCP-TOOLS.md) — HashiCorp Terraform Registry and Azure MCP tool reference: when to use each tool, example calls, and a full workflow sequence
+- [MODULE-PATTERNS.md](references/MODULE-PATTERNS.md) — Common Terraform module patterns for Azure: file structure, variables, outputs, managed identity, diagnostics, private endpoints, tagging
+- [AZURE-STANDARDS.md](references/AZURE-STANDARDS.md) — Azure naming conventions (CAF), required tags, security defaults, networking assumptions, Azure Verified Modules guidance
