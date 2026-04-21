@@ -14,6 +14,7 @@ module/
 ├── versions.tf          # Terraform and provider version constraints
 ├── locals.tf            # Local value computations (add only if needed)
 ├── .terraform-docs.yml  # terraform-docs configuration
+├── .tflint.hcl          # tflint static analysis configuration
 └── README.md            # Purpose, usage example, generated inputs/outputs table
 ```
 
@@ -268,6 +269,12 @@ output "principal_id" {
   description = "Principal ID of the system-assigned managed identity."
   value       = azurerm_example.this.identity[0].principal_id
 }
+
+output "primary_connection_string" {
+  description = "Primary connection string. Sensitive — do not log or expose in plan output."
+  value       = azurerm_example.this.primary_connection_string
+  sensitive   = true
+}
 ```
 
 **Guidance:**
@@ -275,7 +282,101 @@ output "principal_id" {
 - Output `name` — useful for reference
 - Output `principal_id` if the resource has a managed identity
 - Do not output every attribute — only those consumers realistically need
-- Sensitive outputs (connection strings, keys) should use `sensitive = true`
+- Mark `sensitive = true` on any output that contains a secret: connection strings, access keys, passwords, SAS tokens
+- Prefer outputting the managed identity `principal_id` over a connection string — guide consumers toward keyless authentication
+
+---
+
+## Variable Validation Blocks
+
+Add `validation` blocks to catch invalid inputs at plan time, before any resource is touched. This is cleaner than buried conditionals or cryptic provider errors.
+
+```hcl
+variable "account_tier" {
+  description = "Storage account tier. Standard for general use, Premium for high IOPS."
+  type        = string
+  default     = "Standard"
+
+  validation {
+    condition     = contains(["Standard", "Premium"], var.account_tier)
+    error_message = "account_tier must be 'Standard' or 'Premium'."
+  }
+}
+
+variable "name" {
+  description = "Name of the resource. Must be 3–24 lowercase alphanumeric characters."
+  type        = string
+
+  validation {
+    condition     = can(regex("^[a-z0-9]{3,24}$", var.name))
+    error_message = "name must be 3–24 lowercase alphanumeric characters (no hyphens)."
+  }
+}
+
+variable "retention_days" {
+  description = "Number of days to retain soft-deleted blobs. Must be between 1 and 365."
+  type        = number
+  default     = 7
+
+  validation {
+    condition     = var.retention_days >= 1 && var.retention_days <= 365
+    error_message = "retention_days must be between 1 and 365."
+  }
+}
+```
+
+**Guidance:**
+- Add validation to enum-style variables (SKUs, tiers, kinds) — never rely on the provider to surface the error clearly
+- Add validation to name variables that have format constraints (storage account names, Key Vault names)
+- Keep error messages short and actionable — state the constraint, not just that it failed
+- Use `can()` with `regex()` for pattern validation — avoids throwing on non-matching strings
+
+---
+
+## Lifecycle Preconditions and Postconditions
+
+Use `lifecycle` preconditions to enforce cross-variable constraints that cannot be expressed in a single `validation` block. Available in Terraform >= 1.2.
+
+**Precondition** — checked before the resource is created or updated:
+
+```hcl
+resource "azurerm_private_endpoint" "this" {
+  count = var.private_endpoint.enabled ? 1 : 0
+  # ...
+
+  lifecycle {
+    precondition {
+      condition     = var.private_endpoint.subnet_id != null
+      error_message = "private_endpoint.subnet_id must be provided when private_endpoint.enabled is true."
+    }
+    precondition {
+      condition     = var.private_endpoint.private_dns_zone_id != null
+      error_message = "private_endpoint.private_dns_zone_id must be provided when private_endpoint.enabled is true."
+    }
+  }
+}
+```
+
+**Postcondition** — checked after the resource is created, validates the real state:
+
+```hcl
+resource "azurerm_storage_account" "this" {
+  # ...
+
+  lifecycle {
+    postcondition {
+      condition     = self.min_tls_version == "TLS1_2"
+      error_message = "Storage account must enforce TLS 1.2. Check the provider version or resource arguments."
+    }
+  }
+}
+```
+
+**Guidance:**
+- Use preconditions for cross-variable dependencies that cannot be expressed in a single `validation` block (e.g., "if X is enabled, Y must be set")
+- Use postconditions to assert that deployed resource state meets expectations — useful for compliance-critical defaults
+- Keep conditions simple — complex conditions belong in locals
+- Prefer preconditions over postconditions where possible (fail fast, before resources are created)
 
 ---
 
@@ -486,6 +587,46 @@ module "storage" {
   }
 }
 ```
+
+---
+
+## `moved` Blocks
+
+Use `moved` blocks when refactoring module internals to rename or restructure resources without breaking consumer state. Without a `moved` block, Terraform plans to destroy the old resource and create a new one — which is destructive.
+
+**Rename a resource within the same module:**
+
+```hcl
+moved {
+  from = azurerm_storage_account.storage
+  to   = azurerm_storage_account.this
+}
+```
+
+**Rename a module call (at the consumer level):**
+
+```hcl
+moved {
+  from = module.old_storage
+  to   = module.storage
+}
+```
+
+**Move a resource into a `for_each` structure:**
+
+```hcl
+moved {
+  from = azurerm_storage_account.this
+  to   = azurerm_storage_account.this["primary"]
+}
+```
+
+**Guidance:**
+- Always add a `moved` block when renaming a resource identifier in a module that has existing consumers
+- Place `moved` blocks in `main.tf` or a dedicated `moved.tf` — do not spread them across files
+- `moved` blocks accumulate over time and can be removed after all consumers have applied the change (typically after 1–2 release cycles)
+- If the resource *type* changes (not just the identifier), a `moved` block cannot help — that is a breaking change requiring a MAJOR version bump
+- Document `moved` blocks in the CHANGELOG under the version that introduces them
 
 ---
 
