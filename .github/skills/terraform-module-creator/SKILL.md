@@ -113,11 +113,14 @@ Design variables and outputs with discipline.
 - avoid exposing every possible provider option
 - avoid optional inputs that massively change module behaviour
 - avoid large sets of loosely related switches
+- add `validation {}` blocks to enum-style variables (SKU, tier, kind) and name format constraints — catch bad inputs at plan time with a clear error message, not a cryptic provider error
 
 **Outputs**
 - return only values that consumers are likely to use
 - keep outputs meaningful and predictable
 - avoid outputting everything just because it is available
+- mark `sensitive = true` on any output containing a secret: connection strings, access keys, passwords, SAS tokens
+- prefer outputting `principal_id` (managed identity) over connection strings — guide consumers toward keyless authentication
 
 **Locals**
 - use locals to improve readability and consistency
@@ -146,6 +149,8 @@ Always include `.terraform-docs.yml` — the README inputs and outputs table is 
 Before generating `versions.tf`, call `mcp_terraform_get_latest_provider_version(namespace="hashicorp", name="azurerm")` to get the current latest version and use it as the minimum constraint.
 
 For compliance-sensitive modules, call `mcp_terraform_search_policies` with a query like `"CIS Azure"` to identify policy constraints that should inform default values (e.g., requiring TLS 1.2, disabling public network access by default).
+
+For modules with dependent optional variables (e.g., `private_endpoint.enabled = true` requires `subnet_id`), add `lifecycle { precondition {} }` blocks on the resource to surface misconfigurations clearly before any resource is created. See [MODULE-PATTERNS.md](references/MODULE-PATTERNS.md#lifecycle-preconditions-and-postconditions) for the pattern.
 
 When generating code:
 
@@ -177,6 +182,17 @@ Before finalising, check:
 - will this be easy to maintain in six months?
 
 If the module feels hard to explain, it is probably doing too much.
+
+**Before handing off, run:**
+
+```bash
+terraform fmt -check -recursive .   # formatting
+terraform init -backend=false && terraform validate   # syntax and references
+tflint --init && tflint             # provider-specific issues, deprecated args, naming
+terraform-docs .                    # README in sync with variables and outputs
+```
+
+See [references/VALIDATION.md](references/VALIDATION.md) for full tool setup, `.tflint.hcl` config, and CI pipeline guidance.
 
 ## Decision framework: should this be a module?
 
@@ -229,7 +245,7 @@ If the user has repeated Terraform code and wants to extract a module:
 2. isolate the stable reusable responsibility
 3. propose a minimal module contract
 4. highlight what should remain outside the module
-5. suggest migration steps carefully
+5. suggest migration steps carefully — add `moved {}` blocks for any renamed or restructured resources to prevent destructive plan changes for existing consumers (see [MODULE-PATTERNS.md](references/MODULE-PATTERNS.md#moved-blocks))
 6. avoid dragging one-off concerns into the new shared interface
 
 ## Azure-specific considerations
@@ -301,5 +317,7 @@ Do not:
 Supporting reference material for this skill:
 
 - [MCP-TOOLS.md](references/MCP-TOOLS.md) — HashiCorp Terraform Registry and Azure MCP tool reference: when to use each tool, example calls, and a full workflow sequence
-- [MODULE-PATTERNS.md](references/MODULE-PATTERNS.md) — Common Terraform module patterns for Azure: file structure, variables, outputs, managed identity, diagnostics, private endpoints, tagging
+- [MODULE-PATTERNS.md](references/MODULE-PATTERNS.md) — Common Terraform module patterns for Azure: file structure, variables, outputs, validation blocks, preconditions, sensitive outputs, managed identity, diagnostics, private endpoints, `moved` blocks, tagging
 - [AZURE-STANDARDS.md](references/AZURE-STANDARDS.md) — Azure naming conventions (CAF), required tags, security defaults, networking assumptions, Azure Verified Modules guidance
+- [VERSIONING.md](references/VERSIONING.md) — SemVer guidance, git tagging, module source refs, GitHub releases, private registry, CHANGELOG
+- [VALIDATION.md](references/VALIDATION.md) — terraform fmt, terraform validate, tflint (with `.tflint.hcl` config), pre-commit hooks, CI pipeline example
