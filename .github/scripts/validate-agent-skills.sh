@@ -145,7 +145,8 @@ for skill_file in .github/skills/*/SKILL.md; do
     SKILL_NAME=$(dirname "$skill_file" | xargs basename)
     # Extract relative markdown links like (references/FOO.md) or (./references/FOO.md)
     while IFS= read -r ref; do
-      ref_path="$(dirname "$skill_file")/$ref"
+      ref_file="${ref%%#*}"  # strip anchor fragment before checking file existence
+      ref_path="$(dirname "$skill_file")/$ref_file"
       if [ ! -f "$ref_path" ]; then
         echo "   ❌ $SKILL_NAME: broken reference → $ref"
         FAILED=1

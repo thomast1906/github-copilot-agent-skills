@@ -332,7 +332,7 @@ Warning: Failed to create pull request: GitHub Actions is not permitted to creat
 # Check container image is correct
 mcp-servers:
   terraform:
-    container: "hashicorp/terraform-mcp-server:0.3.3"  # Verify version
+    container: "hashicorp/terraform-mcp-server:0.5.1"  # Verify version
 ```
 
 **Solutions:**

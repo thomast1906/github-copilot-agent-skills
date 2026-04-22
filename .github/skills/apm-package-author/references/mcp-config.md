@@ -80,7 +80,7 @@ mcp:
       - TFE_TOKEN
       - -e
       - TFE_ADDRESS
-      - hashicorp/terraform-mcp-server:0.3.3
+      - hashicorp/terraform-mcp-server:0.5.1
     env:
       TFE_TOKEN: "${input:tfe_token}"
       TFE_ADDRESS: "${input:tfe_address}"
