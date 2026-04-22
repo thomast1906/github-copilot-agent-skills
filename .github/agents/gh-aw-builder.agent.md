@@ -90,7 +90,7 @@ tools:
 ```yaml
 mcp-servers:
   terraform:
-    container: "hashicorp/terraform-mcp-server:0.3.3"
+    container: "hashicorp/terraform-mcp-server:0.5.1"
     env:
       TF_LOG: "INFO"
     allowed: ["*"]
@@ -200,7 +200,7 @@ safe-outputs:
 ### 4. MCP Server Integration
 
 **Common MCP Servers:**
-- **Terraform**: `hashicorp/terraform-mcp-server:0.3.3`
+- **Terraform**: `hashicorp/terraform-mcp-server:0.5.1`
 - **Azure**: `mcr.microsoft.com/azure-sdk/azure-mcp:latest`
 - **Kubernetes**: Container-based MCP servers
 - **Custom**: Docker containers implementing MCP protocol

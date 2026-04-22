@@ -16,7 +16,7 @@
         "--rm",
         "-e", "TFE_TOKEN=${input:tfe_token}",
         "-e", "TFE_ADDRESS=${input:tfe_address}",
-        "hashicorp/terraform-mcp-server:0.3.3"
+        "hashicorp/terraform-mcp-server:0.5.1"
       ]
     }
   },

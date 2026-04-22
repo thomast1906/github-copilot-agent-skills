@@ -62,7 +62,7 @@ tools:
 # ===== MCP SERVERS (if needed) =====
 mcp-servers:
   terraform:
-    container: "hashicorp/terraform-mcp-server:0.3.3"
+    container: "hashicorp/terraform-mcp-server:0.5.1"
     env:
       TF_LOG: "INFO"
     allowed: ["*"]
@@ -239,7 +239,7 @@ Configure and use Model Context Protocol (MCP) servers for specialized tool acce
 ```yaml
 mcp-servers:
   terraform:
-    container: "hashicorp/terraform-mcp-server:0.3.3"
+    container: "hashicorp/terraform-mcp-server:0.5.1"
     env:
       TF_LOG: "INFO"
     allowed: ["*"]  # or specific tools
