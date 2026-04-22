@@ -47,7 +47,7 @@ This skill makes active use of the HashiCorp Terraform Registry MCP and the Azur
 
 **Important:** Before invoking any Azure MCP tool, run a discovery call with `learn=true` or `tool_search_tool_regex` to confirm the exact tool name. Do not hardcode names that may change.
 
-## Use this skill when
+## When to Use
 
 - a user wants to create a new Terraform module from a requirement or scenario
 - a repeated Terraform pattern may need to become a shared module
