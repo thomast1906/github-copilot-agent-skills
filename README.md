@@ -67,6 +67,7 @@ Skills are invoked automatically by Copilot based on relevance, or explicitly by
 
 | Skill | Description |
 |---|---|
+| `terraform-module-creator` | Designs and creates Terraform modules from real infrastructure requirements — module boundary definition, clean interface design, KISS/DRY principles, and full file structure generation. Covers Azure-focused modules with validation via `terraform validate`, `tflint`, and `terraform-docs`. Uses **Azure MCP** and **Terraform MCP**. |
 | `terraform-provider-upgrade` | Safe Terraform provider upgrades with breaking change detection, automatic resource migration using `moved` blocks, and state management. Uses **Terraform MCP**. |
 
 ### Diagramming
@@ -110,12 +111,12 @@ apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runti
 | Bundle | What's included |
 |---|---|
 | `packages/architect` | Design and review Azure architectures — service selection, WAF pillar assessments, and live pricing lookups. Includes the `azure-architect` agent and `architecture-design`, `waf-assessment`, `azure-pricing` skills. |
-| `packages/terraform` | Safely upgrade Terraform providers and build GitHub Agentic Workflows. Includes `terraform-provider-upgrade` and `gh-aw-builder` agents, matching skills, and the Terraform MCP (requires Docker). |
+| `packages/terraform` | Safely upgrade Terraform providers, create Terraform modules, and build GitHub Agentic Workflows. Includes `terraform-provider-upgrade` and `gh-aw-builder` agents, plus `terraform-module-creator`, `terraform-provider-upgrade`, and `gh-aw-operations` skills. Requires Docker for the Terraform MCP. |
 | `packages/diagramming` | Create and edit architecture diagrams via Draw.io and Excalidraw MCP. Includes `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming`, and `excalidraw-mcp-diagramming` skills. |
 
 APM installs skills to `.github/skills/`, agents to `.github/agents/`, and configures MCP servers in `.vscode/mcp.json` automatically.
 
-> **Note:** The Azure MCP (used by `azure-pricing`, `waf-assessment`, `cost-optimization`, `architecture-design`) is provided by the **[Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot)** VS Code extension — install that separately.
+> **Note:** The Azure MCP (used by `azure-pricing`, `waf-assessment`, `cost-optimization`, `architecture-design`, `terraform-module-creator`) is provided by the **[Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot)** VS Code extension — install that separately.
 
 ---
 
