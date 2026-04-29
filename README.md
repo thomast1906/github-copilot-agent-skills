@@ -106,6 +106,7 @@ apm install thomast1906/github-copilot-agent-skills --runtime vscode
 apm install thomast1906/github-copilot-agent-skills/packages/architect --runtime vscode
 apm install thomast1906/github-copilot-agent-skills/packages/terraform --runtime vscode
 apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runtime vscode
+apm install thomast1906/github-copilot-agent-skills/packages/drawio-mcp-diagramming --runtime vscode
 ```
 
 | Bundle | What's included |
@@ -113,6 +114,7 @@ apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runti
 | `packages/architect` | Design and review Azure architectures — service selection, WAF pillar assessments, and live pricing lookups. Includes the `azure-architect` agent and `architecture-design`, `waf-assessment`, `azure-pricing` skills. |
 | `packages/terraform` | Safely upgrade Terraform providers, create Terraform modules, and build GitHub Agentic Workflows. Includes `terraform-provider-upgrade` and `gh-aw-builder` agents, plus `terraform-module-creator`, `terraform-provider-upgrade`, and `gh-aw-operations` skills. Requires Docker for the Terraform MCP. |
 | `packages/diagramming` | Create and edit architecture diagrams via Draw.io and Excalidraw MCP. Includes `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming`, and `excalidraw-mcp-diagramming` skills. |
+| `packages/drawio-mcp-diagramming` | Standalone Draw.io MCP diagramming package. Installs only the `drawio-mcp-diagramming` skill and wires the Draw.io HTTP MCP server (`https://mcp.draw.io/mcp`) automatically. |
 
 APM installs skills to `.github/skills/`, agents to `.github/agents/`, and configures MCP servers in `.vscode/mcp.json` automatically.
 
