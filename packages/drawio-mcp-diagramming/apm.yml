@@ -1,0 +1,19 @@
+name: drawio-mcp-diagramming
+version: 1.0.0
+description: >
+  Draw.io MCP diagramming skill for GitHub Copilot. Creates and edits architecture
+  diagrams using the Draw.io MCP server with Azure2 and AWS4 icon library support.
+  Includes the Draw.io HTTP MCP server configuration.
+author: thomast1906
+license: MIT
+target: vscode
+
+dependencies:
+  apm:
+    # Skills
+    - thomast1906/github-copilot-agent-skills/.github/skills/drawio-mcp-diagramming
+  mcp:
+    - name: drawio
+      registry: false
+      transport: http
+      url: "https://mcp.draw.io/mcp"
