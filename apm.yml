@@ -13,3 +13,4 @@ dependencies:
     - thomast1906/github-copilot-agent-skills/packages/architect
     - thomast1906/github-copilot-agent-skills/packages/terraform
     - thomast1906/github-copilot-agent-skills/packages/diagramming
+    - thomast1906/github-copilot-agent-skills/packages/drawio-mcp-diagramming
