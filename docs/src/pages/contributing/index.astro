@@ -1,0 +1,391 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SectionHeader from '../../components/sections/SectionHeader.astro';
+import CodeBlock from '../../components/ui/CodeBlock.astro';
+import { getCollection } from 'astro:content';
+
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+
+const skillFrontmatterExample = `---
+name: my-skill-name
+description: 'Clear one-liner: what does this skill do and when should GitHub Copilot use it? Include USE FOR and DO NOT USE FOR triggers.'
+metadata:
+  examples:
+    - Describe a realistic prompt a user would type — be specific, not generic
+    - Another distinct example covering a different use case of this skill
+    - A third example that shows the breadth of what the skill handles
+  category: azure-architecture  # azure-architecture | azure-apim | infrastructure-as-code | diagramming | github-workflows
+  status: stable                 # stable | wip
+  featured: false
+  mcp: []                        # e.g. [azure-mcp] or [drawio-mcp, excalidraw-mcp]
+---`;
+
+const agentFrontmatterExample = `---
+name: My Agent Name
+description: 'What the agent does and when to use it. Include trigger phrases.'
+tools: []
+metadata:
+  examples:
+    - '@my-agent A realistic prompt a user would send to this agent'
+    - '@my-agent Another distinct example covering a different workflow'
+    - '@my-agent A third example that shows the breadth of the agent'
+  skills:
+    - skill-id-one
+    - skill-id-two
+---`;
+
+const apmYmlExample = `name: my-bundle-name
+version: 1.0.0
+featured: false
+description: >
+  Brief description of what this bundle provides.
+target: vscode
+dependencies:
+  apm:
+    - .github/agents/my-agent.agent.md
+    - .github/skills/my-skill
+  mcp: []`;
+---
+
+<BaseLayout
+  title="Contributing"
+  description="Learn how to add new skills, agents, and packages to Thomas Thornton's GitHub Copilot Agent Skills repository."
+>
+  <div class="page">
+    <div class="container">
+      <SectionHeader
+        title="Contributing"
+        description="Add new skills, agents, or packages — the site updates automatically from your source files."
+      />
+
+      <section class="section">
+        <h2>How It Works</h2>
+        <p class="intro">
+          The documentation site reads directly from the source files in this repository. Adding a skill or agent only requires creating the right file with correct frontmatter — no config files to update, no separate website content to maintain.
+        </p>
+        <div class="how-it-works-grid">
+          <div class="how-it-item">
+            <div class="how-it-icon">📄</div>
+            <div>
+              <strong>Skills</strong> — <code>.github/skills/&lt;slug&gt;/SKILL.md</code><br />
+              One directory per skill. The directory name becomes the skill's ID.
+            </div>
+          </div>
+          <div class="how-it-item">
+            <div class="how-it-icon">🤖</div>
+            <div>
+              <strong>Agents</strong> — <code>.github/agents/&lt;name&gt;.agent.md</code><br />
+              One file per agent. The filename (without extension) becomes the agent's ID.
+            </div>
+          </div>
+          <div class="how-it-item">
+            <div class="how-it-icon">📦</div>
+            <div>
+              <strong>Packages</strong> — <code>packages/&lt;id&gt;/apm.yml</code><br />
+              One directory per APM bundle. Declares which agents, skills, and MCP servers to install.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Adding a Skill</h2>
+
+        <ol class="steps-list">
+          <li>Create a directory: <code>.github/skills/&lt;your-skill-slug&gt;/</code></li>
+          <li>Add a <code>SKILL.md</code> with the frontmatter below and your skill spec as the body.</li>
+          <li>The skill appears on the site automatically at the next build.</li>
+        </ol>
+
+        <h3 class="subsection-title">Required frontmatter</h3>
+        <CodeBlock code={skillFrontmatterExample} label="SKILL.md frontmatter" />
+
+        <div class="field-table">
+          <div class="field-row header-row">
+            <span>Field</span><span>Required</span><span>Notes</span>
+          </div>
+          <div class="field-row">
+            <code>name</code><span class="req">Yes</span><span>Skill slug / identifier used for invocation</span>
+          </div>
+          <div class="field-row">
+            <code>description</code><span class="req">Yes</span><span>Shown on cards and detail pages. Include USE FOR / DO NOT USE FOR triggers so GitHub Copilot knows when to activate it.</span>
+          </div>
+          <div class="field-row">
+            <code>metadata.examples</code><span class="req">Yes</span><span>3 realistic example prompts. Shown on the skill page as "Example prompts".</span>
+          </div>
+          <div class="field-row">
+            <code>metadata.category</code><span class="req">Yes</span><span><code>azure-architecture</code>, <code>azure-apim</code>, <code>infrastructure-as-code</code>, <code>diagramming</code>, or <code>github-workflows</code></span>
+          </div>
+          <div class="field-row">
+            <code>metadata.status</code><span class="req">Yes</span><span><code>stable</code> or <code>wip</code>. WIP skills display a warning badge.</span>
+          </div>
+          <div class="field-row">
+            <code>metadata.featured</code><span class="req">Yes</span><span><code>true</code> to surface the skill on the homepage. Use sparingly.</span>
+          </div>
+          <div class="field-row">
+            <code>metadata.mcp</code><span class="req">Yes</span><span>List of MCP server IDs this skill requires (e.g. <code>[azure-mcp]</code>). Empty array if none.</span>
+          </div>
+        </div>
+
+        <p class="note">
+          Optionally add <code>metadata.azure-services</code> (comma-separated string or list) and <code>metadata.version</code> / <code>metadata.last-updated</code> — these are shown as tag pills and meta badges on the skill detail page.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Adding an Agent</h2>
+
+        <ol class="steps-list">
+          <li>Create <code>.github/agents/&lt;your-agent-name&gt;.agent.md</code></li>
+          <li>Add the frontmatter below and your agent instructions as the body.</li>
+          <li>List the skill IDs the agent depends on under <code>metadata.skills</code> — the site uses this to link them.</li>
+          <li>The agent appears on the site automatically at the next build.</li>
+        </ol>
+
+        <h3 class="subsection-title">Required frontmatter</h3>
+        <CodeBlock code={agentFrontmatterExample} label=".agent.md frontmatter" />
+
+        <p class="note">
+          The <code>@agent-id</code> invocation syntax shown on the agent detail page is derived from the filename. For example, <code>azure-architect.agent.md</code> → <code>@azure-architect</code>.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Adding a Package</h2>
+
+        <ol class="steps-list">
+          <li>Create a directory: <code>packages/&lt;your-bundle-id&gt;/</code></li>
+          <li>Add an <code>apm.yml</code> declaring the bundle's agents, skills, and MCP dependencies.</li>
+          <li>Set <code>featured: true</code> to surface the package on the homepage.</li>
+          <li>The package appears on the site automatically — no config changes needed.</li>
+        </ol>
+
+        <h3 class="subsection-title">apm.yml structure</h3>
+        <CodeBlock code={apmYmlExample} label="packages/<id>/apm.yml" />
+      </section>
+
+      <section class="section">
+        <h2>Testing Locally</h2>
+        <p class="intro">Run the dev server to preview your changes before opening a PR.</p>
+
+        <CodeBlock code={`cd docs\nnpm install\nnpm run dev`} label="Start dev server" />
+
+        <p>
+          The site will be available at <code>http://localhost:4321</code>. Changes to <code>.github/skills/</code>, <code>.github/agents/</code>, and <code>packages/</code> are picked up on page reload. If you add a completely new file, you may need to restart the dev server.
+        </p>
+
+        <h3 class="subsection-title">Build check</h3>
+        <CodeBlock code="npm run build" label="Build (run from docs/)" />
+        <p>Verify the build completes with 0 errors before opening a PR. A new skill or agent that's missing required frontmatter fields will cause a build failure.</p>
+      </section>
+
+      <section class="section">
+        <h2>Skill Spec Guidelines</h2>
+        <p class="intro">The body of <code>SKILL.md</code> is your skill's instruction set. These guidelines help keep skills consistent and effective.</p>
+        <ul class="guidelines-list">
+          <li><strong>When to Use</strong> — list specific trigger scenarios (include USE FOR: and DO NOT USE FOR: patterns in the description)</li>
+          <li><strong>Inputs</strong> — describe what context GitHub Copilot needs to do its job (e.g. architecture docs, Terraform files, requirements)</li>
+          <li><strong>Output Format</strong> — define what the skill produces (markdown report, XML policy, draw.io XML, etc.)</li>
+          <li><strong>MCP Tool Usage</strong> — if the skill calls MCP tools, document which tools and when</li>
+          <li><strong>References</strong> — put supporting data (schema files, example outputs, look-up tables) in a <code>references/</code> subdirectory</li>
+        </ul>
+        <p class="note">
+          Look at an existing stable skill like <a href={`${baseUrl}/skills/architecture-design/`}>architecture-design</a> or <a href={`${baseUrl}/skills/waf-assessment/`}>waf-assessment</a> as a reference for structure and depth.
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-6);
+  }
+
+  .subsection-title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: var(--space-8) 0 var(--space-4);
+  }
+
+  .intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-8);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .how-it-works-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .how-it-item {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .how-it-icon {
+    font-size: var(--text-2xl);
+    flex-shrink: 0;
+  }
+
+  .how-it-item strong {
+    color: var(--color-text-primary);
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-left: 0;
+    list-style: none;
+    counter-reset: steps;
+    margin-bottom: var(--space-8);
+  }
+
+  .steps-list li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    counter-increment: steps;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .steps-list li::before {
+    content: counter(steps);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    background: var(--color-accent-primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .field-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 180px 70px 1fr;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    align-items: start;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .field-row:last-child {
+    border-bottom: none;
+  }
+
+  .header-row {
+    background: var(--color-bg-tertiary);
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .req {
+    color: var(--color-accent-secondary);
+    font-weight: 600;
+  }
+
+  .note {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .guidelines-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: var(--space-6);
+  }
+
+  .guidelines-list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .guidelines-list li::before {
+    content: '→';
+    color: var(--color-accent-primary);
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .guidelines-list strong {
+    color: var(--color-text-primary);
+  }
+
+  @media (max-width: 640px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+
+    .header-row {
+      display: none;
+    }
+  }
+</style>

@@ -3,11 +3,19 @@ name: apiops-deployment
 description: Guides deployment of Azure API Management infrastructure using Infrastructure as Code (Bicep/Terraform), CI/CD pipelines (GitHub Actions/Azure DevOps), and APIOps workflows. Use when deploying APIM, creating pipelines, or implementing dev→test→prod promotion strategies.
 license: MIT
 metadata:
+  examples:
+  - Generate Bicep modules to deploy APIM with Developer SKU in dev and Premium SKU across two Availability Zones in prod, with separate parameter files per environment and Key Vault for secrets
+  - Create a GitHub Actions APIOps pipeline that extracts APIM configuration, validates API definitions against an OpenAPI schema, and promotes changes from dev to test to prod with a manual approval gate
+  - Design a Terraform deployment for APIM Premium in VNet Internal mode with hub-spoke VNet peering, Private DNS zones, a Front Door WAF as the public entry point, and Application Insights for monitoring
   author: Azure API Marketplace Team
-  version: "1.0"
-  last-updated: "2026-01-29"
-  azure-services: "api-management, devops, github-actions"
-  iac-tools: "bicep, terraform"
+  version: '1.0'
+  last-updated: '2026-01-29'
+  azure-services: api-management, devops, github-actions
+  iac-tools: bicep, terraform
+  category: azure-apim
+  status: wip
+  featured: false
+  mcp: []
 ---
 
 # APIOps Deployment Skill

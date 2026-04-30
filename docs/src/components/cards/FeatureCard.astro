@@ -1,0 +1,67 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+}
+
+const { icon, title, description, href } = Astro.props;
+---
+
+<article class="feature-card">
+  {href ? (
+    <a href={href} class="card-link">
+      <div class="icon">{icon}</div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </a>
+  ) : (
+    <>
+      <div class="icon">{icon}</div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </>
+  )}
+</article>
+
+<style>
+  .feature-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .icon {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--space-4);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    color: var(--color-text-primary);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+</style>
