@@ -1,0 +1,63 @@
+<mxfile>
+  <diagram name="Azure Three-Tier Web App" id="azure-three-tier">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="info" value="&lt;b&gt;Azure Three-Tier Web App&lt;/b&gt;&lt;br&gt;Orange: Edge / CDN&lt;br&gt;Blue: Application Tier&lt;br&gt;Purple: Data Tier" style="text;html=1;strokeColor=#d6b656;fillColor=#fff9cc;align=left;verticalAlign=top;spacingLeft=10;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="190" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="internet" value="Internet" style="image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/general/Globe.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="edgezone" value="Edge / CDN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;verticalAlign=top;fontStyle=1;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="220" y="120" width="220" height="420" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="frontdoor" value="Azure Front Door" style="image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/networking/Front_Doors.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="298" y="300" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="appzone" value="Application Tier" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=1;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="530" y="120" width="220" height="420" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="appservice" value="App Service" style="image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/app_services/App_Services.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="608" y="300" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="datazone" value="Data Tier" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7B1FA2;verticalAlign=top;fontStyle=1;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="840" y="120" width="260" height="420" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sqldb" value="Azure SQL Database" style="image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/databases/SQL_Database.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="938" y="200" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="blob" value="Blob Storage" style="image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/general/Blob_Block.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="938" y="390" width="64" height="64" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" value="HTTPS:443" style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=3;strokeColor=#0078D4;fontColor=#0078D4;fontStyle=1;fontSize=11;" edge="1" source="internet" target="frontdoor" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e2" value="HTTPS:443" style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=2;strokeColor=#00897B;fontColor=#00897B;fontStyle=1;fontSize=11;" edge="1" source="frontdoor" target="appservice" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e3" value="SQL:1433" style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=2;strokeColor=#5C6BC0;dashed=1;fontColor=#5C6BC0;fontStyle=1;fontSize=11;" edge="1" source="appservice" target="sqldb" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e4" value="HTTPS:443" style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=2;strokeColor=#43A047;fontColor=#43A047;fontStyle=1;fontSize=11;" edge="1" source="appservice" target="blob" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
