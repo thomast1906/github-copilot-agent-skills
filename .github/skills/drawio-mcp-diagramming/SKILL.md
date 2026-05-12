@@ -158,7 +158,7 @@ When creating **Azure infrastructure network diagrams** with VNets, subnets, and
   
   <!-- Labeled traffic edge -->
   <mxCell id="edge" value="PostgreSQL:5432" 
-    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#6c8ebf;dashed=1;"
+    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#5C6BC0;dashed=1;"
     edge="1" source="vm" target="postgres">
     <mxGeometry relative="1"/>
   </mxCell>
@@ -169,13 +169,14 @@ When creating **Azure infrastructure network diagrams** with VNets, subnets, and
 - [ ] VNets have thick borders (strokeWidth=4)
 - [ ] Subnets have dashed borders (strokeWidth=2, dashPattern=8 8)
 - [ ] All resources positioned inside their subnets
-- [ ] Traffic arrows labeled with protocols and ports
+- [ ] Traffic arrows labelled with protocols and ports using the standard colour palette
 - [ ] Traffic legend box included
 - [ ] Network isolation explanation box included
 - [ ] Color-coded zones for different purposes
 - [ ] Canvas sized appropriately (1900x1500 for complex infra)
 - [ ] VNet peering connections shown in separate zone
 - [ ] External services grouped in separate zone
+- [ ] Animation preference confirmed with user before generating (*"Would you like any flow arrows animated? If so, which ones?"*)
 
 ## Professional Network Topology Patterns (AWS Infrastructure)
 
@@ -206,15 +207,16 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
 - Databases (RDS, ElastiCache) go in **isolated subnets** with no outbound internet
 
 ### Traffic Flow Visualization
-- **Label all traffic arrows** with protocols/ports:
-  - HTTPS:443 (red thick arrows for internet ingress via ALB/CloudFront)
-  - HTTP:80→HTTPS redirect (light red)
-  - Port 5432/3306 (blue dashed arrows for DB connections)
-  - HTTPS:443 (green arrows for VPC Endpoints / AWS service calls)
-  - SSH:22 / SSM (orange dashed for management / Bastion access)
+- **Label all traffic arrows** with protocols and ports, using the same colour palette as Azure:
+  - HTTPS:443 *(internet ingress)* — **Azure blue** (`#0078D4`, thick solid) for external traffic entering via ALB/CloudFront
+  - HTTP:80→HTTPS redirect — **Teal** (`#00897B`, solid) for healthy/redirected traffic
+  - Port 5432/3306 — **Indigo** (`#5C6BC0`, dashed) for database connections
+  - HTTPS:443 *(internal AWS service calls)* — **Green** (`#43A047`, solid) for traffic to VPC Endpoints and AWS-managed services (S3, SSM, Secrets Manager, etc.)
+  - SSH:22 / SSM — **Amber** (`#F57C00`, dashed) for management / Bastion access
+  - Denied/Blocked (WAF, Security Group deny rules) — **Red** (`#C62828`) — reserve red exclusively for blocked traffic
 - Use `edgeStyle=orthogonalEdgeStyle` for clean routing
 - Show NAT Gateway path for private subnet → internet egress
-- **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and data-transfer flows readable at a glance — the effect renders in SVG export and draw.io desktop and can be applied to any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated path: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=2;strokeColor=#8C4FFF;"`
+- **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and data-transfer flows readable at a glance — the effect renders in SVG export and draw.io desktop and can be applied to any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated ingress path: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=3;strokeColor=#0078D4;"`
 
 ### Essential Components
 1. **Traffic Legend Box** (bottom-left)
@@ -267,7 +269,7 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
 
   <!-- Labeled traffic edge -->
   <mxCell id="edge-rds" value="PostgreSQL:5432"
-    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#6c8ebf;dashed=1;"
+    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#5C6BC0;dashed=1;"
     edge="1" source="alb" target="rds">
     <mxGeometry relative="1"/>
   </mxCell>
@@ -280,13 +282,14 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
 - [ ] Availability Zone containers group subnets per AZ
 - [ ] All resources positioned inside their respective subnets
 - [ ] Internet Gateway and NAT Gateway shown for public/private egress
-- [ ] Traffic arrows labeled with protocols and ports
+- [ ] Traffic arrows labelled with protocols and ports using the standard colour palette
 - [ ] Security Group boundaries annotated where important
 - [ ] Traffic legend box included
 - [ ] Network isolation explanation box included
 - [ ] Canvas sized appropriately (1900x1500 for complex infra)
 - [ ] VPC Peering / Transit Gateway shown in separate zone
 - [ ] Edge/internet services (CloudFront, Route53, WAF) in separate zone
+- [ ] Animation preference confirmed with user before generating (*"Would you like any flow arrows animated? If so, which ones?"*)
 
 ## Icon Reference Assets (Azure Diagrams)
 
@@ -409,6 +412,17 @@ If Azure or AWS icons still do not render:
 - Do **not** generate the diagram with an unresolved icon set.
 - Return the missing icon list and propose verified replacements (grepped from the relevant catalog).
 - After replacements validate to `OK`, then generate the diagram.
+
+## Exporting Diagrams
+
+| Format | How | Notes |
+|---|---|---|
+| **SVG** | `File → Export As → SVG` | Recommended — preserves `flowAnimation` moving-dot effects and all icon rendering. Use for sharing or embedding. |
+| **PNG** | `File → Export As → PNG` | Static snapshot. `flowAnimation` effects are not captured; icons and colours are preserved. |
+| **PDF** | `File → Export As → PDF` | Best for printed or document-embedded diagrams. Static only. |
+| **.drawio file** | `File → Save As` | Preserves all XML, animation settings, and style attributes for future editing. |
+
+> `flowAnimation=1` is only visible when the diagram is open in **draw.io desktop** or rendered as **SVG**. It does not appear in PNG or PDF exports — inform the user of this if they ask why the animation isn't showing.
 
 ## Troubleshooting Checklist
 
