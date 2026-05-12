@@ -73,6 +73,7 @@ Apply these defaults unless the user explicitly asks for a dense/technical view:
 - Keep one icon per major service; avoid icon-per-step layouts.
 - Limit cross-lane dashed lines to one security/auth line and one optional telemetry line.
 - Keep text concise (single purpose per box) and avoid multiline overload.
+- **Animated flow on connectors**: adding `flowAnimation=1;` to any edge style renders a moving dot that travels along the arrow, making directional flow immediately visible without extra labels — ideal for data-flow and pipeline diagrams. The animation is preserved in SVG export and the draw.io desktop app. By default, ask the user whether they want any flow arrows animated before generating the diagram — *"Would you like any of the flow arrows animated to show traffic direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges the user identifies. If the user has already indicated they want a static/clean diagram, skip the question.
 - Prefer a "clean" variant first; add detail only if requested.
 
 For worked examples of common layout problems (stacked edges, repeated labels, observability inside VNet, etc.), see [references/layout-antipatterns.md](references/layout-antipatterns.md).
@@ -102,14 +103,16 @@ When creating **Azure infrastructure network diagrams** with VNets, subnets, and
 - This clearly shows network isolation boundaries
 
 ### Traffic Flow Visualization
-- **Label all traffic arrows** with protocols and ports:
-  - HTTPS:443 (red thick arrows for internet ingress)
-  - HTTP:8080/8090/8095 (gold arrows for backend pools)
-  - PostgreSQL:5432 (blue dashed arrows for database connections)
-  - NFS/Gluster (green arrows for shared storage)
-  - RBAC/Identity/SMTP (orange dashed arrows for management/external)
+- **Label all traffic arrows** with protocols and ports, using this colour palette:
+  - HTTPS:443 — **Azure blue** (`#0078D4`, thick solid) for internet ingress; prominent but professional
+  - HTTP:80/8080/8090/8095 — **Teal** (`#00897B`, solid) for backend pool traffic; signals allowed/healthy east-west flow
+  - PostgreSQL:5432 — **Indigo** (`#5C6BC0`, dashed) for database connections; purple/indigo conventionally marks the data tier
+  - NFS/Gluster — **Green** (`#43A047`, solid) for shared storage flows
+  - RBAC/Identity/SMTP — **Amber** (`#F57C00`, dashed) for management/control-plane traffic
+  - Denied/Blocked (WAF, NSG deny rules) — **Red** (`#C62828`) — reserve red exclusively for blocked or denied traffic
 - Use `edgeStyle=orthogonalEdgeStyle` for clean routing
 - Include `<Array>` waypoints for complex routing
+- **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and replication flows readable at a glance — the effect renders in SVG export and draw.io desktop and works on any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated internet ingress arrow: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=3;strokeColor=#0078D4;"`
 
 ### Essential Components
 1. **Traffic Legend Box** (bottom-left)
@@ -211,6 +214,7 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
   - SSH:22 / SSM (orange dashed for management / Bastion access)
 - Use `edgeStyle=orthogonalEdgeStyle` for clean routing
 - Show NAT Gateway path for private subnet → internet egress
+- **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and data-transfer flows readable at a glance — the effect renders in SVG export and draw.io desktop and can be applied to any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated path: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=2;strokeColor=#8C4FFF;"`
 
 ### Essential Components
 1. **Traffic Legend Box** (bottom-left)
