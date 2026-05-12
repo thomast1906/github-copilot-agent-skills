@@ -25,6 +25,10 @@ This folder contains reference artifacts for the `drawio-mcp-diagramming` skill.
   - Complete `mxGraphModel` XML examples for Azure (VNet → Subnet → Resource) and AWS (VPC → Public/Private Subnets → ALB/ECS) topology diagrams.
   - Use when building or debugging a network topology diagram.
 
+- `standalone-file-requirements.md`
+  - Required XML attributes when writing a `.drawio` file directly (MCP tool unavailable): `as="geometry"` on every `<mxGeometry>`, and standard `mxGraphModel` layout attributes.
+  - Includes a full minimal wrapper template.
+
 ## Refresh Workflow
 
 Refresh the catalogs when draw.io updates its icon library (not required per-run):
