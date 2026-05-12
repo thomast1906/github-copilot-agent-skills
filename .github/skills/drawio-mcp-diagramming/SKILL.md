@@ -18,6 +18,9 @@ For non-Azure/non-AWS diagrams, you can skip icon discovery/validation scripts a
 - The user needs Azure service icons in diagrams.
 - The user needs AWS service icons in diagrams.
 - The user reports that Azure or AWS icons/shapes are not appearing.
+- The user asks for an **auth or identity flow** (OAuth 2.0, OIDC, JWT validation, SSO, login, token exchange, Entra, Cognito).
+- The user asks for an **API or microservice interaction diagram** (request/response chain, service-to-service calls, API gateway flow).
+- The user asks for a **CI/CD pipeline or deployment workflow** (build, test, deploy stages, GitHub Actions, Azure DevOps, approval gates).
 
 ## Required Tooling
 
@@ -42,14 +45,14 @@ For non-Azure/non-AWS diagrams, you can skip icon discovery/validation scripts a
    - Azure: grep `references/azure2-complete-catalog.txt`
    - AWS: grep `references/aws4-complete-catalog.txt`
    - Multi-cloud: grep both catalogs as needed.
-3. If diagram uses neither Azure nor AWS icons: skip icon lookup and create diagram directly.
+3. If diagram uses neither Azure nor AWS icons — or is a **sequence or flow diagram** (auth flow, API call chain, CI/CD pipeline): skip icon lookup. For sequence and flow diagrams, apply Sequence and Flow Diagram Patterns (see section below).
 4. **For Azure infrastructure/network diagrams**: apply Professional Network Topology Patterns (see Azure section below):
    - Use larger canvas (1900x1500)
    - VNets with thick borders (strokeWidth=4)
    - Subnets with dashed borders (strokeWidth=2, dashPattern=8 8)
    - Position resources inside their subnets
    - Label all traffic flows with protocols/ports
-   - Include traffic legend and network isolation explanation boxes
+   - Include network isolation explanation box
 5. **For AWS infrastructure/network diagrams**: apply AWS Network Topology Patterns (see AWS section below):
    - Use larger canvas (1900x1500) for multi-VPC/account topologies
    - VPCs with thick borders (strokeWidth=4)
@@ -115,62 +118,18 @@ When creating **Azure infrastructure network diagrams** with VNets, subnets, and
 - **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and replication flows readable at a glance — the effect renders in SVG export and draw.io desktop and works on any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated internet ingress arrow: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=3;strokeColor=#0078D4;"`
 
 ### Essential Components
-1. **Traffic Legend Box** (bottom-left)
-   - Show all 5 traffic types with color-coded arrows
-   - Include protocol/port information
-   - Use thick bordered white box (`strokeWidth=3`)
 
-2. **Network Isolation Explanation Box** (top-left)
-   - Explain visual conventions:
-     - "VNets: Thick borders"
-     - "Subnets: Dashed borders"
-     - "PostgreSQL subnet delegated"
-     - "NSGs control traffic"
-     - "Private DNS for internal resolution"
-   - Use yellow background (`fillColor=#fff9cc`)
+Include two annotation boxes in every Azure topology diagram:
+1. **Network Isolation Explanation** (top-left, `fillColor=#fff9cc`) — visual conventions: VNet thick borders, subnet dashed borders, NSG/DNS notes
+2. **Zone Separation** — VNet Peering zone (grey `fillColor=#f5f5f5`) and External Services zone (orange `fillColor=#ffe6cc`)
 
-3. **Zone Separation**
-   - VNet Peering Zone: Grey box (`fillColor=#f5f5f5`, `strokeColor=#666666`)
-   - External Services Zone: Orange box (`fillColor=#ffe6cc`, `strokeColor=#d79b00`)
-
-### Complete Example Structure
-```xml
-<mxGraphModel pageWidth="1900" pageHeight="1500">
-  <!-- VNet Container with thick border -->
-  <mxCell id="vnet" value="Internal VNet - 10.x.0.0/16" 
-    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;
-    verticalAlign=top;fontSize=16;fontStyle=1;align=center;strokeWidth=4;">
-    <mxGeometry x="220" y="580" width="1340" height="820"/>
-  </mxCell>
-  
-  <!-- Subnet Container with dashed border inside VNet -->
-  <mxCell id="subnet-app" value="Application Subnet - 10.x.2.0/24"
-    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#82b366;
-    verticalAlign=top;fontSize=13;fontStyle=1;align=center;strokeWidth=2;dashed=1;dashPattern=8 8;">
-    <mxGeometry x="260" y="650" width="480" height="340"/>
-  </mxCell>
-  
-  <!-- Resources inside subnet -->
-  <mxCell id="vm" style="image;aspect=fixed;html=1;points=[];align=center;
-    image=img/lib/azure2/compute/Virtual_Machine.svg;">
-    <mxGeometry x="300" y="720" width="64" height="59"/>
-  </mxCell>
-  
-  <!-- Labeled traffic edge -->
-  <mxCell id="edge" value="PostgreSQL:5432" 
-    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#5C6BC0;dashed=1;"
-    edge="1" source="vm" target="postgres">
-    <mxGeometry relative="1"/>
-  </mxCell>
-</mxGraphModel>
-```
+For a complete example, see [references/topology-patterns.md](references/topology-patterns.md).
 
 ### Professional Topology Checklist (Azure)
 - [ ] VNets have thick borders (strokeWidth=4)
 - [ ] Subnets have dashed borders (strokeWidth=2, dashPattern=8 8)
 - [ ] All resources positioned inside their subnets
 - [ ] Traffic arrows labelled with protocols and ports using the standard colour palette
-- [ ] Traffic legend box included
 - [ ] Network isolation explanation box included
 - [ ] Color-coded zones for different purposes
 - [ ] Canvas sized appropriately (1900x1500 for complex infra)
@@ -219,62 +178,12 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
 - **Direction animation on key edges**: `flowAnimation=1;` adds a moving dot along a connector arrow, making ingress paths, egress routes, and data-transfer flows readable at a glance — the effect renders in SVG export and draw.io desktop and can be applied to any edge style. Before generating the diagram, ask the user: *"Would you like any of the traffic arrows animated to show flow direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges they identify. Example style for an animated ingress path: `style="edgeStyle=orthogonalEdgeStyle;flowAnimation=1;strokeWidth=3;strokeColor=#0078D4;"`
 
 ### Essential Components
-1. **Traffic Legend Box** (bottom-left)
-   - Show all traffic types with colour-coded arrows
-   - Include protocol/port information
 
-2. **Network Isolation Explanation Box** (top-left)
-   - Explain visual conventions:
-     - "VPCs: Thick borders"
-     - "Subnets: Dashed borders (Public/Private/Isolated)"
-     - "Security Groups control ingress/egress per resource"
-     - "NACLs control subnet-level traffic"
-     - "VPC Endpoints for private AWS service access"
+Include two annotation boxes in every AWS topology diagram:
+1. **Network Isolation Explanation** (top-left) — visual conventions: VPC thick borders, subnet tiers (public/private/isolated), SG/NACL notes, VPC Endpoints
+2. **Zone Separation** — Internet/Edge zone (orange), VPC Peering/Transit Gateway zone (grey), AWS Managed Services zone (purple)
 
-3. **Zone Separation**
-   - Internet/Edge Zone: Orange box for CloudFront, Route53, WAF, Shield
-   - VPC Peering / Transit Gateway Zone: Grey box
-   - AWS Managed Services Zone: Purple box for S3, DynamoDB VPC endpoints, etc.
-
-### Complete Example Structure
-```xml
-<mxGraphModel pageWidth="1900" pageHeight="1500">
-  <!-- VPC Container with thick border -->
-  <mxCell id="vpc" value="Production VPC - 10.x.0.0/16"
-    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;
-    verticalAlign=top;fontSize=16;fontStyle=1;align=center;strokeWidth=4;">
-    <mxGeometry x="220" y="200" width="1340" height="1100"/>
-  </mxCell>
-
-  <!-- AZ Container inside VPC -->
-  <mxCell id="az-a" value="us-east-1a"
-    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;
-    verticalAlign=top;fontSize=13;align=center;strokeWidth=1;dashed=1;">
-    <mxGeometry x="260" y="280" width="600" height="960"/>
-  </mxCell>
-
-  <!-- Public Subnet inside AZ -->
-  <mxCell id="subnet-public-a" value="Public Subnet A - 10.x.1.0/24"
-    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#82b366;
-    verticalAlign=top;fontSize=12;fontStyle=1;align=center;strokeWidth=2;dashed=1;dashPattern=8 8;">
-    <mxGeometry x="280" y="360" width="550" height="200"/>
-  </mxCell>
-
-  <!-- ALB stencil shape inside subnet -->
-  <mxCell id="alb" value="ALB"
-    style="shape=mxgraph.aws4.application_load_balancer;fillColor=#8C4FFF;
-    fontColor=#ffffff;strokeColor=none;align=center;html=1;">
-    <mxGeometry x="320" y="410" width="64" height="64"/>
-  </mxCell>
-
-  <!-- Labeled traffic edge -->
-  <mxCell id="edge-rds" value="PostgreSQL:5432"
-    style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#5C6BC0;dashed=1;"
-    edge="1" source="alb" target="rds">
-    <mxGeometry relative="1"/>
-  </mxCell>
-</mxGraphModel>
-```
+For a complete example, see [references/topology-patterns.md](references/topology-patterns.md).
 
 ### Professional Topology Checklist (AWS)
 - [ ] VPCs have thick borders (strokeWidth=4) and are colour-coded by environment
@@ -284,12 +193,88 @@ When creating **AWS infrastructure network diagrams** with VPCs, subnets, and ne
 - [ ] Internet Gateway and NAT Gateway shown for public/private egress
 - [ ] Traffic arrows labelled with protocols and ports using the standard colour palette
 - [ ] Security Group boundaries annotated where important
-- [ ] Traffic legend box included
 - [ ] Network isolation explanation box included
 - [ ] Canvas sized appropriately (1900x1500 for complex infra)
 - [ ] VPC Peering / Transit Gateway shown in separate zone
 - [ ] Edge/internet services (CloudFront, Route53, WAF) in separate zone
 - [ ] Animation preference confirmed with user before generating (*"Would you like any flow arrows animated? If so, which ones?"*)
+
+## Sequence and Flow Diagram Patterns
+
+Use this section for diagrams that show **temporal flows** — what happens in order — rather than infrastructure topology. No cloud icon catalog lookup is required.
+
+### When to Apply
+
+| Diagram type | Keywords | Layout |
+|---|---|---|
+| Auth / authorisation flow | OAuth, OIDC, JWT, SSO, login, token exchange, Entra, Cognito | Swimlane interaction flow |
+| API / microservice call chain | REST, GraphQL, request/response, service-to-service, API gateway | Swimlane or vertical flowchart |
+| CI/CD pipeline | pipeline, build, deploy, release, GitHub Actions, Azure DevOps, approval gate | Horizontal pipeline flowchart |
+
+### Layout Approach
+
+**Swimlane interaction flow** (auth / API flows with 2–5 actors):
+- Represent each actor as a labelled header rectangle at the top, with a matching full-height light-coloured background column below it
+- Steps flow top-to-bottom within each column; number them (`1.`, `2.`, `3.`) in the label so execution order is unambiguous
+- All step boxes and edges live at `parent="1"` (root) — no nested swimlane cell geometry required
+- Edges cross between columns with `edgeStyle=orthogonalEdgeStyle;`
+- Canvas: `pageWidth="1400" pageHeight="900"` for 3 actors; add ~420 px width per additional actor
+
+**Horizontal pipeline flowchart** (CI/CD):
+- Stages flow left-to-right: Source → Build → Test → Staging → Approval → Production
+- Use `rounded=1` rectangles for stages, `rhombus` shape for gate / decision points
+- Colour-code each stage box using the Stage Colours table below
+- Failure branch goes downward from the gate with a red edge to a Rollback/Notify step
+- Canvas: `pageWidth="1700" pageHeight="600"`
+
+### Colour Conventions
+
+**Edge colours** (consistent with topology palette):
+
+| Meaning | `strokeColor` | Style |
+|---|---|---|
+| Primary request / call | `#0078D4` Azure blue | solid, `strokeWidth=2` |
+| Success response / return | `#00897B` Teal | solid, `strokeWidth=2` |
+| Token / credential / redirect | `#F57C00` Amber | `dashed=1`, `strokeWidth=2` |
+| Async / event-driven call | `#5C6BC0` Indigo | `dashed=1`, `strokeWidth=2` |
+| Error / rejection / rollback | `#C62828` Red | solid, `strokeWidth=2` |
+| Optional / conditional | `#666666` Grey | `dashed=1`, `strokeWidth=1` |
+
+**Participant lane colours** (swimlane header + column background at `opacity=30`):
+
+| Actor type | `fillColor` | `strokeColor` |
+|---|---|---|
+| User / browser / client | `#dae8fc` | `#6c8ebf` |
+| Identity provider (Entra, Cognito, Okta) | `#e6f4ea` | `#82b366` |
+| API / backend service | `#fff3e0` | `#e6821e` |
+| Database / data store | `#f5f5f5` | `#666666` |
+| Cloud managed service (Key Vault, S3, etc.) | `#f3e5f5` | `#7B1FA2` |
+
+**Stage fill colours** (CI/CD pipeline):
+
+| Stage | `fillColor` | `fontColor` |
+|---|---|---|
+| Source / Trigger | `#0078D4` | `#ffffff` |
+| Build | `#00897B` | `#ffffff` |
+| Test / Quality Gate | `#F57C00` | `#ffffff` |
+| Deploy to Staging | `#5C6BC0` | `#ffffff` |
+| Approval Gate | `#795548` | `#ffffff` |
+| Deploy to Production | `#43A047` | `#ffffff` |
+| Rollback / Failure | `#C62828` | `#ffffff` |
+
+### Flow Animation
+
+`flowAnimation=1;` works on sequence/flow edges exactly as in topology diagrams. Apply to primary call paths or pipeline stage transitions. Always ask the user before applying.
+
+### Checklist (Sequence/Flow Diagrams)
+
+- [ ] Diagram type identified (auth flow / API flow / CI/CD pipeline)
+- [ ] Actors / participants labelled clearly
+- [ ] Steps numbered in execution order
+- [ ] Edge colours consistent with conventions above
+- [ ] Error / failure paths shown in red
+- [ ] Animation preference confirmed with user before generating
+- [ ] Canvas sized appropriately for participant count and step depth
 
 ## Icon Reference Assets (Azure Diagrams)
 
@@ -371,39 +356,16 @@ AWS4 icon rendering in draw.io can fail for two common reasons:
 
 Grep the static catalogs — no scripts needed at agent runtime:
 
-**Azure:**
 ```bash
-grep -i "gateway" references/azure2-complete-catalog.txt
-grep -i "virtual_machine\|load_balancer\|key_vault" references/azure2-complete-catalog.txt
+grep -i "gateway" references/azure2-complete-catalog.txt     # Azure
+grep -i "lambda"  references/aws4-complete-catalog.txt       # AWS
 ```
 
-**AWS:**
-```bash
-grep -i "lambda" references/aws4-complete-catalog.txt
-grep -i "load_balancing\|cloudfront\|route_53" references/aws4-complete-catalog.txt
-```
+Use verified paths in cell styles:
+- **Azure**: `image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/<category>/<Icon_Name>.svg;`
+- **AWS**: `shape=mxgraph.aws4.<shape_name>;fillColor=<service_color>;fontColor=#ffffff;strokeColor=none;`
 
-Use verified paths in diagram cell styles:
-
-**Azure** (SVG image style):
-```text
-image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/<category>/<Icon_Name>.svg;
-```
-
-**AWS** (stencil shape style — AWS4 icons are stencils, not SVG files):
-```text
-shape=mxgraph.aws4.<shape_name>;fillColor=<service_color>;fontColor=#ffffff;strokeColor=none;
-```
-
-For Azure renderer resilience, absolute URLs also work:
-
-```text
-image;aspect=fixed;html=1;...;image=https://raw.githubusercontent.com/jgraph/drawio/dev/src/main/webapp/img/lib/azure2/<category>/<Icon_Name>.svg;
-```
-
-If local rendering still fails, open in `app.diagrams.net`.
-
-See [references/REFERENCE.md](references/REFERENCE.md) for known-good Azure2 and AWS4 icon examples.
+See [references/REFERENCE.md](references/REFERENCE.md) for absolute URL fallback, additional grep examples, and known-good icon style strings.
 
 ## Fallback Strategy if Icons Still Fail
 
@@ -442,31 +404,11 @@ See [references/REFERENCE.md](references/REFERENCE.md) for full example prompt t
 
 ## Definition of Done
 
-- For non-Azure/non-AWS diagrams: diagram is generated and renders correctly.
-- For Azure diagrams: all icon paths confirmed against `references/azure2-complete-catalog.txt` before calling `drawio/create_diagram`.
-- For AWS diagrams: all icon paths confirmed against `references/aws4-complete-catalog.txt` before calling `drawio/create_diagram`.
-- If render issues found, alternative icon paths sourced from the relevant catalog and substituted.
-- Diagram generated via `drawio/create_diagram` only with confirmed icon paths.
-- XML is valid and opens in draw.io.
-- Cloud resources are identifiable (icons and clear service labels).
-- **For Azure infrastructure/network diagrams**:
-  - VNets use thick borders (strokeWidth=4) and are color-coded
-  - Subnets use dashed borders (strokeWidth=2, dashPattern=8 8)
-  - All resources positioned inside their respective subnets
-  - All traffic flows labeled with protocols and ports
-  - Traffic legend box included (bottom-left)
-  - Network isolation explanation box included (top-left)
-  - Canvas appropriately sized (1900x1500 for complex topologies)
-  - VNet peering and external services in separate zones
-- **For AWS infrastructure/network diagrams**:
-  - VPCs use thick borders (strokeWidth=4) and are colour-coded by environment
-  - Subnets use dashed borders and are colour-coded by tier (public/private/isolated)
-  - Availability Zone containers group subnets per AZ
-  - All resources positioned inside their respective subnets
-  - Internet Gateway and NAT Gateway shown for public/private egress
-  - All traffic flows labeled with protocols and ports
-  - Traffic legend box included (bottom-left)
-  - Network isolation explanation box included (top-left)
-  - Canvas appropriately sized (1900x1500 for complex topologies)
-  - VPC Peering / Transit Gateway and edge services in separate zones
+- All icon paths confirmed against the relevant static catalog before calling `drawio/create_diagram`; unconfirmed icons are not used
+- Diagram renders correctly; XML is valid and opens in draw.io
+- Cloud resources identifiable via correct icons and clear labels
+- All applicable topology checklist items passed (borders, subnets, traffic labels, legend, isolation box, zones, canvas size)
+- All applicable sequence/flow checklist items passed (numbered steps, colour-coded edges, error paths, canvas size)
+- Animation preference confirmed; `flowAnimation=1;` applied only to user-identified edges
+- File artifact saved as `.drawio` (wrapped in `<mxfile>`) if requested
 - Layout anti-patterns checked against [references/layout-antipatterns.md](references/layout-antipatterns.md) before finalising

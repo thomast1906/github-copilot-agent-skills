@@ -21,6 +21,10 @@ This folder contains reference artifacts for the `drawio-mcp-diagramming` skill.
   - Derived from real diagram review sessions.
   - Use this as the first reference when a diagram looks cluttered or has overlapping lines/labels.
 
+- `topology-patterns.md`
+  - Complete `mxGraphModel` XML examples for Azure (VNet → Subnet → Resource) and AWS (VPC → Public/Private Subnets → ALB/ECS) topology diagrams.
+  - Use when building or debugging a network topology diagram.
+
 ## Refresh Workflow
 
 Refresh the catalogs when draw.io updates its icon library (not required per-run):
@@ -60,7 +64,6 @@ Requirements:
   respective subnets to show network isolation
 - Label all traffic flows with protocols and ports (e.g., HTTPS:443,
   PostgreSQL:5432, HTTP:8080)
-- Include a traffic legend showing different traffic types with color-coded arrows
 - Add a network isolation explanation box showing the visual conventions
 - Use a larger canvas (1900x1500) to accommodate the multi-VNet topology
 - Color-code different zones (DMZ VNet in yellow, Internal VNet in green,
@@ -96,7 +99,6 @@ Requirements:
 - Show Internet Gateway and NAT Gateway for public/private subnet egress
 - Label all traffic flows with protocols and ports (e.g., HTTPS:443,
   PostgreSQL:5432, SSH:22)
-- Include a traffic legend showing different traffic types with colour-coded arrows
 - Add a network isolation explanation box (VPC thick borders, subnet dashed borders,
   SG/NACL annotations, VPC Endpoints for private AWS service access)
 - Use a larger canvas (1900x1500) for multi-VPC/multi-account topologies
