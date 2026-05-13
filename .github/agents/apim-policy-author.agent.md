@@ -1,7 +1,25 @@
 ---
 name: APIM Policy Author
 description: Expert agent for creating production-ready Azure API Management policy XML for authentication (OAuth, JWT, subscription keys), rate limiting, CORS, error handling, and transformations. Implements hybrid authentication and security best practices.
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'azure-mcp/get_azure_bestpractices', 'azure-mcp/documentation', 'azure-mcp/search', 'agent', 'todo']
+tools:
+- vscode
+- execute
+- read
+- edit
+- search
+- web
+- azure-mcp/get_azure_bestpractices
+- azure-mcp/documentation
+- azure-mcp/search
+- agent
+- todo
+metadata:
+  examples:
+  - '@apim-policy-author Create a production inbound policy that validates Entra ID JWT tokens with audience and issuer checks, falls back to subscription key auth for legacy clients, adds X-Correlation-Id headers, and returns structured XML error responses with fault codes'
+  - '@apim-policy-author My API is being hit with credential stuffing attacks — add a policy that rate-limits to 20 requests per minute per client IP, blocks requests with missing or malformed Authorization headers, and logs all 401 and 429 events to Application Insights'
+  - '@apim-policy-author Write a CORS policy for my APIM product allowing https://app.contoso.com with GET, POST, PUT, DELETE methods, Authorization and Content-Type headers, a 10-minute preflight cache, and correct handling of OPTIONS requests'
+  skills:
+  - apim-policy-authoring
 ---
 
 ## Purpose

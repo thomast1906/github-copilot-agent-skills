@@ -1,0 +1,69 @@
+---
+import CodeBlock from '../ui/CodeBlock.astro';
+import Button from '../ui/Button.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+---
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to get started?</h2>
+      <p>Install the Architect Bundle in one command.</p>
+      
+      <CodeBlock 
+        code="apm install thomast1906/github-copilot-agent-skills/packages/architect --runtime vscode" 
+      />
+      
+      <div class="cta-buttons">
+        <Button href={`${baseUrl}/getting-started/`} variant="primary">Get Started</Button>
+        <Button href={`${baseUrl}/packages/`} variant="secondary">View All Packages</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-20) 0;
+    margin: var(--space-24) 0;
+  }
+
+  .cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    h2 {
+      font-size: var(--text-3xl);
+    }
+  }
+
+  p {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-8);
+  }
+</style>

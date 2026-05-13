@@ -1,0 +1,204 @@
+---
+import StatusBadge from '../ui/StatusBadge.astro';
+import type { CollectionEntry } from 'astro:content';
+import { categories } from '../../config/categories';
+
+interface Props {
+  skill: CollectionEntry<'skills'>;
+}
+
+const { skill } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+const cat = categories[skill.data.metadata.category as keyof typeof categories];
+const examples = skill.data.metadata.examples?.slice(0, 2) ?? [];
+const services = skill.data.metadata.azureServices ?? [];
+---
+
+<article
+  class="skill-card"
+  data-category={skill.data.metadata.category}
+  style={`--cat-color: ${cat?.color ?? 'var(--color-accent-primary)'}`}
+>
+  <a href={`${baseUrl}/skills/${skill.id}/`} class="card-link">
+    <div class="card-top">
+      <span class="cat-chip">
+        {cat?.icon && <span class="cat-icon" aria-hidden="true">{cat.icon}</span>}
+        {cat?.name ?? skill.data.metadata.category}
+      </span>
+      <StatusBadge status={skill.data.metadata.status} />
+    </div>
+
+    <h3>{skill.data.name}</h3>
+
+    <p class="description">{skill.data.description}</p>
+    <button class="desc-toggle" aria-expanded="false" hidden>Show more</button>
+
+    {examples.length > 0 && (
+      <ul class="examples" aria-label="Example prompts">
+        {examples.map(ex => (
+          <li class="example-item">
+            <span class="ex-icon" aria-hidden="true">💬</span>
+            <span class="ex-text">{ex.length > 80 ? ex.slice(0, 80) + '…' : ex}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="card-footer">
+      {services.length > 0 && (
+        <div class="services-row">
+          {services.slice(0, 3).map(svc => (
+            <span class="svc-tag">{svc}</span>
+          ))}
+          {services.length > 3 && (
+            <span class="svc-tag svc-more">+{services.length - 3}</span>
+          )}
+        </div>
+      )}
+      <span class="view-hint">View skill →</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .skill-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--cat-color);
+    border-radius: var(--radius-md);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 0;
+  }
+
+  .skill-card:hover {
+    border-color: var(--cat-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .cat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--cat-color);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .cat-icon {
+    font-size: 0.85rem;
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .examples {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .example-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
+  }
+
+  .ex-icon {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    margin-top: 1px;
+  }
+
+  .ex-text {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+
+  .services-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    flex: 1;
+  }
+
+  .svc-tag {
+    font-size: var(--text-xs);
+    padding: 1px var(--space-2);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .svc-more {
+    opacity: 0.7;
+  }
+
+  .view-hint {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--cat-color);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .skill-card:hover .view-hint {
+    opacity: 1;
+  }
+</style>

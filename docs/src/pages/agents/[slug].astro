@@ -1,0 +1,451 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SkillCard from '../../components/cards/SkillCard.astro';
+import PackageCard from '../../components/cards/PackageCard.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const agents = await getCollection('agents');
+  return agents.map((agent) => ({
+    params: { slug: agent.id },
+    props: { agent },
+  }));
+}
+
+interface Props {
+  agent: CollectionEntry<'agents'>;
+}
+
+const { agent } = Astro.props;
+const { Content } = await render(agent);
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+
+const allSkills = await getCollection('skills');
+const relatedSkills = allSkills.filter(skill => agent.data.metadata.skills.includes(skill.id));
+
+const allPackages = await getCollection('packages');
+const relatedPackages = allPackages.filter(pkg => pkg.data.agents.includes(agent.id));
+
+const githubUrl = `https://github.com/thomast1906/github-copilot-agent-skills/blob/main/.github/agents/${agent.id}.agent.md`;
+---
+
+<BaseLayout
+  title={agent.data.name}
+  description={agent.data.description}
+>
+  <article class="page">
+    <div class="container">
+      <a href={`${baseUrl}/agents/`} class="back-link">← Back to Agents</a>
+
+      <header class="agent-header">
+        <div class="header-icon">🤖</div>
+        <div class="header-text">
+          <h1>{agent.data.name}</h1>
+          <p class="description">{agent.data.description}</p>
+        </div>
+      </header>
+
+      <div class="invocation-box">
+        <div class="invocation-label">Invoke this agent in GitHub Copilot Chat</div>
+        <div class="invocation-command">
+          <code>@{agent.id} <span class="invocation-placeholder">your request here</span></code>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          View Source on GitHub
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path>
+          </svg>
+        </a>
+      </div>
+
+      {agent.data.metadata.examples.length > 0 && (
+        <section class="examples-section">
+          <h2>Example prompts</h2>
+          <ul class="examples-list">
+            {agent.data.metadata.examples.map((ex) => (
+              <li class="example-item">
+                <span class="example-icon">💬</span>
+                <span class="example-text">{ex}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {agent.data.tools.length > 0 && (
+        <section class="tools-section">
+          <h2>Tools &amp; Skills</h2>
+          <p class="section-intro">This agent has access to the following GitHub Copilot tools and skills:</p>
+          <div class="tools-list">
+            {agent.data.tools.map((tool) => (
+              <span class="tool-tag">{tool}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedSkills.length > 0 && (
+        <section class="section">
+          <h2>Skills Used</h2>          <p class="section-intro">This agent is powered by the following skills:</p>
+          <div class="skills-grid">
+            {relatedSkills.map((skill) => (
+              <SkillCard skill={skill} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedPackages.length > 0 && (
+        <section class="section">
+          <h2>Available in Packages</h2>
+          <p class="section-intro">Install this agent as part of these packages:</p>
+          <div class="packages-grid">
+            {relatedPackages.map((pkg) => (
+              <PackageCard package={pkg} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section class="prose-section">
+        <h2>Full Specification</h2>
+        <div class="prose">
+          <Content />
+        </div>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-link);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: var(--space-8);
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .agent-header {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+    margin-bottom: var(--space-8);
+  }
+
+  .header-icon {
+    font-size: 3rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  h1 {
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: var(--text-4xl);
+    }
+
+    .agent-header {
+      flex-direction: column;
+    }
+  }
+
+  .description {
+    font-size: var(--text-xl);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .actions {
+    margin-bottom: var(--space-12);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--color-accent-primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+
+  .invocation-box {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-8);
+  }
+
+  .invocation-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-2);
+  }
+
+  .invocation-command code {
+    font-size: var(--text-base);
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-primary);
+  }
+
+  .invocation-placeholder {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  .examples-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .examples-section h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .examples-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .example-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .example-icon {
+    font-size: var(--text-base);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .example-text {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    font-style: italic;
+  }
+
+  .tools-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .tools-section h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tool-tag {
+    display: inline-block;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full, 9999px);
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-sm);
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-secondary);
+  }
+
+  .section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .section-intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .skills-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 1024px) {
+    .packages-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .prose-section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .prose-section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-8);
+  }
+
+  .prose {
+    font-size: var(--text-base);
+    line-height: 1.75;
+    color: var(--color-text-primary);
+    max-width: 72ch;
+  }
+
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+  }
+
+  .prose :global(h1) { font-size: var(--text-3xl); }
+  .prose :global(h2) { font-size: var(--text-2xl); }
+  .prose :global(h3) { font-size: var(--text-xl); }
+  .prose :global(h4) { font-size: var(--text-lg); }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875em;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+  }
+
+  .prose :global(pre) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    overflow-x: auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: var(--text-sm);
+  }
+
+  .prose :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--color-border);
+    padding-left: var(--space-4);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-bottom: var(--space-4);
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-8) 0;
+  }
+</style>

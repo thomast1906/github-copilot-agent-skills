@@ -1,0 +1,33 @@
+name: Validate Astro Site
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/skills/**'
+      - '.github/agents/**'
+      - 'packages/**'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install dependencies
+        run: cd docs && npm ci
+
+      - name: Build Astro site
+        run: cd docs && npm run build

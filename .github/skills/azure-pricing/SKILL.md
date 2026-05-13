@@ -1,6 +1,16 @@
 ---
 name: azure-pricing
 description: Look up real-time Azure retail pricing for any service, SKU, or region using the Azure MCP pricing tool. Estimate deployment costs from Bicep, ARM, or Terraform templates, compare pricing across regions, price types (Consumption, Reservation, DevTest), and surface savings plan options. Use when asked about Azure costs, SKU prices, region comparisons, or template cost estimates.
+metadata:
+  examples:
+  - What is the monthly cost for 3 instances of a P2v3 App Service plan in UK South, and how much would I save by switching to a 1-year reserved commitment vs pay-as-you-go?
+  - Estimate the monthly cost of a Bicep template that deploys an AKS cluster with 5 Standard_D4s_v5 nodes, Azure SQL Business Critical at 4 vCores, Premium P1 Redis Cache, and a Standard Azure Front Door profile in UK South
+  - Compare the monthly cost of running 10 containerised microservices on AKS (Standard_D2s_v5 node pool, 3 nodes) vs Azure Container Apps consumption plan, assuming 15 million requests per month at 300ms average execution time
+  category: azure-architecture
+  status: stable
+  featured: true
+  mcp:
+  - azure-mcp
 ---
 
 # Azure Pricing Skill

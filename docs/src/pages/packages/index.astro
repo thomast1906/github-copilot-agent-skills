@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import SectionHeader from '../../components/sections/SectionHeader.astro';
+import PackageCard from '../../components/cards/PackageCard.astro';
+import Button from '../../components/ui/Button.astro';
+import { getCollection } from 'astro:content';
+
+const packages = await getCollection('packages');
+
+const baseUrl = import.meta.env.BASE_URL || '/github-copilot-agent-skills';
+---
+
+<BaseLayout 
+  title="Packages"
+  description="Install curated bundles of agents and skills with a single APM command."
+>
+  <div class="page">
+    <div class="container">
+      <SectionHeader 
+        title="Packages" 
+        description="Curated bundles of agents and skills grouped by use case. Install everything you need with a single command."
+      />
+      
+      <div class="install-box">
+        <h3>Install with APM</h3>
+        <p>
+          All packages are available via the Agent Package Manager (APM). Install any package with a single command, 
+          and APM handles the dependencies and setup automatically.
+        </p>
+        <div class="button-wrapper">
+          <Button href={`${baseUrl}/getting-started/`} variant="primary">View Installation Guide →</Button>
+        </div>
+      </div>
+      
+      <div class="packages-grid">
+        {packages.map((pkg) => (
+          <PackageCard package={pkg} />
+        ))}
+      </div>
+      
+      <div class="apm-explainer">
+        <h3>What is APM?</h3>
+        <p>
+          The Agent Package Manager (APM) is a command-line tool for installing and managing GitHub Copilot 
+          agent bundles. It works like npm or pip, but for GitHub Copilot extensions.
+        </p>
+        <p>
+          APM automatically installs agents, skills, and their dependencies into your VS Code or CLI environment, 
+          making them immediately available in GitHub Copilot Chat.
+        </p>
+        <p>
+          Learn more in the <a href={`${baseUrl}/getting-started/`}>Getting Started</a> guide.
+        </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-20) 0 var(--space-24);
+  }
+
+  .install-box {
+    background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(35, 134, 54, 0.05) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    margin-bottom: var(--space-16);
+  }
+
+  .install-box h3 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .install-box p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-6);
+  }
+
+  .button-wrapper {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-8);
+    margin-bottom: var(--space-16);
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .packages-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .apm-explainer {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    margin-top: var(--space-16);
+  }
+
+  .apm-explainer h3 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .apm-explainer p {
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .apm-explainer p:last-child {
+    margin-bottom: 0;
+  }
+
+  .apm-explainer a {
+    color: var(--color-text-link);
+    font-weight: 600;
+  }
+</style>

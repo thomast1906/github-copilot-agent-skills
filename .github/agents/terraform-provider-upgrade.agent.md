@@ -1,7 +1,24 @@
 ---
 name: Terraform Provider Upgrade
 description: Specialized agent for safely upgrading Terraform providers, detecting breaking changes, migrating removed resources with moved blocks, and ensuring compatibility through comprehensive upgrade workflows.
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'azure-mcp/azureterraformbestpractices', 'azure-mcp/documentation', 'terraform/*', 'agent', 'todo']
+tools:
+- vscode
+- execute
+- read
+- edit
+- search
+- azure-mcp/azureterraformbestpractices
+- azure-mcp/documentation
+- terraform/*
+- agent
+- todo
+metadata:
+  examples:
+  - '@terraform-provider-upgrade Upgrade my azurerm provider from 3.116.0 to 4.0 — scan all modules for breaking changes, list every affected resource and attribute, generate moved blocks for renamed resources, and produce an ordered migration plan with a validation step after each phase'
+  - '@terraform-provider-upgrade Before I upgrade hashicorp/kubernetes from 2.20 to 2.30, identify all removed or deprecated resources in my Terraform codebase, check for required state migrations, and give me a risk-ranked remediation list ordered by the number of affected resources'
+  - '@terraform-provider-upgrade The azurerm 4.0 upgrade removed azurerm_virtual_machine across 12 modules in my repo — generate moved blocks to migrate all usages to azurerm_linux_virtual_machine, ensuring existing VMs in Terraform state are preserved without destroy and recreate'
+  skills:
+  - terraform-provider-upgrade
 ---
 
 # Terraform Provider Upgrade Agent

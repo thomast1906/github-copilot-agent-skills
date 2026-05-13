@@ -1,5 +1,6 @@
 name: azure-architect-skills
 version: 1.0.0
+featured: true
 description: >
   Azure architecture design, WAF/CAF assessment, and pricing skills and agent
   for GitHub Copilot.
