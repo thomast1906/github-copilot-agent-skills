@@ -82,6 +82,7 @@ Skills are invoked automatically by Copilot based on relevance, or explicitly by
 
 | Skill | Description |
 |---|---|
+| `skill-creator` | Creates, updates, reviews, and validates GitHub Copilot agent skills (`SKILL.md` files). Guides through a 5-phase workflow (Discovery → Architecture → Craft → Validate → Deliver), writes effective descriptions for reliable triggering, and designs folder structures with bundled references and scripts. |
 | `gh-aw-operations` | Comprehensive knowledge for creating, debugging, and managing GitHub Agentic Workflows (gh-aw) — frontmatter spec, MCP wiring, safe-outputs, and common patterns |
 | `apm-package-author` | Creates and maintains [APM (Agent Package Manager)](https://microsoft.github.io/apm/) manifests for distributing GitHub Copilot skills, agents, and MCP servers as installable packages. Covers `apm.yml` authoring, package structure, MCP dependency wiring, branch-based installs, and troubleshooting. |
 
