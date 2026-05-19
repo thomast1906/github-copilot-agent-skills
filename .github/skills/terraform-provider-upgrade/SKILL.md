@@ -2,8 +2,9 @@
 name: terraform-provider-upgrade
 description: Safe Terraform provider upgrades with automatic resource migration, breaking change detection, and state management using moved blocks. Use when upgrading provider versions, handling removed resources, migrating deprecated syntax, or performing major version upgrades.
 metadata:
-  author: github-copilot-skills-terraform
+  author: Thomas Thornton
   version: "1.0.0"
+  last-updated: "2026-05-19"
   category: terraform-maintenance
 ---
 

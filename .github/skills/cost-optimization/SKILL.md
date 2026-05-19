@@ -1,6 +1,10 @@
 ---
 name: cost-optimization
 description: Analyze Azure architectures for cost optimization opportunities, provide savings recommendations, and calculate ROI for improvements.
+metadata:
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
 ---
 
 # Cost Optimization Skill

@@ -1,6 +1,10 @@
 ---
 name: architecture-design
 description: Design Azure cloud architectures from requirements and generate High-Level Design (HLD) documentation with service selection, patterns, cost estimates, and WAF alignment. Use this when asked to design or architect Azure solutions.
+metadata:
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
 ---
 
 # Architecture Design Skill

@@ -1,6 +1,10 @@
 ---
 name: waf-assessment
 description: Assess Azure architectures against Well-Architected Framework (WAF) five pillars - Reliability, Security, Cost Optimization, Operational Excellence, and Performance Efficiency. Provide scores and recommendations.
+metadata:
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
 ---
 
 # Well-Architected Framework Assessment Skill

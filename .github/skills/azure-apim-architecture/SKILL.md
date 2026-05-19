@@ -3,9 +3,9 @@ name: azure-apim-architecture
 description: Analyzes and explains Azure API Management architecture decisions for enterprise API marketplace implementations using VNet Internal mode, Front Door, hybrid authentication, and multi-environment strategies. Use when discussing APIM component selection, network topology, cost optimization, or comparing alternatives like workspaces vs instances, VNet Internal vs External mode, or Front Door vs Application Gateway.
 license: MIT
 metadata:
-  author: Azure API Marketplace Team
-  version: "1.0"
-  last-updated: "2026-01-29"
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
   azure-services: "api-management, front-door, vnet, private-link, api-center"
 ---
 

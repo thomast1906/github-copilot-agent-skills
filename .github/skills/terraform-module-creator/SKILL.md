@@ -1,6 +1,10 @@
 ---
 name: terraform-module-creator
 description: Design and create Terraform modules from real infrastructure requirements. Use when asked to create a Terraform module, build a module from a requirement, turn repeated Terraform into a module, design module inputs and outputs, review whether a Terraform pattern should become a module, refactor existing Terraform into a reusable module, or assess whether a module is over-abstracted. Covers Azure-focused modules with KISS/DRY principles, module boundary definition, interface design, and practical file structure generation. Do NOT use for general Terraform coding with no module boundary, provider version upgrades (use terraform-provider-upgrade skill), or non-Terraform IaC.
+metadata:
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
 ---
 
 # Terraform Module Creator

@@ -3,8 +3,8 @@ name: apiops-deployment
 description: Guides deployment of Azure API Management infrastructure using Infrastructure as Code (Bicep/Terraform), CI/CD pipelines (GitHub Actions/Azure DevOps), and APIOps workflows. Use when deploying APIM, creating pipelines, or implementing dev→test→prod promotion strategies.
 license: MIT
 metadata:
-  author: Azure API Marketplace Team
-  version: "1.0"
+  author: Thomas Thornton
+  version: "1.0.0"
   last-updated: "2026-01-29"
   azure-services: "api-management, devops, github-actions"
   iac-tools: "bicep, terraform"

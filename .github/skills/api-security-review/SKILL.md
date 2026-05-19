@@ -3,9 +3,9 @@ name: api-security-review
 description: Reviews Azure API Management configurations for security vulnerabilities, OWASP API Security Top 10 compliance, VNet Internal mode validation, Private Link verification, and Azure Security Benchmark alignment. Use when performing security audits, pre-deployment validation, or compliance reviews.
 license: MIT
 metadata:
-  author: Azure API Marketplace Team
-  version: "1.0"
-  last-updated: "2026-01-29"
+  author: Thomas Thornton
+  version: "1.0.0"
+  last-updated: "2026-05-19"
   azure-services: "api-management, security-center"
   compliance-frameworks: "owasp-api-top10,azure-security-benchmark,cis-azure"
 ---
