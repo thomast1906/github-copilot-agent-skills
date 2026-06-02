@@ -1,137 +1,169 @@
 # GitHub Copilot Agent Skills
 
-A growing collection of GitHub Copilot agents and reusable skills designed to extend Copilot's capabilities across engineering and architecture workflows. Skills are domain-specific bundles of knowledge, prompting logic, and MCP tool usage that Copilot loads automatically when relevant.
+A growing collection of GitHub Copilot agents and reusable skills designed to extend GitHub Copilot's capabilities across engineering and architecture workflows. 
 
-## Structure
+Skills are focused instruction bundles that GitHub Copilot loads when a task
+matches their description. Agents are selectable GitHub Copilot Chat modes with
+a defined role, workflow, and tool access.
 
-```
-.github/
-├── agents/
-└── skills/
-```
+## Choose an Installation
+
+| Goal | Recommended approach |
+|---|---|
+| Install the curated architecture, Terraform, and diagramming bundles | [Install the curated collection with APM](#install-the-curated-collection) |
+| Install one focused bundle | [Install an individual bundle with APM](#install-an-individual-bundle) |
+| Explore every skill, including work in progress | [Clone the repository](#clone-the-repository) |
+
+The root APM package installs the curated bundles listed below. It does not
+install every skill in the repository. Only directories with a committed
+`apm.yml` manifest are presented as installable packages. Clone the repository
+to explore unbundled utilities and work-in-progress skills.
+
+## Curated Bundles
+
+| Bundle | Included content | Requirements |
+|---|---|---|
+| `packages/architect` | `azure-architect` agent; `architecture-design`, `waf-assessment`, and `azure-pricing` skills | Azure MCP |
+| `packages/terraform` | `terraform-provider-upgrade` and `gh-aw-builder` agents; `terraform-module-creator` and `terraform-provider-upgrade` skills | Docker for Terraform MCP; Azure MCP for module creation |
+| `packages/diagramming` | `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming`, and `excalidraw-mcp-diagramming` skills | Draw.io and Excalidraw MCP servers configured by APM |
+| `packages/drawio-mcp-diagramming` | Standalone `drawio-mcp-diagramming` skill | Draw.io MCP server configured by APM |
+
+The standalone Draw.io package is useful when you only want Draw.io support.
+It is already covered by `packages/diagramming`.
+
+## Skills
+
+Skills with no included bundle are currently available by cloning the
+repository.
+
+| Skill | What it does | Included bundle |
+|---|---|---|
+| `architecture-design` | Designs Azure solutions from requirements, including service selection, WAF alignment, cost estimates, and HLD output. | `packages/architect` |
+| `waf-assessment` | Assesses an architecture against the five Azure Well-Architected Framework pillars and provides scored recommendations. | `packages/architect` |
+| `azure-pricing` | Looks up live Azure retail pricing, estimates template costs, and compares regions and pricing types. | `packages/architect` |
+| `terraform-module-creator` | Designs maintainable Terraform modules from infrastructure requirements, with Azure-focused patterns and validation guidance. | `packages/terraform` |
+| `terraform-provider-upgrade` | Guides safe Terraform provider upgrades, breaking-change analysis, resource migration with `moved` blocks, and validation. | `packages/terraform` |
+| `drawio-mcp-diagramming` | Creates and edits Draw.io diagrams with Azure2 and AWS4 icon guidance. | `packages/diagramming`, `packages/drawio-mcp-diagramming` |
+| `azure-drawio-mcp-diagramming` | Creates and edits Azure-focused Draw.io diagrams with Azure icon rendering guidance. | `packages/diagramming` |
+| `excalidraw-mcp-diagramming` | Creates and edits live Excalidraw canvases and exports diagrams to PNG, SVG, `.excalidraw`, or a shareable URL. | `packages/diagramming` |
+| `skill-creator` | Creates, updates, reviews, and validates GitHub Copilot `SKILL.md` files. | - |
+| `apm-package-author` | Creates and troubleshoots APM manifests for distributing skills, agents, and MCP server configuration. | - |
+| `gh-aw-operations` | Creates, compiles, debugs, and manages GitHub Agentic Workflows (`gh-aw`). | - |
+
+## Work in Progress
+
+These skills are under active development and may change as their coverage
+improves. They are available by cloning the repository.
+
+| Skill | What it does |
+|---|---|
+| `cost-optimization` | Identifies Azure cost reduction opportunities and estimates savings and ROI. |
+| `azure-apim-architecture` | Analyzes Azure API Management topology, networking, environment strategy, and cost trade-offs. |
+| `apim-policy-authoring` | Generates APIM policy XML for authentication, rate limiting, CORS, error handling, and transformations. |
+| `api-security-review` | Reviews APIM configurations against OWASP API Security Top 10 and Azure security guidance. |
+| `apiops-deployment` | Guides APIM deployments with Bicep or Terraform and CI/CD promotion workflows. |
+
+## Agents
+
+Select an agent from the GitHub Copilot Chat agent picker when you want a
+guided, role-specific workflow.
+
+| Agent file | Agent | What it does | Availability |
+|---|---|---|---|
+| `azure-architect.agent.md` | Azure Architect Agent | Designs Azure architectures and produces HLD documents aligned to WAF and CAF. | `packages/architect` |
+| `terraform-provider-upgrade.agent.md` | Terraform Provider Upgrade | Performs structured Terraform provider upgrades and compatibility validation. | `packages/terraform` |
+| `gh-aw-builder.agent.md` | GitHub Agentic Workflow Builder | Creates markdown-based GitHub Agentic Workflows with frontmatter, MCP wiring, and safe outputs. | `packages/terraform` |
+| `apim-policy-author.agent.md` | APIM Policy Author | Generates Azure API Management policy XML for authentication, rate limiting, CORS, error handling, and transformations. | Repository only |
 
 ## Prerequisites
 
 ### Always Required
 
-- VS Code (or VS Code Insiders)
-- **[GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)** extension with Copilot Chat enabled
+- VS Code or VS Code Insiders
+- [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
+  with GitHub Copilot Chat enabled
 
 ### MCP Servers
 
-Some skills require MCP servers to be active. This repository includes a pre-configured `.vscode/mcp.json` for the servers below. VS Code will prompt you to start them when first used.
+Some skills call MCP servers for live data or diagram editing. APM configures
+the MCP servers bundled in package manifests. The repository also includes
+[`.vscode/mcp.json`](.vscode/mcp.json) for direct clones.
 
-| MCP Server | Skills that use it | Setup |
+| MCP server | Used by | Setup |
 |---|---|---|
-| **Azure MCP** (via VS Code extension) | `azure-pricing`, `cost-optimization`, `waf-assessment`, `architecture-design` | Install the **[Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot)** VS Code extension — the Azure MCP Server registers automatically, no `mcp.json` entry needed |
-| **Draw.io MCP** (`https://mcp.draw.io/mcp`) | `azure-drawio-mcp-diagramming`, `drawio-mcp-diagramming` | Included in `.vscode/mcp.json` — no additional install required |
-| **Excalidraw MCP** (`https://mcp.excalidraw.com`) | `excalidraw-mcp-diagramming` | Included in `.vscode/mcp.json` — no additional install required |
-| **Terraform MCP** (Docker image `hashicorp/terraform-mcp-server`) | `terraform-provider-upgrade` | Included in `.vscode/mcp.json` — requires **Docker** to be running; optionally provide a HCP Terraform/TFE token when prompted |
-
-## Agents
-
-Agents are pre-configured Copilot modes with domain-specific instructions and tool access. Invoke them from the Copilot Chat agent picker.
-
-| Agent file | Name | What it does |
-|---|---|---|
-| `apim-policy-author.agent.md` | APIM Policy Author | Generates production-ready Azure API Management policy XML for authentication (OAuth 2.0, JWT, subscription keys), rate limiting, CORS, error handling, and request/response transformations |
-| `azure-architect.agent.md` | Azure Architect | Designs production-ready Azure architectures aligned to the Well-Architected Framework and Cloud Adoption Framework; produces HLD documents with service selection, cost estimates, and IaC |
-| `gh-aw-builder.agent.md` | GitHub Agentic Workflow Builder | Creates and configures markdown-based GitHub Agentic Workflows (gh-aw) with correct frontmatter, MCP server wiring, safe-outputs, and best practices |
-| `terraform-provider-upgrade.agent.md` | Terraform Provider Upgrade | Safely upgrades Terraform providers, detects breaking changes, migrates removed resources using `moved` blocks, and validates compatibility |
-
-## Skills
-
-Skills are invoked automatically by Copilot based on relevance, or explicitly by name in chat.
-
-> 🚧 **WIP** — Skills marked with 🚧 WIP are under active development. They are functional but may have incomplete coverage, rough edges, or breaking changes as they evolve.
-
-### Azure Architecture & Design
-
-| Skill | Description |
-|---|---|
-| `architecture-design` | Designs Azure solutions from requirements — service selection, WAF alignment, cost estimates, and HLD output. Uses **Azure MCP** for live pricing. |
-| `waf-assessment` | Assesses an architecture against all five WAF pillars (Reliability, Security, Cost, Operational Excellence, Performance) and provides scored recommendations. Uses **Azure MCP**. |
-| `cost-optimization` 🚧 WIP | Identifies cost reduction opportunities across Azure workloads, quantifies savings, and calculates ROI. Uses **Azure MCP**. |
-| `azure-pricing` | Looks up real-time Azure retail pricing for any service, SKU, or region; estimates costs from Bicep/ARM/Terraform templates; compares Consumption vs Reservation pricing. Defaults to GBP. Uses **Azure MCP**. |
-
-### Azure API Management (APIM)
-
-| Skill | Description |
-|---|---|
-| `azure-apim-architecture` 🚧 WIP | Analyses APIM architecture decisions — VNet Internal vs External, Front Door vs App Gateway, workspaces vs instances, multi-environment strategies, and cost trade-offs |
-| `apim-policy-authoring` 🚧 WIP | Generates production-ready APIM policy XML for OAuth 2.0, JWT validation, subscription keys, rate limiting, CORS, error handling, and transformations |
-| `api-security-review` 🚧 WIP | Reviews APIM configurations against OWASP API Security Top 10, VNet Internal mode, Private Link, and Azure Security Benchmark |
-| `apiops-deployment` 🚧 WIP | Guides APIM deployments using Bicep/Terraform and CI/CD pipelines (GitHub Actions / Azure DevOps); covers dev→test→prod promotion |
-
-### Infrastructure as Code
-
-| Skill | Description |
-|---|---|
-| `terraform-module-creator` | Designs and creates Terraform modules from real infrastructure requirements — module boundary definition, clean interface design, KISS/DRY principles, and full file structure generation. Covers Azure-focused modules with validation via `terraform validate`, `tflint`, and `terraform-docs`. Uses **Azure MCP** and **Terraform MCP**. |
-| `terraform-provider-upgrade` | Safe Terraform provider upgrades with breaking change detection, automatic resource migration using `moved` blocks, and state management. Uses **Terraform MCP**. |
-
-### Diagramming
-
-| Skill | Description |
-|---|---|
-| `azure-drawio-mcp-diagramming` | Creates and edits Azure architecture diagrams via the Draw.io MCP; Azure-only icon library with icon catalog and rendering troubleshooting. Uses **Draw.io MCP**. |
-| `drawio-mcp-diagramming` | Creates and edits architecture diagrams via the Draw.io MCP; supports both Azure2 and AWS4 icon libraries. Uses **Draw.io MCP**. |
-| `excalidraw-mcp-diagramming` | Creates and edits diagrams on a live Excalidraw canvas — architectures, flowcharts, sequence diagrams, mind maps; exports to PNG, SVG, `.excalidraw`, or shareable URL. Uses **Excalidraw MCP**. |
-
-### GitHub Workflows & Package Management
-
-| Skill | Description |
-|---|---|
-| `skill-creator` | Creates, updates, reviews, and validates GitHub Copilot agent skills (`SKILL.md` files). Guides through a 5-phase workflow (Discovery → Architecture → Craft → Validate → Deliver), writes effective descriptions for reliable triggering, and designs folder structures with bundled references and scripts. |
-| `gh-aw-operations` | Comprehensive knowledge for creating, debugging, and managing GitHub Agentic Workflows (gh-aw) — frontmatter spec, MCP wiring, safe-outputs, and common patterns |
-| `apm-package-author` | Creates and maintains [APM (Agent Package Manager)](https://microsoft.github.io/apm/) manifests for distributing GitHub Copilot skills, agents, and MCP servers as installable packages. Covers `apm.yml` authoring, package structure, MCP dependency wiring, branch-based installs, and troubleshooting. |
+| Azure MCP | `architecture-design`, `waf-assessment`, `azure-pricing`, `cost-optimization`, `terraform-module-creator` | Install the [Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot) VS Code extension. The server registers automatically. |
+| Draw.io MCP | `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming` | Configured automatically by the relevant APM bundles or the included `.vscode/mcp.json`. |
+| Excalidraw MCP | `excalidraw-mcp-diagramming` | Configured automatically by `packages/diagramming` or the included `.vscode/mcp.json`. |
+| Terraform MCP | `terraform-provider-upgrade`, `terraform-module-creator` | Configured automatically by `packages/terraform` or the included `.vscode/mcp.json`. Requires Docker. HCP Terraform or Terraform Enterprise credentials are optional for public registry use. |
 
 ## Getting Started
 
-### Option A — APM (if using GitHub Copilot & vscode)
+### Install APM
 
-Install individual bundles or all agents and skills at once using [APM (Agent Package Manager)](https://github.com/microsoft/apm).
+Install [APM (Agent Package Manager)](https://github.com/microsoft/apm):
 
-**Install APM:**
 ```bash
-curl -sSL https://aka.ms/apm-unix | sh   # macOS / Linux
-irm https://aka.ms/apm-windows | iex     # Windows
+# macOS / Linux
+curl -sSL https://aka.ms/apm-unix | sh
+
+# Windows PowerShell
+irm https://aka.ms/apm-windows | iex
 ```
 
-**Install agents and skills:**
-```bash
-# All agents and skills
-apm install thomast1906/github-copilot-agent-skills --runtime vscode
+### Install the Curated Collection
 
-# Or pick a bundle
-apm install thomast1906/github-copilot-agent-skills/packages/architect --runtime vscode
-apm install thomast1906/github-copilot-agent-skills/packages/terraform --runtime vscode
-apm install thomast1906/github-copilot-agent-skills/packages/diagramming --runtime vscode
-apm install thomast1906/github-copilot-agent-skills/packages/drawio-mcp-diagramming --runtime vscode
+```bash
+apm install thomast1906/github-copilot-agent-skills --target copilot
 ```
 
-| Bundle | What's included |
-|---|---|
-| `packages/architect` | Design and review Azure architectures — service selection, WAF pillar assessments, and live pricing lookups. Includes the `azure-architect` agent and `architecture-design`, `waf-assessment`, `azure-pricing` skills. |
-| `packages/terraform` | Safely upgrade Terraform providers, create Terraform modules, and build GitHub Agentic Workflows. Includes `terraform-provider-upgrade` and `gh-aw-builder` agents, plus `terraform-module-creator`, `terraform-provider-upgrade`, and `gh-aw-operations` skills. Requires Docker for the Terraform MCP. |
-| `packages/diagramming` | Create and edit architecture diagrams via Draw.io and Excalidraw MCP. Includes `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming`, and `excalidraw-mcp-diagramming` skills. |
-| `packages/drawio-mcp-diagramming` | Standalone Draw.io MCP diagramming package. Installs only the `drawio-mcp-diagramming` skill and wires the Draw.io HTTP MCP server (`https://mcp.draw.io/mcp`) automatically. |
+### Install an Individual Bundle
 
-APM installs skills to `.github/skills/`, agents to `.github/agents/`, and configures MCP servers in `.vscode/mcp.json` automatically.
+```bash
+apm install thomast1906/github-copilot-agent-skills/packages/architect --target copilot
+apm install thomast1906/github-copilot-agent-skills/packages/terraform --target copilot
+apm install thomast1906/github-copilot-agent-skills/packages/diagramming --target copilot
+apm install thomast1906/github-copilot-agent-skills/packages/drawio-mcp-diagramming --target copilot
+```
 
-> **Note:** The Azure MCP (used by `azure-pricing`, `waf-assessment`, `cost-optimization`, `architecture-design`, `terraform-module-creator`) is provided by the **[Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot)** VS Code extension — install that separately.
+APM deploys agents and MCP configuration to the selected target. Current APM
+versions deploy skills to `.agents/skills/` by default; use
+`--legacy-skill-paths` if you need per-client skill directories such as
+`.github/skills/`.
 
----
-
-### Option B — Clone directly
+### Clone the Repository
 
 1. Clone or fork this repository.
-2. Open the folder in VS Code with GitHub Copilot Chat enabled.
-3. Skills and agents are registered via `.github/copilot-instructions.md` and load automatically.
-4. To invoke an agent, open Copilot Chat and select it from the agent picker (e.g. **Azure Architect**).
-5. To invoke a skill explicitly, ask Copilot by name — e.g. _"use the waf-assessment skill to review this architecture"_.
-6. For MCP-backed skills, ensure the relevant MCP server is running (see [Prerequisites → MCP Servers](#mcp-servers) above).
+2. Open the repository folder in VS Code with GitHub Copilot Chat enabled.
+3. Start the MCP servers needed for the skills you plan to use.
+4. Select an agent from the GitHub Copilot Chat agent picker, or ask GitHub
+   Copilot to use a skill explicitly, such as:
+   `Use the waf-assessment skill to review this architecture.`
+
+## Repository Layout
+
+```text
+.github/
+├── agents/               # Selectable GitHub Copilot Chat agents
+├── skills/               # Stable and work-in-progress skill directories
+├── scripts/              # Repository validation scripts
+└── workflows/            # CI validation
+packages/
+├── architect/            # Azure architecture APM bundle
+├── terraform/            # Terraform APM bundle
+├── diagramming/          # Complete diagramming APM bundle
+└── drawio-mcp-diagramming/ # Standalone Draw.io APM bundle
+apm.yml                   # Root curated APM package
+```
 
 ## Contributing
 
-Each skill lives in its own directory under `.github/skills/` and follows a consistent structure: a `SKILL.md` defining purpose, inputs, output format, and tool usage, plus an optional `references/` folder for supporting data. New agents are added as `.agent.md` files under `.github/agents/`.
+Each skill lives under `.github/skills/<skill-name>/` with a `SKILL.md` file
+containing its purpose, trigger description, workflow, and tool guidance.
+Supporting material belongs in `references/`, and reusable helpers belong in
+`scripts/`.
+
+Before opening a pull request, run:
+
+```bash
+./.github/scripts/validate-agent-skills.sh
+```
