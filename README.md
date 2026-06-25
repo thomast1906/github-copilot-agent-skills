@@ -74,6 +74,8 @@ guided, role-specific workflow.
 | `terraform-provider-upgrade.agent.md` | Terraform Provider Upgrade | Performs structured Terraform provider upgrades and compatibility validation. | `packages/terraform` |
 | `gh-aw-builder.agent.md` | GitHub Agentic Workflow Builder | Creates markdown-based GitHub Agentic Workflows with frontmatter, MCP wiring, and safe outputs. | `packages/terraform` |
 | `apim-policy-author.agent.md` | APIM Policy Author | Generates Azure API Management policy XML for authentication, rate limiting, CORS, error handling, and transformations. | Repository only |
+| `brightdata-rapid-agent.agent.md` | Bright Data Rapid Agent | Performs real-time web research with search, discovery, and page scraping via Bright Data MCP (free tier). | Repository only |
+| `brightdata-pro-agent.agent.md` | Bright Data Pro Agent | Delivers web intelligence with 60+ Bright Data MCP tools for search, structured platform data, scraping, and browser automation. | Repository only |
 
 ## Prerequisites
 
@@ -95,6 +97,7 @@ the MCP servers bundled in package manifests. The repository also includes
 | Draw.io MCP | `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming` | Configured automatically by the relevant APM bundles or the included `.vscode/mcp.json`. |
 | Excalidraw MCP | `excalidraw-mcp-diagramming` | Configured automatically by `packages/diagramming` or the included `.vscode/mcp.json`. |
 | Terraform MCP | `terraform-provider-upgrade`, `terraform-module-creator` | Configured automatically by `packages/terraform` or the included `.vscode/mcp.json`. Requires Docker. HCP Terraform or Terraform Enterprise credentials are optional for public registry use. |
+| Bright Data MCP | `brightdata-rapid-agent`, `brightdata-pro-agent` | Requires a [Bright Data](https://brightdata.com/) account and a `COPILOT_MCP_BRIGHTDATA_TOKEN` secret. MCP wiring is embedded in each agent file; Rapid uses the free tier, Pro enables structured extractors and browser automation. |
 
 ## Getting Started
 
