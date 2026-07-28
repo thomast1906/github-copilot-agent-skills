@@ -6,10 +6,15 @@
   "main": "src/functions/*.mjs",
   "scripts": {
     "start": "func start",
+    "dev": "node dev-server.mjs",
+    "azurite": "azurite-table --location .azurite --silent",
     "test": "node --test 'test/**/*.test.mjs'"
   },
   "dependencies": {
     "@azure/functions": "^4.7.0",
     "@azure/data-tables": "^13.3.0"
+  },
+  "devDependencies": {
+    "azurite": "^3.35.0"
   }
 }

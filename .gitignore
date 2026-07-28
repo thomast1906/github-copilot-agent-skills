@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # Misc
 *.tgz
+
+# Azurite local state
+.azurite/
