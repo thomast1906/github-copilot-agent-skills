@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skills install endpoint</title>
+    <style>
+      body { font: 16px/1.6 system-ui, sans-serif; max-width: 46rem; margin: 4rem auto; padding: 0 1.5rem; }
+      code { background: #f4f4f5; padding: 0.15em 0.4em; border-radius: 4px; }
+      pre { background: #f4f4f5; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>Skills install endpoint</h1>
+    <p>
+      This host serves install redirects for
+      <a href="https://github.com/thomast1906/github-copilot-agent-skills">github-copilot-agent-skills</a>.
+    </p>
+    <p><code>GET /i/{bundle}</code> records an install and redirects to the download.</p>
+    <pre>npx @thomast1906/skills add architect</pre>
+    <p>
+      No telemetry runs on your machine. The count is a server-side property of
+      the redirect. To skip it entirely, use <code>--from-github</code>, or
+      download directly from the repository.
+    </p>
+    <p>Aggregate counts are public at <a href="/api/stats">/api/stats</a>.</p>
+  </body>
+</html>

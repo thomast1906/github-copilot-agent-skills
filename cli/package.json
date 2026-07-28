@@ -1,0 +1,27 @@
+{
+  "name": "@thomast1906/skills",
+  "version": "0.1.0",
+  "description": "Install GitHub Copilot agent skills and agents from thomast1906/github-copilot-agent-skills.",
+  "type": "module",
+  "bin": {
+    "thomas-skills": "bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "author": "Thomas Thornton",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomast1906/github-copilot-agent-skills.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/thomast1906/github-copilot-agent-skills",
+  "dependencies": {
+    "tar": "^7.4.3"
+  }
+}

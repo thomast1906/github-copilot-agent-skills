@@ -1,0 +1,72 @@
+{
+  "generatedAt": "2026-07-28T12:41:19.884Z",
+  "repo": "thomast1906/github-copilot-agent-skills",
+  "bundles": {
+    "architect": {
+      "package": "azure-architect-skills",
+      "version": "1.0.0",
+      "skills": [
+        "architecture-design",
+        "waf-assessment",
+        "azure-pricing"
+      ],
+      "agents": [
+        "azure-architect.agent.md"
+      ],
+      "target": {
+        "type": "archive",
+        "ref": "main",
+        "url": "https://codeload.github.com/thomast1906/github-copilot-agent-skills/tar.gz/refs/heads/main",
+        "include": [
+          ".github/skills/architecture-design",
+          ".github/skills/waf-assessment",
+          ".github/skills/azure-pricing",
+          ".github/agents/azure-architect.agent.md"
+        ]
+      }
+    },
+    "diagramming": {
+      "package": "diagramming-skills",
+      "version": "1.0.0",
+      "skills": [
+        "drawio-mcp-diagramming",
+        "azure-drawio-mcp-diagramming",
+        "excalidraw-mcp-diagramming"
+      ],
+      "agents": [],
+      "target": {
+        "type": "archive",
+        "ref": "main",
+        "url": "https://codeload.github.com/thomast1906/github-copilot-agent-skills/tar.gz/refs/heads/main",
+        "include": [
+          ".github/skills/drawio-mcp-diagramming",
+          ".github/skills/azure-drawio-mcp-diagramming",
+          ".github/skills/excalidraw-mcp-diagramming"
+        ]
+      }
+    },
+    "terraform": {
+      "package": "terraform-deployer-skills",
+      "version": "1.0.0",
+      "skills": [
+        "terraform-provider-upgrade",
+        "gh-aw-operations"
+      ],
+      "agents": [
+        "terraform-provider-upgrade.agent.md",
+        "gh-aw-builder.agent.md"
+      ],
+      "target": {
+        "type": "archive",
+        "ref": "main",
+        "url": "https://codeload.github.com/thomast1906/github-copilot-agent-skills/tar.gz/refs/heads/main",
+        "include": [
+          ".github/skills/terraform-provider-upgrade",
+          ".github/skills/gh-aw-operations",
+          ".github/agents/terraform-provider-upgrade.agent.md",
+          ".github/agents/gh-aw-builder.agent.md"
+        ]
+      }
+    }
+  }
+}

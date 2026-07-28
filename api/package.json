@@ -1,0 +1,15 @@
+{
+  "name": "skills-install-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/functions/*.mjs",
+  "scripts": {
+    "start": "func start",
+    "test": "node --test 'test/**/*.test.mjs'"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.7.0",
+    "@azure/data-tables": "^13.3.0"
+  }
+}
