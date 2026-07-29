@@ -144,7 +144,7 @@ Run the automated validator first:
 python .github/skills/skill-creator/scripts/quick_validate.py .github/skills/<skill-name>
 ```
 
-Then work through the full [references/quality-checklist.md](references/quality-checklist.md) for description quality scoring, instruction quality scoring, trigger testing, and final sign-off.
+Then work through the full [references/quality-checklist.md](references/quality-checklist.md) for description quality scoring, instruction quality scoring, trigger evaluation, behavior evaluation, and final sign-off. For new skills, risky skills, or meaningful updates to existing skills, read [references/evaluation.md](references/evaluation.md) and create a small eval set before delivery.
 
 **Quick structure checks** (also caught by the script):
 - [ ] SKILL.md exists with correct casing (not skill.md or SKILL.MD)
@@ -153,15 +153,17 @@ Then work through the full [references/quality-checklist.md](references/quality-
 - [ ] No README.md or extra docs in the skill folder
 - [ ] Description does NOT contain XML angle brackets `< >`
 
-**Trigger checks** — propose 3–5 test phrases and verify mentally:
-- Should trigger: obvious requests, paraphrased versions, informal requests
-- Should NOT trigger: unrelated topics, tasks better handled by other skills
+**Trigger evaluation** — write a small prompt set before finalizing the description:
+- 8–10 should-trigger prompts covering obvious requests, paraphrases, informal wording, and file/tool-specific wording
+- 8–10 should-not-trigger prompts focused on near misses: related keywords, adjacent skills, and generic requests that should stay with the default agent
+- Revise the description when should-trigger prompts feel undercovered, or when near misses would probably trigger the skill
 
 **Quality checks:**
 - [ ] Every instruction is unambiguous — an agent reading it fresh can follow it without guessing
 - [ ] Examples are realistic and complete
 - [ ] Referenced files have clear load conditions stated in SKILL.md
 - [ ] SKILL.md body is under 500 lines
+- [ ] Evals exist for meaningful new skills or updates, or there is a clear reason they were skipped
 
 ### Phase 5 — Deliver
 
@@ -179,6 +181,29 @@ Present a brief summary:
 - What the skill does
 - Suggested test phrase to try first
 - Any bundled resources and when they load
+
+---
+
+## Updating Existing Skills
+
+When improving an existing skill, preserve its public identity unless the user explicitly asks to rename it. Keep the folder name and `name` frontmatter unchanged, because downstream users, references, and trigger habits may already depend on them.
+
+Before editing:
+
+1. Read the current `SKILL.md` and any directly referenced files.
+2. Check the current git diff so user changes are not overwritten accidentally.
+3. Identify the behavior being improved: triggering, workflow reliability, output quality, bundled resources, or validation.
+4. Snapshot the current behavior with notes or eval prompts before changing the instructions.
+
+When editing:
+
+- Make the smallest change that addresses the observed failure.
+- Avoid overfitting to one prompt; generalize from the failure into a rule, pattern, example, or resource that helps nearby cases too.
+- Remove stale or duplicated guidance when adding new guidance, so the skill does not accumulate conflicting layers.
+- If the update changes triggering behavior, rerun trigger evaluation.
+- If the update changes execution behavior, rerun behavior evals from [references/evaluation.md](references/evaluation.md).
+
+Deliver the update with a short before/after summary: what changed, why it should improve behavior, and which validation or evals were run.
 
 ---
 
@@ -260,7 +285,7 @@ Use for domain knowledge, API specs, schemas, or detailed guides that exceed wha
 
 - Load only when needed — always state the condition in SKILL.md
 - Avoid duplicating content between SKILL.md and reference files
-- This skill bundles: `references/workflows.md` (workflow pattern templates — read during Phase 2), `references/output-patterns.md` (output formatting patterns — read during Phase 3), and `references/quality-checklist.md` (pre-delivery quality checks — read during Phase 4)
+- This skill bundles: `references/workflows.md` (workflow pattern templates — read during Phase 2), `references/output-patterns.md` (output formatting patterns — read during Phase 3), `references/evaluation.md` (trigger and behavior eval workflow — read during Phase 4 for meaningful new skills or updates), and `references/quality-checklist.md` (pre-delivery quality checks — read during Phase 4)
 
 ### assets/
 

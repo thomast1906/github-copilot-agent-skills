@@ -48,22 +48,48 @@ A description scoring below 4 on trigger clarity will undertrigger — the agent
 
 ---
 
-## Trigger Testing
+## Trigger Evaluation
 
-Test the description before delivery. Propose 3–5 phrases for each category and verify mentally whether the skill would load.
+Test the description before delivery. For meaningful new skills or trigger-sensitive updates, create a small trigger set rather than relying on a few obvious examples.
 
 ### Should trigger
-1. [ ] `[Most obvious phrasing of the request]` → triggers? Y / N
-2. [ ] `[Paraphrased version]` → triggers? Y / N
-3. [ ] `[Informal or abbreviated version]` → triggers? Y / N
-4. [ ] `[Version that mentions a specific file type or tool]` → triggers? Y / N
+1. [ ] 8-10 prompts cover obvious wording, paraphrases, informal wording, contextual wording, and file/tool/domain-specific wording
+2. [ ] Each should-trigger prompt has a clear concept or branch represented in the description
+3. [ ] The set includes at least one prompt that does not literally say "skill" but clearly needs the workflow
 
 ### Should NOT trigger
-1. [ ] `[Clearly unrelated task]` → stays silent? Y / N
-2. [ ] `[Task that belongs to a different skill in this repo]` → stays silent? Y / N
-3. [ ] `[Generic question the default agent should handle]` → stays silent? Y / N
+1. [ ] 8-10 near-miss prompts cover adjacent skills, one-off prompts, repo-wide instruction requests, and generic tasks
+2. [ ] Negative prompts are genuinely confusable, not obviously unrelated filler
+3. [ ] The description includes a boundary when a near miss would otherwise trigger
 
-If a "should NOT trigger" phrase would activate this skill, the description is too broad. Add a negative scope clause or narrow the trigger wording.
+If should-trigger prompts are weakly covered, add the missing branch or user phrasing. If should-not-trigger prompts match too easily, narrow the description or add a negative scope clause. See `references/evaluation.md` for the full process.
+
+---
+
+## Behavior Evaluation
+
+Use this for meaningful new skills or execution-changing updates. Skip only when the change is purely mechanical and the reason is obvious.
+
+- [ ] 2-4 realistic eval prompts exist
+- [ ] For a new skill, output is compared against a without-skill baseline when practical
+- [ ] For an existing skill update, output is compared against the old skill or a pre-edit snapshot when practical
+- [ ] Evals include the main workflow and at least one edge case or branch
+- [ ] Optional assertions are objective and checkable
+- [ ] User-facing or subjective outputs receive qualitative review
+- [ ] Iteration stops when success criteria pass, returns diminish, or the user accepts the tradeoff
+
+---
+
+## Existing Skill Update Check
+
+When updating an existing skill:
+
+- [ ] Existing folder name and `name` frontmatter are preserved unless the user explicitly requested a rename
+- [ ] Current behavior or current failure mode is captured before editing
+- [ ] Git diff is checked before editing so unrelated user changes are not overwritten
+- [ ] The update generalizes beyond a single failed prompt
+- [ ] Stale or conflicting old guidance is removed when new guidance replaces it
+- [ ] Relevant trigger or behavior evals are rerun after editing
 
 ---
 
