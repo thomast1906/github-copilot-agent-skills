@@ -3,13 +3,13 @@ name: drawio-mcp-diagramming
 description: "Create and edit diagrams using the Draw.io MCP server — any shape, any vendor. USE FOR: draw me a diagram, create an architecture diagram, add Azure/AWS/GCP/Cisco/Kubernetes icons to a diagram, convert Mermaid to draw.io, fix overlapping arrows, edit a .drawio file, network topology diagrams, CI/CD pipeline diagrams, auth flow diagrams. Supports XML, Mermaid, and CSV. Uses drawio/search_shapes to find any of 10,000+ shapes across all vendor and icon libraries. DO NOT USE FOR: Excalidraw output (use excalidraw-mcp-diagramming skill)."
 metadata:
   author: Thomas Thornton
-  version: "1.1.1"
-  last-updated: "2026-07-26"
+  version: "1.2.0"
+  last-updated: "2026-10-07"
 ---
 
 # Draw.io MCP Diagramming Skill
 
-Create or update diagrams via the Draw.io MCP server. Before generating XML, read [references/xml-authoring-rules.md](references/xml-authoring-rules.md) — hard constraints, container rules, and edge routing guidance that prevent the most common rendering failures. For layout anti-pattern fixes, see [references/layout-antipatterns.md](references/layout-antipatterns.md). For cloud topology conventions, icon libraries, and worked examples, see [references/azure.md](references/azure.md) and [references/aws.md](references/aws.md).
+Create or update diagrams via the Draw.io MCP server. Before generating XML, read [references/xml-authoring-rules.md](references/xml-authoring-rules.md) — hard constraints, container rules, and edge routing guidance that prevent the most common rendering failures. For layout anti-pattern fixes, see [references/layout-antipatterns.md](references/layout-antipatterns.md). For cloud topology conventions, icon libraries, and worked examples, see [references/azure.md](references/azure.md), [references/aws.md](references/aws.md), and [references/gcp.md](references/gcp.md).
 
 For diagrams that use only basic shapes (flowcharts, UML, ERD, org charts, mind maps, timelines, wireframes), skip icon discovery and proceed directly to `drawio/create_diagram` or `drawio/open_drawio_mermaid`.
 
@@ -103,7 +103,7 @@ The draw.io MCP server enforces strict XML rules, and the most common quality fa
 2. **Use `drawio/search_shapes` for any non-geometric shape** — it searches all 10,000+ shapes across every draw.io library and returns ready-to-use style strings.
    - Use it for cloud services (Azure, AWS, GCP), network equipment (Cisco, Juniper), container/orchestration tools (Kubernetes, Docker), brand logos (Slack, GitHub), IT infrastructure shapes, and any other named component.
    - Example queries: `"azure virtual machine"`, `"aws lambda"`, `"cisco router"`, `"kubernetes pod"`, `"slack"`, `"docker"`.
-   - Use the returned style string directly in the XML cell — do not guess or fabricate style strings.
+   - Use the returned style string directly in the XML cell (see Icon Discovery below for the hard gate and fallback flow).
    - Skip `search_shapes` only for diagrams that use purely geometric shapes: rectangles, diamonds, circles, and arrows.
 
 3. **When to use `search_shapes` vs skip it** — if a shape has a recognised name, brand, or product identity, always look it up via `search_shapes` first. Only skip it for standard geometric diagrams (flowcharts, UML, ERD, org charts, mind maps, timelines, wireframes) that need no pictorial icons. For sequence and flow diagrams, apply Sequence and Flow Diagram Patterns (see section below).
@@ -112,7 +112,7 @@ The draw.io MCP server enforces strict XML rules, and the most common quality fa
 
 5. **Keep labels unique and sparse** — if several edges say the same thing, collapse them into one labelled flow or a single note box. Do not repeat the same wording in the title, legend, lane name, and callout; each text element should have one job.
 
-6. **For cloud infrastructure diagrams, load the vendor reference** — read [references/azure.md](references/azure.md) for anything with VNets, subnets, or Azure icons, and [references/aws.md](references/aws.md) for anything with VPCs, AZs, or AWS icons. Read both for multi-cloud diagrams. Each covers that vendor's icon library and caveats, container structure, colour palette, annotation boxes, a complete worked example, and a topology checklist.
+6. **For cloud infrastructure diagrams, load the vendor reference** — read [references/azure.md](references/azure.md) for anything with VNets, subnets, or Azure icons, [references/aws.md](references/aws.md) for anything with VPCs, AZs, or AWS icons, and [references/gcp.md](references/gcp.md) for anything with VPCs, regional subnets, or GCP icons. Read all that apply for multi-cloud diagrams. Each covers that vendor's icon library and caveats, container structure, colour palette, annotation boxes, a complete worked example, and a topology checklist. GCP's networking model (global VPC, regional subnets, VPC-level firewall rules) is not a direct analogue of Azure's or AWS's — read [references/gcp.md](references/gcp.md) even if you are confident with Azure/AWS conventions.
 
 7. **Build the payload**
    - XML: valid `mxGraphModel` using verified icons/style strings.
@@ -165,14 +165,15 @@ Apply these defaults unless the user explicitly asks for a dense/technical view:
 
 For worked examples of common layout problems (stacked edges, repeated labels, observability inside VNet, etc.), see [references/layout-antipatterns.md](references/layout-antipatterns.md).
 
-## Cloud Infrastructure Topology (Azure and AWS)
+## Cloud Infrastructure Topology (Azure, AWS, and GCP)
 
-Vendor-specific topology guidance lives in per-cloud reference files. Load the one that matches the diagram — or both for multi-cloud:
+Vendor-specific topology guidance lives in per-cloud reference files. Load the one that matches the diagram — or more than one for multi-cloud:
 
 - **Azure** — [references/azure.md](references/azure.md): read for any diagram with VNets, subnets, or Azure icons. Covers the azure2 and mscae icon libraries and their caveats, nested VNet → subnet container structure, colour and border conventions, traffic palette, annotation boxes, a complete worked example, and the Azure topology checklist.
 - **AWS** — [references/aws.md](references/aws.md): read for any diagram with VPCs, AZs, or AWS icons. Covers the AWS4 stencil library and its caveats, nested VPC → AZ → subnet container structure, subnet-tier colour coding, NAT/IGW egress paths, security group annotation, a complete worked example, and the AWS topology checklist.
+- **GCP** — [references/gcp.md](references/gcp.md): read for any diagram with VPCs, regional subnets, or GCP icons. Covers the gcp2 stencil library and its caveats, the global-VPC/regional-subnet container model (not a direct analogue of Azure's or AWS's), VPC-level firewall-rule annotation, a complete worked example, and the GCP topology checklist.
 
-Shared rules that apply to both — containment, edge routing, and hard XML constraints — stay in [references/xml-authoring-rules.md](references/xml-authoring-rules.md).
+Shared rules that apply to all three — containment, edge routing, and hard XML constraints — stay in [references/xml-authoring-rules.md](references/xml-authoring-rules.md).
 
 
 ## Sequence and Flow Diagram Patterns
@@ -255,17 +256,9 @@ Use this section for diagrams that show **temporal flows** — what happens in o
 - [ ] Animation preference confirmed with user before generating
 - [ ] Canvas sized appropriately for participant count and step depth
 
-## Icon Discovery: Hard Gate and Fallback
+## Icon Discovery
 
-This applies to all shapes — cloud services, network equipment, brand logos, and any pictorial icon.
-
-1. **`drawio/search_shapes` is the only accepted source** — do not guess or fabricate style strings.
-2. If a style string cannot be confirmed, find an alternative via `drawio/search_shapes` before generating.
-3. If a shape renders incorrectly, use `drawio/search_shapes` for an alternative, substitute, and regenerate.
-
-## How to Discover Shapes
-
-`drawio/search_shapes` searches all 10,000+ shapes across every draw.io library and returns ready-to-use style strings. Use it for **any** shape that has a name, brand, or product identity — not just cloud providers.
+`drawio/search_shapes` is the **only accepted source** for a style string, for any shape with a name, brand, or product identity — cloud services, network equipment, brand logos, container/orchestration tools, or any other pictorial icon. Never guess or fabricate one; this rule is referenced from elsewhere in this skill rather than restated.
 
 Example queries by category:
 
@@ -279,15 +272,13 @@ Example queries by category:
 | Brands / SaaS | `"slack"`, `"github"`, `"jira"`, `"salesforce"` |
 | On-premises / IT | `"server"`, `"database"`, `"laptop"`, `"printer"` |
 
-Always use the returned `style` value directly on the `mxCell` — never guess or fabricate a style string.
-
-The style format varies by library:
+Always use the returned `style` value directly on the `mxCell`. The style format varies by library:
 
 ```text
 # Image-based (Azure azure2, SVG files)
 image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/<category>/<Name>.svg;
 
-# Stencil-based (AWS4, shape library)
+# Stencil-based (AWS4, GCP2, shape libraries)
 shape=mxgraph.aws4.<name>;fillColor=<color>;fontColor=#ffffff;strokeColor=none;
 
 # Stencil-based (Cisco, Kubernetes, etc.)
@@ -299,14 +290,12 @@ shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;image=https://
 
 When the built-in libraries have no strong match, `search_shapes` supplements results from the draw.io icon service (the same grouped icon search the editor sidebar uses) and returns them as `shape=image` styles with an absolute URL. These are valid results — use them as returned rather than rejecting them for not matching an `img/lib/...` path.
 
-## Fallback Strategy if Shapes Still Fail
+**If a style string cannot be confirmed, or a shape renders incorrectly:**
 
-If any shapes do not render correctly:
-
-- Do **not** generate the diagram with an unresolved shape style.
-- Use `drawio/search_shapes` to find alternative verified style strings.
-- Return the list of unresolved shapes and propose verified replacements.
-- After replacements validate to `OK`, then generate the diagram.
+1. Re-query `search_shapes` (raise `limit`, up to 50) for an alternative — don't conclude a shape doesn't exist after one narrow query.
+2. Do **not** generate the diagram with an unresolved shape style.
+3. If multiple shapes are unresolved, list them and propose verified replacements before generating anything.
+4. Once every replacement is confirmed, generate the diagram.
 
 ## Exporting Diagrams
 
@@ -329,7 +318,7 @@ If any shapes do not render correctly:
 - **`html=1` in style** is required for any cell whose `value` contains HTML tags (`<b>`, `<br>`, `<i>`). Newlines via `&#xa;` work without it.
 - **`sketch=0` in search results**: if `drawio/search_shapes` returns a style string containing `sketch=0`, preserve it exactly — omitting it enables the hand-drawn sketch rendering mode for that shape.
 - **Icon sizes**: use dimensions as returned by `search_shapes`; they reflect the intended aspect ratio. When normalising a row of icons for visual consistency, 64×64 is a safe common size. Never change the aspect ratio of an icon that has `aspect=fixed` in its style.
-- **Azure / AWS icon rendering**: vendor-specific style rules and fixes are in [references/azure.md](references/azure.md) and [references/aws.md](references/aws.md).
+- **Azure / AWS / GCP icon rendering**: vendor-specific style rules and fixes are in [references/azure.md](references/azure.md), [references/aws.md](references/aws.md), and [references/gcp.md](references/gcp.md).
 - Reopen diagram in web draw.io if VS Code extension rendering differs.
 - If an icon looks wrong, use `drawio/search_shapes` for an alternative exact style string.
 

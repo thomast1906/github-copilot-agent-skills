@@ -4,9 +4,7 @@ This folder contains reference artifacts for the `drawio-mcp-diagramming` skill.
 
 ## Shape Discovery
 
-Use `drawio/search_shapes` for any shape with a name, brand, or product identity — cloud services (Azure, AWS, GCP), network equipment (Cisco, Juniper), containers (Kubernetes, Docker), brand logos, IT infrastructure shapes, and more. It covers all 10,000+ draw.io library shapes and returns ready-to-use style strings.
-
-Never guess or fabricate a style string. If `drawio/search_shapes` cannot confirm a style, find an alternative before generating.
+See `SKILL.md` § Icon Discovery for the hard gate, query-by-category table, style format by library, and fallback flow — not restated here.
 
 ## Reference Files
 
@@ -23,14 +21,13 @@ Never guess or fabricate a style string. If `drawio/search_shapes` cannot confir
   - AWS4 stencil library and its caveats, nested VPC → AZ → subnet container structure, subnet-tier colour coding, NAT/IGW egress paths, a complete topology example, and the AWS checklist.
   - Read for any diagram containing AWS services.
 
+- `gcp.md`
+  - gcp2 stencil library and its caveats, the global-VPC/regional-subnet container model (not a direct analogue of Azure's VNet/subnet or AWS's VPC/AZ/subnet hierarchy), VPC-level firewall-rule annotation, a complete topology example, and the GCP checklist.
+  - Read for any diagram containing GCP services. No stencil names in this file are pre-validated against a live `search_shapes` call — confirm every one before use.
+
 - `standalone-file-requirements.md`
   - Required XML attributes when writing a `.drawio` file directly (MCP tool unavailable): `as="geometry"` on every `<mxGeometry>`, and standard `mxGraphModel` layout attributes.
   - Includes a full minimal wrapper template.
-
-## Notes
-
-- Always confirm icon style strings via `drawio/search_shapes` before use.
-- If render review shows bad/missing icons, use `drawio/search_shapes` for alternative paths and substitute.
 
 ## Example Prompt Templates
 
@@ -101,14 +98,50 @@ Use AWS4 image styles (image=img/lib/aws4/...) for all AWS resources.
 Include [list services] and show ingress/egress/data flows.
 ```
 
-### Multi-Cloud (Azure + AWS) Architecture Diagram
+### GCP Network Topology Diagram (Infrastructure Focus)
+
+```text
+Create a professional GCP network topology diagram emphasising VPC design,
+regional subnets, and traffic flows.
+
+Requirements:
+- Show the VPC as a global container (thick border strokeWidth=4) with regional
+  subnets as dashed sub-containers (strokeWidth=2 dashPattern=8 8) — do not model
+  subnets as zone-scoped the way AWS AZ subnets are
+- Position zonal resources (GKE nodes, Compute Engine, MIGs) inside their regional
+  subnet; only add a zone sub-grouping if zonal redundancy is the point of the diagram
+- Place the Global External Load Balancer and Cloud CDN OUTSIDE the VPC boundary
+  (they are global, anycast resources, not subnet-resident)
+- Place Cloud SQL, Pub/Sub, BigQuery, Cloud Storage outside the VPC, connected via
+  a dashed Private Service Access / Serverless VPC Access connector edge
+- Place Cloud Monitoring, Cloud Logging, and IAM outside any VPC/subnet container
+- Annotate firewall rules as VPC-level (GCP has no NACL equivalent)
+- Label all traffic flows with protocols and ports
+- Use a larger canvas (1900x1500) for Shared VPC or multi-VPC topologies
+- Use GCP stencil icons confirmed via drawio/search_shapes
+
+Focus on the networking aspects - what is global vs. regional vs. zonal, how
+traffic enters the VPC, and where managed services actually live.
+```
+
+### Basic GCP Architecture Diagram
+
+```text
+Use drawio/create_diagram to generate a 3-tier GCP architecture diagram.
+Confirm every icon via drawio/search_shapes before use (gcp2 stencil library).
+Include [list services] and show ingress/egress/data flows.
+```
+
+### Multi-Cloud (Azure + AWS + GCP) Architecture Diagram
 
 ```text
 Use drawio/create_diagram to generate a multi-cloud architecture diagram
-showing both Azure and AWS components connected via [VPN/ExpressRoute/Direct Connect].
+showing Azure, AWS, and/or GCP components connected via [VPN/ExpressRoute/Direct Connect/
+Cloud Interconnect].
 
 Use Azure2 image styles (image=img/lib/azure2/...) for Azure resources.
-Use AWS4 image styles (image=img/lib/aws4/...) for AWS resources.
+Use AWS4 shape styles (shape=mxgraph.aws4.*) for AWS resources.
+Use gcp2 shape styles (shape=mxgraph.gcp2.*) for GCP resources, confirmed via drawio/search_shapes.
 Show connectivity, data replication, and identity federation between the clouds.
 ```
 
@@ -150,6 +183,12 @@ Create a professional Azure network topology diagram for [description]. Use Azur
 
 ```text
 Create a professional AWS network topology diagram for [description]. Use AWS4 icons with correct fill colours, VPCs with thick borders, public/private/isolated subnets with dashed borders, and label all traffic flows.
+```
+
+### GCP network topology
+
+```text
+Create a professional GCP network topology diagram for [description]. Use gcp2 icons confirmed via drawio/search_shapes, model the VPC as global with regional (not zonal) subnets, keep the Global External LB and managed services outside the VPC boundary, and label all traffic flows.
 ```
 
 ### Cross-functional swimlane

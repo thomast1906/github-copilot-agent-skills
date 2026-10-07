@@ -1,6 +1,6 @@
 # Standalone .drawio File Requirements
 
-The XML examples in this skill (and in `azure.md` / `aws.md`) are **designed for `drawio/create_diagram`**, which wraps the `mxGraphModel` payload automatically. When the MCP tool is unavailable and you must write a `.drawio` file directly, two extra things are required that the MCP tool normally provides:
+The XML examples in this skill (and in `azure.md` / `aws.md` / `gcp.md`) are **designed for `drawio/create_diagram`**, which wraps the `mxGraphModel` payload automatically. When the MCP tool is unavailable and you must write a `.drawio` file directly, two extra things are required that the MCP tool normally provides:
 
 ## 1. `as="geometry"` on every `<mxGeometry>` element
 
