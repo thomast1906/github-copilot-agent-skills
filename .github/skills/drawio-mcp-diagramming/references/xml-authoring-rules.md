@@ -54,14 +54,6 @@ Cells defined later render on top of earlier siblings. When background rectangle
 
 ---
 
-## VS Code / GitHub Copilot: Sequential Shape Searches
-
-In VS Code and GitHub Copilot, **parallel tool calls are cancelled if the user sends a new message** while they are in flight.
-
-Always run `drawio/search_shapes` calls **one at a time** (sequentially) — never in parallel batches — to avoid losing results mid-search.
-
----
-
 ## Icon Size Normalisation
 
 `drawio/search_shapes` returns varying default dimensions (e.g. 65×60, 68×68, 64×64). Use these default sizes as returned — they reflect the icon's intended aspect ratio. When normalising a row of icons for visual consistency, 64×64 is a common safe size. Never scale an icon that has `aspect=fixed` in its style to a size that changes the aspect ratio.
