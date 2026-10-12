@@ -92,7 +92,7 @@ Skills are grouped below by area. Stable skills are included in an APM bundle; w
 
 | Skill | Description | APM bundle |
 |---|---|---|
-| [`architecture-design`](.github/skills/architecture-design) | Designs Azure cloud architectures from requirements, produces HLD documentation, selects services, and aligns to WAF and CAF. | `packages/architect` |
+| [`azure-architecture-design`](.github/skills/azure-architecture-design) | Designs Azure cloud architectures from requirements, grounding service choices in current Azure best practices and Microsoft Learn documentation, with WAF, CAF, and live-pricing alignment. | `packages/architect` |
 | [`waf-assessment`](.github/skills/waf-assessment) | Assesses an architecture against the five Azure Well-Architected Framework pillars and provides scored recommendations. | `packages/architect` |
 | [`azure-pricing`](.github/skills/azure-pricing) | Looks up live Azure retail pricing for any SKU or region, estimates template costs, and compares pricing types. | `packages/architect` |
 | [`cost-optimization`](.github/skills/cost-optimization) | Analyses Azure architectures for cost reduction opportunities and estimates savings and ROI. *(work in progress)* | — |
@@ -163,7 +163,7 @@ Some skills call MCP servers for live data or diagram editing. APM configures th
 
 | MCP server | Used by | Setup |
 |---|---|---|
-| Azure MCP | `architecture-design`, `waf-assessment`, `azure-pricing`, `cost-optimization`, `terraform-module-creator` | Install the [Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot) VS Code extension; the server registers automatically. |
+| Azure MCP | `azure-architecture-design`, `waf-assessment`, `azure-pricing`, `cost-optimization`, `terraform-module-creator` | Install the [Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot) VS Code extension; the server registers automatically. |
 | Draw.io MCP | `drawio-mcp-diagramming`, `azure-drawio-mcp-diagramming` | Configured automatically by the relevant APM bundles or the included `.vscode/mcp.json`. |
 | Excalidraw MCP | `excalidraw-mcp-diagramming` | Configured automatically by `packages/diagramming` or the included `.vscode/mcp.json`. |
 | Terraform MCP | `terraform-provider-upgrade`, `terraform-module-creator` | Configured automatically by `packages/terraform` or the included `.vscode/mcp.json`. Requires Docker. HCP Terraform or Terraform Enterprise credentials are optional for public registry use. |

@@ -190,7 +190,7 @@ Apply to ALL Azure resources:
 
 ## When to Use Each Skill
 
-- **`architecture-design`**: Designing new solutions, selecting services and patterns
+- **`azure-architecture-design`**: Designing new Azure solutions, selecting services and patterns
 - **`waf-assessment`**: Reviewing architectures, validating production-readiness
 - **`cost-optimization`**: Analyzing costs, finding savings opportunities
 - **`azure-pricing`**: Looking up real-time Azure retail pricing for SKUs, services, or regions; estimating deployment costs from Bicep/ARM templates; comparing Consumption vs Reservation pricing. Always use **GBP** as the default currency (`currency: GBP`); pass `USD`, `EUR`, or another ISO code only when the user specifies a different currency
@@ -239,7 +239,7 @@ This provides 99.95% SLA with Availability Zones, managed patching, and scales f
 
 Alternative: Container Apps if you're already containerized (~£140/month for similar scale)
 
-Would you like me to create a complete architecture design using the `architecture-design` skill?"
+Would you like me to create a complete architecture design using the `azure-architecture-design` skill?"
 ```
 
 ## Reference Documentation

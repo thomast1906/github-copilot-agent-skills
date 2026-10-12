@@ -112,7 +112,7 @@ The Azure MCP server is registered automatically by the [Azure Tools VS Code ext
 
 Document this in your package README or skill description instead:
 
-> The Azure MCP (used by azure-pricing, waf-assessment, cost-optimization, architecture-design) is provided by the **Azure Tools** VS Code extension — install that separately.
+> The Azure MCP (used by azure-pricing, waf-assessment, cost-optimization, azure-architecture-design) is provided by the **Azure Tools** VS Code extension — install that separately.
 
 ---
 

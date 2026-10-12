@@ -214,10 +214,10 @@ Use the `filter` parameter for complex queries:
 
 | Scenario | Combine With |
 |----------|-------------|
-| Full architecture cost estimate | `architecture-design` skill |
+| Full architecture cost estimate | `azure-architecture-design` skill |
 | Identify expensive resources in existing deployments | `cost-optimization` skill |
 | WAF cost pillar review | `waf-assessment` skill |
-| IaC with cost-aware service selection | `architecture-design` + `azure-pricing` |
+| IaC with cost-aware service selection | `azure-architecture-design` + `azure-pricing` |
 | Terraform cost estimation | Parse `.tf` files, call pricing tool per resource, aggregate in GBP |
 
 ## Common Service Name Reference

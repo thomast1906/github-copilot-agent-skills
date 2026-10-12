@@ -48,7 +48,7 @@ dependencies:
     # Agents
     - thomast1906/github-copilot-agent-skills/.github/agents/azure-architect.agent.md
     # Skills
-    - thomast1906/github-copilot-agent-skills/.github/skills/architecture-design
+    - thomast1906/github-copilot-agent-skills/.github/skills/azure-architecture-design
     - thomast1906/github-copilot-agent-skills/.github/skills/waf-assessment
     - thomast1906/github-copilot-agent-skills/.github/skills/azure-pricing
     # cost-optimization excluded — WIP

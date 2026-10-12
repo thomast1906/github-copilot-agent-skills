@@ -190,7 +190,7 @@ The `description` field is the primary mechanism that determines whether Copilot
 
 **Good example:**
 ```
-Analyze Azure architectures for cost optimization opportunities and provide savings recommendations. Use when reviewing Azure spending, asked to reduce costs, optimize resources, right-size VMs, or find savings across subscriptions. Do NOT use for general architecture design (use architecture-design skill instead).
+Analyze Azure architectures for cost optimization opportunities and provide savings recommendations. Use when reviewing Azure spending, asked to reduce costs, optimize resources, right-size VMs, or find savings across subscriptions. Do NOT use for general architecture design (use azure-architecture-design skill instead).
 ```
 
 **Bad example:**
