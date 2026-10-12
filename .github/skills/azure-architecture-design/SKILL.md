@@ -53,6 +53,8 @@ Use managed services where they meet requirements; do not make PaaS a rule that 
 
 Do not invent SKUs, feature support, SLAs, paired-region behaviour, or service limits. Validate them through documentation before reporting them as facts.
 
+See [references/worked-example.md](references/worked-example.md) for two filled-in decision rows — an easy call and a genuinely contested one — plus a short Executive Summary/Cost Model excerpt in this format. Its service names, SKUs, and prices are illustrative placeholders, not current facts.
+
 ### 4. Design WAF and CAF into the solution
 
 For every material component and cross-cutting decision, map the applicable WAF recommendations and CAF conventions to the decision record. Record a recommendation or an explicitly accepted gap; do not imply that every pillar has an equally relevant control for every component. Treat the pillars as design constraints, not a post-design checklist:
