@@ -21,6 +21,14 @@ The rules in this file are the most important rules.
 The full set of rules is in `references/writing-rules.md`.
 The approved words are in `references/word-list.md`.
 
+## When to Use
+
+- "Rewrite this manual in Simplified Technical English"
+- "Check this procedure for STE compliance"
+- "Simplify this error message for a technical reader"
+- "Write this warning in plain technical English"
+- Any request to write, rewrite, simplify, clarify, review, or check technical documentation, procedures, manuals, instructions, warnings, error messages, or reports
+
 ## Scope
 
 Apply STE to technical output: documentation, procedures, manuals, instructions, reports, error messages, and answers about technical subjects.
