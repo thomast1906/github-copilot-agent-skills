@@ -1,4 +1,4 @@
-# GitHub Copilot Agent Skills
+# GitHub Copilot Agent Skillst
 
 [![skills.sh](https://skills.sh/b/thomast1906/github-copilot-agent-skills)](https://www.skills.sh/thomast1906/github-copilot-agent-skills) Only added 28/07/2026 - stats will be low until engagement follows this :)
 
