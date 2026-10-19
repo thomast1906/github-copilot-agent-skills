@@ -33,7 +33,7 @@ Draw.io provides two MCP server variants. The skill works with either; call the 
 
 ### Option A — Hosted App Server (inline / "Open in draw.io" button)
 
-- MCP tool: `drawio/create_diagram`
+- MCP tools: `drawio/create_diagram`, `drawio/search_shapes`, `drawio/get_drawio_reference`
 - Workspace MCP config:
 
 ```json
@@ -52,7 +52,7 @@ Optional layout passes: `postLayout: "elk"`, `routing: "libavoid"`.
 
 ### Option B — stdio Tool Server (opens draw.io in browser)
 
-- MCP tools: `drawio/open_drawio_xml`, `drawio/open_drawio_mermaid`, `drawio/open_drawio_csv`, `drawio/search_shapes`, `drawio/list_pages`, `drawio/get_page`, `drawio/set_page`
+- MCP tools: `drawio/open_drawio_xml`, `drawio/open_drawio_mermaid`, `drawio/open_drawio_csv`, `drawio/search_shapes`, `drawio/get_drawio_reference`, `drawio/list_pages`, `drawio/get_page`, `drawio/set_page`
 - Workspace MCP config:
 
 ```json
@@ -69,7 +69,15 @@ Optional layout passes: `postLayout: "elk"`, `routing: "libavoid"`.
 Supported inputs: XML, Mermaid, CSV.
 Optional layout pass: `routing: "libavoid"` on `open_drawio_xml` — **requires `@drawio/mcp` v1.3.0 or later**. On older versions the parameter is ignored, so pin with `npx -y @drawio/mcp@latest` if connector routing does not improve.
 
-> Use **Option A** if your host supports MCP Apps inline rendering (Claude.ai, Cursor ≥ 2.6) or if the "Open in draw.io" button workflow is acceptable. Use **Option B** for VS Code / GitHub Copilot or any standard MCP client.
+> Use **Option A** for supported inline hosts, including VS Code with GitHub Copilot, Claude.ai, and Cursor. It is the server configured by this repository's APM packages. Use **Option B** when you specifically need browser-editor workflows, CSV import, or direct multi-page file editing.
+
+### Canonical generation reference (required)
+
+Before the first diagram in **each format** in a conversation, call
+`drawio/get_drawio_reference` for that format: request the XML reference before
+generating or editing XML, and the Mermaid reference before generating Mermaid.
+Treat the returned server reference as authoritative. If it conflicts with this
+skill or a local reference, follow it and update this repository later.
 
 ### Icon discovery tool (both servers)
 
@@ -100,40 +108,42 @@ The draw.io MCP server enforces strict XML rules, and the most common quality fa
    - For org charts or flowcharts from tabular data: use **CSV** with the Tool Server (`drawio/open_drawio_csv`).
    - For diagrams with named services, vendor shapes, or pictorial icons: use **XML** (`drawio/create_diagram` or `drawio/open_drawio_xml`).
 
-2. **Use `drawio/search_shapes` for any non-geometric shape** — it searches all 10,000+ shapes across every draw.io library and returns ready-to-use style strings.
+2. **Load the canonical server reference** — call `drawio/get_drawio_reference` once per selected format (XML or Mermaid) before its first use in the conversation. Its instructions override this repository if they differ.
+
+3. **Use `drawio/search_shapes` for any non-geometric shape** — it searches all 10,000+ shapes across every draw.io library and returns ready-to-use style strings.
    - Use it for cloud services (Azure, AWS, GCP), network equipment (Cisco, Juniper), container/orchestration tools (Kubernetes, Docker), brand logos (Slack, GitHub), IT infrastructure shapes, and any other named component.
    - Example queries: `"azure virtual machine"`, `"aws lambda"`, `"cisco router"`, `"kubernetes pod"`, `"slack"`, `"docker"`.
    - Use the returned style string directly in the XML cell (see Icon Discovery below for the hard gate and fallback flow).
    - Skip `search_shapes` only for diagrams that use purely geometric shapes: rectangles, diamonds, circles, and arrows.
 
-3. **When to use `search_shapes` vs skip it** — if a shape has a recognised name, brand, or product identity, always look it up via `search_shapes` first. Only skip it for standard geometric diagrams (flowcharts, UML, ERD, org charts, mind maps, timelines, wireframes) that need no pictorial icons. For sequence and flow diagrams, apply Sequence and Flow Diagram Patterns (see section below).
+4. **When to use `search_shapes` vs skip it** — if a shape has a recognised name, brand, or product identity, always look it up via `search_shapes` first. Only skip it for standard geometric diagrams (flowcharts, UML, ERD, org charts, mind maps, timelines, wireframes) that need no pictorial icons. For sequence and flow diagrams, apply Sequence and Flow Diagram Patterns (see section below).
 
-4. **Nest groupings with real containers, not stacked rectangles** — for any diagram with hierarchy (VNet → Subnet → resource, VPC → AZ → instance, Region → Environment → Service, swimlanes), make each level a `swimlane;startSize=24;` container, set `parent="<container_id>"` on children, and give children coordinates **relative to their parent**. Edges between cells in *different* containers must use `parent="1"` or they render inside the container and get clipped. Drawing a large rectangle and positioning shapes on top of it at absolute coordinates is the anti-pattern the draw.io XML reference explicitly calls out — it breaks move/resize, collapse, and layout passes.
+5. **Nest groupings with real containers, not stacked rectangles** — for any diagram with hierarchy (VNet → Subnet → resource, VPC → AZ → instance, Region → Environment → Service, swimlanes), make each level a `swimlane;startSize=24;` container, set `parent="<container_id>"` on children, and give children coordinates **relative to their parent**. Edges between cells in *different* containers must use `parent="1"` or they render inside the container and get clipped. Drawing a large rectangle and positioning shapes on top of it at absolute coordinates is the anti-pattern the draw.io XML reference explicitly calls out — it breaks move/resize, collapse, and layout passes.
 
-5. **Keep labels unique and sparse** — if several edges say the same thing, collapse them into one labelled flow or a single note box. Do not repeat the same wording in the title, legend, lane name, and callout; each text element should have one job.
+6. **Keep labels unique and sparse** — if several edges say the same thing, collapse them into one labelled flow or a single note box. Do not repeat the same wording in the title, legend, lane name, and callout; each text element should have one job.
 
-6. **For cloud infrastructure diagrams, load the vendor reference** — read [references/azure.md](references/azure.md) for anything with VNets, subnets, or Azure icons, [references/aws.md](references/aws.md) for anything with VPCs, AZs, or AWS icons, and [references/gcp.md](references/gcp.md) for anything with VPCs, regional subnets, or GCP icons. Read all that apply for multi-cloud diagrams. Each covers that vendor's icon library and caveats, container structure, colour palette, annotation boxes, a complete worked example, and a topology checklist. GCP's networking model (global VPC, regional subnets, VPC-level firewall rules) is not a direct analogue of Azure's or AWS's — read [references/gcp.md](references/gcp.md) even if you are confident with Azure/AWS conventions.
+7. **For cloud infrastructure diagrams, load the vendor reference** — read [references/azure.md](references/azure.md) for anything with VNets, subnets, or Azure icons, [references/aws.md](references/aws.md) for anything with VPCs, AZs, or AWS icons, and [references/gcp.md](references/gcp.md) for anything with VPCs, regional subnets, or GCP icons. Read all that apply for multi-cloud diagrams. Each covers that vendor's icon library and caveats, container structure, colour palette, annotation boxes, a complete worked example, and a topology checklist. GCP's networking model (global VPC, regional subnets, VPC-level firewall rules) is not a direct analogue of Azure's or AWS's — read [references/gcp.md](references/gcp.md) even if you are confident with Azure/AWS conventions.
 
-7. **Build the payload**
+8. **Build the payload**
    - XML: valid `mxGraphModel` using verified icons/style strings.
    - Mermaid: valid Mermaid.js definition (App Server: pass as `mermaid`; Tool Server: use `drawio/open_drawio_mermaid`).
    - CSV: valid CSV content (Tool Server: use `drawio/open_drawio_csv`).
 
-8. **Call the appropriate tool**
+9. **Call the appropriate tool**
    - App Server: `drawio/create_diagram` with `xml` or `mermaid`.
    - Tool Server: `drawio/open_drawio_xml`, `drawio/open_drawio_mermaid`, or `drawio/open_drawio_csv`.
 
-9. **Decide the layout pass before writing XML, then let it route the edges**
+10. **Decide the layout pass before writing XML, then let it route the edges**
    - `routing: "libavoid"` — keeps your hand-placed coordinates and only reroutes connectors around shapes. This is the default for topology, architecture, deployment, and container-based diagrams.
    - `postLayout: "elk"` — full re-layout that replaces your vertex positions. Use for directional/hierarchical XML (pipelines, decision flows). Add `direction: "horizontal"` when the flow reads left-to-right — it defaults to `vertical`, which is why left-to-right CI/CD pipelines come out stacked.
    - Do **not** combine `postLayout` and `routing` — ELK already routes its own edges. `direction` is XML-only and ignored for Mermaid (Mermaid takes direction from `flowchart TD/LR`).
    - Do **not** hand-write `exitX`/`entryX` or `<Array as="points">` waypoints. The routing pass computes them, and manual values fight it. See [references/xml-authoring-rules.md](references/xml-authoring-rules.md) for the narrow exceptions.
 
-10. If the user wants a file artifact, save as `.drawio` wrapped in `<mxfile><diagram>...</diagram></mxfile>`. **Read [references/standalone-file-requirements.md](references/standalone-file-requirements.md) before writing any `.drawio` file by hand** (or whenever the MCP tools are unavailable) — the MCP tools add `as="geometry"` and the `mxGraphModel` layout attributes for you, and without them every element collapses to the origin.
+11. If the user wants a file artifact, save as `.drawio` wrapped in `<mxfile><diagram>...</diagram></mxfile>`. **Read [references/standalone-file-requirements.md](references/standalone-file-requirements.md) before writing any `.drawio` file by hand** (or whenever the MCP tools are unavailable) — the MCP tools add `as="geometry"` and the `mxGraphModel` layout attributes for you, and without them every element collapses to the origin.
 
-11. Keep labels concise and explicit (service name + role).
+12. Keep labels concise and explicit (service name + role).
 
-12. Prefer one icon per major component or service; use edges for flow semantics (ingress/egress/dependency/telemetry).
+13. Prefer one icon per major component or service; use edges for flow semantics (ingress/egress/dependency/telemetry).
 
 ## Input Format Quick Reference
 
@@ -160,7 +170,7 @@ Apply these defaults unless the user explicitly asks for a dense/technical view:
 - Keep text concise (single purpose per box) and avoid multiline overload.
 - Keep edge labels short and unique; if adjacent edges repeat the same protocol/port wording, collapse them or move the shared detail to one annotation box.
 - Avoid repeating the same label in the title, legend, lane name, and callout.
-- **Animated flow on connectors**: adding `flowAnimation=1;` to any edge style renders a moving dot that travels along the arrow, making directional flow immediately visible without extra labels — ideal for data-flow and pipeline diagrams. The animation is preserved in SVG export and the draw.io desktop app. By default, ask the user whether they want any flow arrows animated before generating the diagram — *"Would you like any of the flow arrows animated to show traffic direction? If so, which ones?"* Apply `flowAnimation=1;` only to the edges the user identifies. If the user has already indicated they want a static/clean diagram, skip the question.
+- **Animated flow on connectors**: keep diagrams static by default. Add `flowAnimation=1;` only when the user requests animation; it renders a moving dot along the arrow and is useful for data-flow and pipeline diagrams.
 - Prefer a "clean" variant first; add detail only if requested.
 
 For worked examples of common layout problems (stacked edges, repeated labels, observability inside VNet, etc.), see [references/layout-antipatterns.md](references/layout-antipatterns.md).
@@ -209,42 +219,11 @@ Use this section for diagrams that show **temporal flows** — what happens in o
 
 ### Colour Conventions
 
-**Edge colours** (consistent with topology palette):
-
-| Meaning | `strokeColor` | Style |
-|---|---|---|
-| Primary request / call | `#0078D4` Azure blue | solid, `strokeWidth=2` |
-| Success response / return | `#00897B` Teal | solid, `strokeWidth=2` |
-| Token / credential / redirect | `#F57C00` Amber | `dashed=1`, `strokeWidth=2` |
-| Async / event-driven call | `#5C6BC0` Indigo | `dashed=1`, `strokeWidth=2` |
-| Error / rejection / rollback | `#C62828` Red | solid, `strokeWidth=2` |
-| Optional / conditional | `#666666` Grey | `dashed=1`, `strokeWidth=1` |
-
-**Participant lane colours** (swimlane header + column background at `opacity=30`):
-
-| Actor type | `fillColor` | `strokeColor` |
-|---|---|---|
-| User / browser / client | `#dae8fc` | `#6c8ebf` |
-| Identity provider (Entra, Cognito, Okta) | `#e6f4ea` | `#82b366` |
-| API / backend service | `#fff3e0` | `#e6821e` |
-| Database / data store | `#f5f5f5` | `#666666` |
-| Managed service / external system | `#f3e5f5` | `#7B1FA2` |
-
-**Stage fill colours** (CI/CD pipeline):
-
-| Stage | `fillColor` | `fontColor` |
-|---|---|---|
-| Source / Trigger | `#0078D4` | `#ffffff` |
-| Build | `#00897B` | `#ffffff` |
-| Test / Quality Gate | `#F57C00` | `#ffffff` |
-| Deploy to Staging | `#5C6BC0` | `#ffffff` |
-| Approval Gate | `#795548` | `#ffffff` |
-| Deploy to Production | `#43A047` | `#ffffff` |
-| Rollback / Failure | `#C62828` | `#ffffff` |
+Use the sequence, participant, and pipeline palettes in [references/REFERENCE.md](references/REFERENCE.md#sequence-and-flow-styles). The vendor topology references remain the source for cloud-specific palettes.
 
 ### Flow Animation
 
-`flowAnimation=1;` works on sequence/flow edges exactly as in topology diagrams. Apply to primary call paths or pipeline stage transitions. Always ask the user before applying.
+`flowAnimation=1;` works on sequence/flow edges exactly as in topology diagrams. Keep the default static; apply it only when the user asks for animated flow.
 
 ### Checklist (Sequence/Flow Diagrams)
 
@@ -253,60 +232,16 @@ Use this section for diagrams that show **temporal flows** — what happens in o
 - [ ] Steps numbered in execution order
 - [ ] Edge colours consistent with conventions above
 - [ ] Error / failure paths shown in red
-- [ ] Animation preference confirmed with user before generating
+- [ ] Animation applied only when the user requested it
 - [ ] Canvas sized appropriately for participant count and step depth
 
 ## Icon Discovery
 
-`drawio/search_shapes` is the **only accepted source** for a style string, for any shape with a name, brand, or product identity — cloud services, network equipment, brand logos, container/orchestration tools, or any other pictorial icon. Never guess or fabricate one; this rule is referenced from elsewhere in this skill rather than restated.
-
-Example queries by category:
-
-| Category | Example queries |
-|---|---|
-| Azure | `"azure virtual machine"`, `"azure key vault"`, `"azure api management"` |
-| AWS | `"aws lambda"`, `"aws s3"`, `"aws ec2"` |
-| GCP | `"gcp compute engine"`, `"gcp cloud storage"` |
-| Network equipment | `"cisco router"`, `"cisco firewall"`, `"juniper switch"` |
-| Containers / orchestration | `"kubernetes pod"`, `"docker"`, `"helm"` |
-| Brands / SaaS | `"slack"`, `"github"`, `"jira"`, `"salesforce"` |
-| On-premises / IT | `"server"`, `"database"`, `"laptop"`, `"printer"` |
-
-Always use the returned `style` value directly on the `mxCell`. The style format varies by library:
-
-```text
-# Image-based (Azure azure2, SVG files)
-image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/<category>/<Name>.svg;
-
-# Stencil-based (AWS4, GCP2, shape libraries)
-shape=mxgraph.aws4.<name>;fillColor=<color>;fontColor=#ffffff;strokeColor=none;
-
-# Stencil-based (Cisco, Kubernetes, etc.)
-shape=mxgraph.cisco.<category>.<name>;sketch=0;html=1;
-
-# Icon-service (brand logos and concept icons, returned as an absolute URL)
-shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;image=https://<icon-service-host>/<icon>.svg;
-```
-
-When the built-in libraries have no strong match, `search_shapes` supplements results from the draw.io icon service (the same grouped icon search the editor sidebar uses) and returns them as `shape=image` styles with an absolute URL. These are valid results — use them as returned rather than rejecting them for not matching an `img/lib/...` path.
-
-**If a style string cannot be confirmed, or a shape renders incorrectly:**
-
-1. Re-query `search_shapes` (raise `limit`, up to 50) for an alternative — don't conclude a shape doesn't exist after one narrow query.
-2. Do **not** generate the diagram with an unresolved shape style.
-3. If multiple shapes are unresolved, list them and propose verified replacements before generating anything.
-4. Once every replacement is confirmed, generate the diagram.
+Use `drawio/search_shapes` as the only source of styles for named, branded, or pictorial shapes. Use the returned `style` value unchanged; never infer or fabricate one. See [references/REFERENCE.md](references/REFERENCE.md#shape-discovery) for queries, style formats, and the fallback procedure.
 
 ## Exporting Diagrams
 
-| Format | How | Notes |
-|---|---|---|
-| **SVG** | `File → Export As → SVG` | Recommended — preserves `flowAnimation` moving-dot effects and all icon rendering. Use for sharing or embedding. |
-| **PNG** | `File → Export As → PNG` | Static snapshot. `flowAnimation` effects are not captured; icons and colours are preserved. |
-| **PDF** | `File → Export As → PDF` | Best for printed or document-embedded diagrams. Static only. |
-| **.drawio file** | `File → Save As` | Preserves all XML, animation settings, and style attributes for future editing. |
-
-> `flowAnimation=1` is only visible when the diagram is open in **draw.io desktop** or rendered as **SVG**. It does not appear in PNG or PDF exports — inform the user of this if they ask why the animation isn't showing.
+See [references/REFERENCE.md](references/REFERENCE.md#exporting-diagrams) for export formats and animation limitations.
 
 ## Troubleshooting Checklist
 
@@ -335,7 +270,7 @@ See [references/REFERENCE.md](references/REFERENCE.md) for diagram-type prompt p
 - Layout pass chosen deliberately (`routing: "libavoid"` for hand-placed/container layouts; `postLayout: "elk"` — with `direction: "horizontal"` for left-to-right flows — for directional diagrams; never both).
 - All applicable topology checklist items passed (borders, subnets, traffic labels, legend, isolation box, zones, canvas size).
 - All applicable sequence/flow checklist items passed (numbered steps, colour-coded edges, error paths, canvas size).
-- Animation preference confirmed; `flowAnimation=1;` applied only to user-identified edges.
+- The diagram remains static unless the user requested `flowAnimation=1;` for specific edges.
 - Nested groupings use real containers: each level a `swimlane`, children parented to their container with relative coordinates, cross-container edges at `parent="1"`.
 - File artifact saved as `.drawio` (wrapped in `<mxfile>`) if requested, following [references/standalone-file-requirements.md](references/standalone-file-requirements.md).
 - Edges declare only `source`/`target`: no hand-written `<Array as="points">` waypoints or `exitX`/`entryX` overrides unless a documented exception applies. See [references/xml-authoring-rules.md](references/xml-authoring-rules.md).

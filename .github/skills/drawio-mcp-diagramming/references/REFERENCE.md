@@ -4,7 +4,44 @@ This folder contains reference artifacts for the `drawio-mcp-diagramming` skill.
 
 ## Shape Discovery
 
-See `SKILL.md` § Icon Discovery for the hard gate, query-by-category table, style format by library, and fallback flow — not restated here.
+Use `drawio/search_shapes` as the only source of a style string for named,
+branded, or pictorial shapes. Never guess or fabricate one. Use the returned
+`style` value directly on the `mxCell`.
+
+| Category | Example queries |
+|---|---|
+| Azure | `"azure virtual machine"`, `"azure key vault"`, `"azure api management"` |
+| AWS | `"aws lambda"`, `"aws s3"`, `"aws ec2"` |
+| GCP | `"gcp compute engine"`, `"gcp cloud storage"` |
+| Network equipment | `"cisco router"`, `"cisco firewall"`, `"juniper switch"` |
+| Containers / orchestration | `"kubernetes pod"`, `"docker"`, `"helm"` |
+| Brands / SaaS | `"slack"`, `"github"`, `"jira"`, `"salesforce"` |
+| On-premises / IT | `"server"`, `"database"`, `"laptop"`, `"printer"` |
+
+Style formats vary by library:
+
+```text
+# Image-based (Azure azure2, SVG files)
+image;aspect=fixed;html=1;points=[];align=center;image=img/lib/azure2/<category>/<Name>.svg;
+
+# Stencil-based (AWS4, GCP2, shape libraries)
+shape=mxgraph.aws4.<name>;fillColor=<color>;fontColor=#ffffff;strokeColor=none;
+
+# Stencil-based (Cisco, Kubernetes, etc.)
+shape=mxgraph.cisco.<category>.<name>;sketch=0;html=1;
+
+# Icon-service (brand logos and concept icons, returned as an absolute URL)
+shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;image=https://<icon-service-host>/<icon>.svg;
+```
+
+When built-in libraries have no strong match, `search_shapes` can return an
+absolute `shape=image` icon-service style. It is valid; use it as returned.
+
+If a style cannot be confirmed or renders incorrectly:
+
+1. Re-query `search_shapes`, raising `limit` to 50 if needed.
+2. Do not generate a diagram with unresolved styles.
+3. Propose confirmed replacements for all unresolved shapes before generating.
 
 ## Reference Files
 
@@ -28,6 +65,48 @@ See `SKILL.md` § Icon Discovery for the hard gate, query-by-category table, sty
 - `standalone-file-requirements.md`
   - Required XML attributes when writing a `.drawio` file directly (MCP tool unavailable): `as="geometry"` on every `<mxGeometry>`, and standard `mxGraphModel` layout attributes.
   - Includes a full minimal wrapper template.
+
+## Sequence and Flow Styles
+
+Use these palettes for sequence diagrams, API flows, and CI/CD pipelines.
+
+| Meaning | `strokeColor` | Style |
+|---|---|---|
+| Primary request / call | `#0078D4` Azure blue | solid, `strokeWidth=2` |
+| Success response / return | `#00897B` Teal | solid, `strokeWidth=2` |
+| Token / credential / redirect | `#F57C00` Amber | `dashed=1`, `strokeWidth=2` |
+| Async / event-driven call | `#5C6BC0` Indigo | `dashed=1`, `strokeWidth=2` |
+| Error / rejection / rollback | `#C62828` Red | solid, `strokeWidth=2` |
+| Optional / conditional | `#666666` Grey | `dashed=1`, `strokeWidth=1` |
+
+| Actor type | `fillColor` | `strokeColor` |
+|---|---|---|
+| User / browser / client | `#dae8fc` | `#6c8ebf` |
+| Identity provider (Entra, Cognito, Okta) | `#e6f4ea` | `#82b366` |
+| API / backend service | `#fff3e0` | `#e6821e` |
+| Database / data store | `#f5f5f5` | `#666666` |
+| Managed service / external system | `#f3e5f5` | `#7B1FA2` |
+
+| Pipeline stage | `fillColor` | `fontColor` |
+|---|---|---|
+| Source / Trigger | `#0078D4` | `#ffffff` |
+| Build | `#00897B` | `#ffffff` |
+| Test / Quality Gate | `#F57C00` | `#ffffff` |
+| Deploy to Staging | `#5C6BC0` | `#ffffff` |
+| Approval Gate | `#795548` | `#ffffff` |
+| Deploy to Production | `#43A047` | `#ffffff` |
+| Rollback / Failure | `#C62828` | `#ffffff` |
+
+## Exporting Diagrams
+
+| Format | How | Notes |
+|---|---|---|
+| **SVG** | `File → Export As → SVG` | Recommended for sharing or embedding; preserves `flowAnimation`. |
+| **PNG** | `File → Export As → PNG` | Static snapshot; animation is not captured. |
+| **PDF** | `File → Export As → PDF` | Best for printing or document embedding; static only. |
+| **.drawio file** | `File → Save As` | Preserves XML, animation settings, and style attributes for editing. |
+
+`flowAnimation=1` is visible only in draw.io desktop or SVG output, not PNG or PDF.
 
 ## Example Prompt Templates
 

@@ -117,7 +117,7 @@ Skills are grouped below by area. Stable skills are included in an APM bundle; w
 
 | Skill | Description | APM bundle |
 |---|---|---|
-| [`drawio-mcp-diagramming`](.github/skills/drawio-mcp-diagramming) | Creates and edits architecture diagrams via the Draw.io MCP server with Azure2 and AWS4 icon library support. | `packages/diagramming`, `packages/drawio-mcp-diagramming` |
+| [`drawio-mcp-diagramming`](.github/skills/drawio-mcp-diagramming) | Creates and edits architecture diagrams via the Draw.io MCP server with Azure, AWS, and GCP icon library support. | `packages/diagramming`, `packages/drawio-mcp-diagramming` |
 | [`azure-drawio-mcp-diagramming`](.github/skills/azure-drawio-mcp-diagramming) | Creates and edits Azure-focused Draw.io diagrams with reliable Azure icon rendering guidance. | `packages/diagramming` |
 | [`excalidraw-mcp-diagramming`](.github/skills/excalidraw-mcp-diagramming) | Creates and edits diagrams on a live Excalidraw canvas; exports to PNG, SVG, `.excalidraw`, or a shareable URL. | `packages/diagramming` |
 
