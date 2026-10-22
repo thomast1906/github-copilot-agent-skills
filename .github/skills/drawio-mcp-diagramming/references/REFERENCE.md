@@ -305,7 +305,27 @@ Example Tool Server call:
 
 ### CSV
 
-CSV input is useful for org charts and simple labeled diagrams. The first row is the header; each subsequent row becomes a node. Edge relationships are typically expressed with `id` and `parent` columns. See the Tool Server documentation for the exact CSV schema.
+CSV input is useful for org charts and simple labeled diagrams (Tool Server only — `drawio/open_drawio_csv`). The first row is the header; each subsequent row becomes a node. Edge relationships are expressed with `id` and `parent` columns — a row's `parent` value must match another row's `id` to draw the connecting edge.
+
+Example org chart:
+
+```csv
+id,parent,name,role
+1,,Jane Doe,CEO
+2,1,John Smith,CTO
+3,1,Alex Lee,CFO
+4,2,Sam Patel,Engineering Manager
+```
+
+Example Tool Server call:
+
+```json
+{
+  "content": "id,parent,name,role\n1,,Jane Doe,CEO\n2,1,John Smith,CTO\n3,1,Alex Lee,CFO\n4,2,Sam Patel,Engineering Manager"
+}
+```
+
+Each row renders as a box labelled with the non-id/parent columns (`name`, `role`); the root row (empty `parent`) becomes the top of the chart.
 
 ### Multi-page `.drawio` files (Tool Server only)
 
